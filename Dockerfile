@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM ubuntu:20.04 as builder_base_appmonitor
+FROM ubuntu:22.04 as builder_base_appmonitor
 MAINTAINER asi@dbca.wa.gov.au
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Perth
@@ -17,7 +17,7 @@ ENV FIELD_ENCRYPTION_KEY="Mv12YKHFm4WgTXMqvnoUUMZPpxx1ZnlFkfGzwactcdM="
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install --no-install-recommends -y wget git libmagic-dev gcc binutils libproj-dev gdal-bin python3 python3-setuptools python3-dev python3-pip tzdata libreoffice cron rsyslog 
+RUN apt-get install --no-install-recommends -y wget git libmagic-dev gcc binutils libproj-dev gdal-bin python3 python3-setuptools python3-dev python3-pip tzdata libreoffice cron 
 RUN apt-get install --no-install-recommends -y libpq-dev patch
 RUN apt-get install --no-install-recommends -y postgresql-client mtr
 RUN apt-get install --no-install-recommends -y sqlite3 vim postgresql-client ssh htop
@@ -46,18 +46,19 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY cron /etc/cron.d/dockercron
 COPY startup.sh /
-RUN service rsyslog start
+#RUN service rsyslog start
 RUN chmod 0644 /etc/cron.d/dockercron
 RUN crontab /etc/cron.d/dockercron
 RUN touch /var/log/cron.log
 RUN service cron start
 RUN chmod 755 /startup.sh
 COPY gunicorn.ini ./
-#COPY ledger ./ledger
+
 RUN touch /app/.env
+COPY .git ./.git
 COPY appmonitor ./appmonitor
 COPY manage.py ./
-#COPY .git/refs/heads/master /app/git_hash
+
 RUN mkdir /app/appmonitor/cache/
 RUN chmod 777 /app/appmonitor/cache/
 RUN python manage.py collectstatic --noinput
