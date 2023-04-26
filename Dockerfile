@@ -62,7 +62,7 @@ COPY manage.py ./
 RUN mkdir /app/appmonitor/cache/
 RUN chmod 777 /app/appmonitor/cache/
 RUN python manage.py collectstatic --noinput
-RUN apt-get install --no-install-recommends -y python-pil
+RUN apt-get install --no-install-recommends -y python3-pil
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
 CMD ["/startup.sh"]
