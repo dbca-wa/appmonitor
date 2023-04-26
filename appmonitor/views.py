@@ -32,10 +32,18 @@ class HomePage(base.TemplateView):
         now = datetime.utcnow().replace(tzinfo=utc)
        
         mjl = models.MonitorJobLog.objects.all().order_by('-id').first()
-        timediff = now - mjl.started
-        context['last_job_run'] = mjl.started
-        context['time_differnce_last_job'] = int(timediff.total_seconds() / 60)
-        
+        if mjl is not None:
+            if mjl.started:
+                timediff = now - mjl.started
+                context['last_job_run'] = mjl.started
+                context['time_differnce_last_job'] = int(timediff.total_seconds() / 60)
+            else:
+                context['last_job_run'] = "No last run date time"
+                context['time_differnce_last_job'] = 1000
+        else:
+            context['last_job_run'] = "No last run date time"
+            context['time_differnce_last_job'] = 1000
+            
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)
     

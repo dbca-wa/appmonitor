@@ -20,8 +20,7 @@ def get_checks(request, *args, **kwargs):
         monitor_status_total = {0 : 0, 1 : 0, 2 : 0, 3:0}
         
         for m in monitor:
-            mh = models.MonitorHistory.objects.filter(monitor=m).order_by('-id')[:1]
-            print (mh[0].created.astimezone().strftime('%d/%m/%Y %H:%M %p'))
+            mh = models.MonitorHistory.objects.filter(monitor=m).order_by('-id')[:1]            
             if len(mh) > 0:
                 monitor_status_total[mh[0].status] = monitor_status_total[mh[0].status] + 1
                 monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': mh[0].created.astimezone().strftime('%d/%m/%Y %H:%M %p'), 'active' : m.active, 'url': m.url})            
