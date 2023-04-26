@@ -1,0 +1,4 @@
+{% if request.session.is_authenticated %}
+      <li class="nav-item"><a class="nav-link active" href="{% url 'public_my_bookings'%}">Sensors</a></li>
+{% else %}
+{% endif %}

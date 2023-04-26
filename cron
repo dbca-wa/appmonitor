@@ -1,0 +1,1 @@
+#15 9 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py clear_api_service_logs >> /app/logs/clear_api_service_logs.log 2>&1

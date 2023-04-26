@@ -1,0 +1,15 @@
+{
+	"name": "APP Monitor Development",
+	"image": "dbcawa/docker_app_dev:appmonitor_dev_latest",
+	"remoteUser": "container",
+	"workspaceFolder": "/data/data/projects/app_monitor",
+	"mounts": ["type=bind,source=/data/,target=/data/",
+	           "type=bind,source=/data/data/containerhome/,target=/home/container/"
+	          ],	
+	"appPort": [ "7017:8080","9131:9131","9132:9132","9133:9133","9134:9134","9135:9135"],
+	"runArgs": ["--env-file","${localEnv:HOME}/vscode-env/appmonitor.env",
+		   "--hostname","appmonitor-dev"
+		   ],
+	"forwardPorts": [9131,9132,9133,9134,9135],
+	"initializeCommand" : ""
+}
