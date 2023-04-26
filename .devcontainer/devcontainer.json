@@ -2,7 +2,7 @@
 	"name": "APP Monitor Development",
 	"image": "dbcawa/docker_app_dev:appmonitor_dev_latest",
 	"remoteUser": "container",
-	"workspaceFolder": "/data/data/projects/app_monitor",
+	"workspaceFolder": "/data/data/projects/appmonitor",
 	"mounts": ["type=bind,source=/data/,target=/data/",
 	           "type=bind,source=/data/data/containerhome/,target=/home/container/"
 	          ],	
