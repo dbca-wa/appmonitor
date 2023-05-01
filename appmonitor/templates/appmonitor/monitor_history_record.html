@@ -59,6 +59,15 @@
                         <tr>
                             <td class='bg-dark text-white'>Last Changed</td>            
                             <td>{{ monitor_history_obj.created}}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>Responsible Group</td>            
+                            <td>{{ monitor_history_obj.monitor.group_responsible.group_name}}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>System ID</td>            
+                            <td>{{ monitor_history_obj.monitor.system_id}}</td>
+                        </tr>                        
                         <tr>                            
                             <td class='bg-dark text-white' colspan='2'>Response</td>                                        
                         </tr>

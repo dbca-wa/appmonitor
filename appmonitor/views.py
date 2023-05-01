@@ -55,23 +55,17 @@ class MonitorHistory(base.TemplateView):
     template_name = "appmonitor/monitor_history.html"
 
     def get(self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> http.HttpResponse:
-        """Provides the GET request endpoint for the HomePage view.
-        Args:
-            request (http.HttpRequest): The incoming HTTP request.
-            *args (Any): Extra positional arguments.
-            **kwargs (Any): Extra keyword arguments.
-        Returns:
-            http.HttpResponse: The rendered template response.
-        """
         # Construct Context
         context: dict[str, Any] = {}
         monitor_history = []
         monitor_id = self.kwargs['pk']
+        monitor = models.Monitor.objects.get(id=monitor_id)
         monitor_history_obj = models.MonitorHistory.objects.filter(monitor_id=monitor_id).order_by('-created')
         
         for mh in monitor_history_obj:        
             monitor_history.append({'id': mh.id, 'monitor_id': mh.monitor.id, 'status': mh.status, 'last_changed': mh.created, 'mon_type': mh.monitor.get_mon_type_display(),})
         context['monitor_history'] = monitor_history
+        context['monitor'] = monitor
         context['request'] = request
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)
@@ -84,14 +78,6 @@ class MonitorHistoryRecord(base.TemplateView):
     template_name = "appmonitor/monitor_history_record.html"
 
     def get(self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> http.HttpResponse:
-        """Provides the GET request endpoint for the HomePage view.
-        Args:
-            request (http.HttpRequest): The incoming HTTP request.
-            *args (Any): Extra positional arguments.
-            **kwargs (Any): Extra keyword arguments.
-        Returns:
-            http.HttpResponse: The rendered template response.
-        """
         # Construct Context
         context: dict[str, Any] = {}
         monitor_id = self.kwargs['pk']

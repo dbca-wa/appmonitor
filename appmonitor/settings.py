@@ -144,3 +144,4 @@ DEV_APP_BUILD_URL = env("DEV_APP_BUILD_URL",None)
 GIT_COMMIT_HASH = os.popen(f"cd {BASE_DIR}; git log -1 --format=%H").read()
 GIT_COMMIT_DATE = os.popen(f"cd {BASE_DIR}; git log -1 --format=%cd").read()
 VERSION_NO = "2.00"
+IT_SYSTEM_REGISTER = env("IT_SYSTEM_REGISTER",None)

@@ -19,7 +19,14 @@ class MonitorJobLog(models.Model):
     job = models.CharField(max_length=255, default='', null=True, blank=True)
     started = models.DateTimeField(auto_now_add=True)
     finished = models.DateTimeField(null=True, blank=True)
-    
+
+class ResponsibleGroup(models.Model):
+    group_name = models.CharField(max_length=250)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.group_name        
 
 class Monitor(models.Model):
     MON_TYPE = Choices(
@@ -39,6 +46,8 @@ class Monitor(models.Model):
     check_name = models.CharField(max_length=50)
     mon_type = models.IntegerField(choices=MON_TYPE, null=True, blank=True, default=MON_TYPE.webconnect)
     check_operator = models.IntegerField(choices=CHECK_OPERATOR, null=True, blank=True, default=CHECK_OPERATOR.postive)
+    system_id = models.CharField(max_length=50, default='',null=True, blank=True)
+    group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
 
     # web connect (string key word checks)
     url = models.CharField(max_length=255, default='', null=True, blank=True)
@@ -54,6 +63,7 @@ class Monitor(models.Model):
     #response
     raw_response=models.TextField(null=True,blank=True)
     json_response=models.TextField(null=True,blank=True)
+
 
     # Status
     active = models.BooleanField(default=True)
@@ -84,3 +94,6 @@ class MonitorGroup(models.Model):
 
     def __str__(self):
         return self.group.name    
+    
+
+
