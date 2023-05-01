@@ -7,7 +7,8 @@ var appmonitor = {
     },
     get_checks: function() {
 
-        $('#sensorlist-tbody').html("<tr><td colspan='5' class='text-center'>"+appmonitor.var.loader+"</td></tr>");
+        // $('#sensorlist-tbody').html("<tr><td colspan='5' class='text-center'>"+appmonitor.var.loader+"</td></tr>");
+        $('#loading-progress').html(appmonitor.var.loader);
         $.ajax({
             type: "post",
             url: "/api/get-checks/",
@@ -33,6 +34,7 @@ var appmonitor = {
                             }
                             htmlval+= "     </td>";
                             //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                            htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
                             htmlval+= "     <td>"+resp.monitors[i].name;
                             if (resp.monitors[i].url != null) {
                                 if (resp.monitors[i].url.length > 0 ) {
@@ -41,6 +43,8 @@ var appmonitor = {
                             }
                             htmlval+= "     </td>";      
                             htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                            htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                            
                             htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                             htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
                             htmlval+= "</tr>";
@@ -52,12 +56,17 @@ var appmonitor = {
                         $('#total-down').html(resp.monitor_status_total[1]);
                         $('#total-warn').html(resp.monitor_status_total[2]);
                         $('#total-up').html(resp.monitor_status_total[3]);
+                        $('#current-server-time').html(resp.monitor_status['current_time']);
+                        $('#last-job-run-time').html(resp.monitor_status['last_job_run']);
+                        
                     } else {
                         $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');                    
-                    }    
-                    setTimeout("appmonitor.get_checks()", 60000)                      
+                    }   
+                    $('#loading-progress').html(""); 
+                    setTimeout("appmonitor.get_checks()", 30000)                      
                 } else {
                     $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');
+                    $('#loading-progress').html("");
                 }
                 
             }

@@ -56,23 +56,30 @@
         </div>
         <div class="col-md-6 text-end">
             <div class="col-md-12">          
-                <b>Current Time</b>: {{ current_time }}
+                <b>Current Time</b>: <span id='current-server-time'>{{ current_time }}</span>
             </div>
             <div class="col-md-12">                      
-                <b>Last Job Run</b>: {{ last_job_run }}
-
-           </div>     
-
+                <b>Last Job Run</b>: <span id='last-job-run-time'>{{ last_job_run }}</span>
+           </div>
         </div>
-
+        <div class="row">
+            <div class="col-md-6">
+                &nbsp;
+            </div>
+            <div class="col-md-6 text-end">
+                <div id='loading-progress'></div>
+            </div>
+        </div>            
         <div class="col-md-12">
             {% if request.user.is_authenticated %}            
             <table id="sensorlist-table" class="table" style="width:100%">
                 <thead class='table-dark'>
                     <tr>
                         <th>Status</th>   
+                        <th>SystemID</th>
                         <th>Check Name</th>
-                        <th>Check Type</th>                                             
+                        <th>Check Type</th>
+                        <th>Responsible Group</th>                                             
                         <th>Last Status Change</th>                        
                         <th>Action</th>
                     </tr>
