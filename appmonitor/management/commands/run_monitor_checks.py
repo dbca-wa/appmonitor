@@ -1,9 +1,11 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.conf import settings
 from datetime import timedelta
 from datetime import datetime as dt_datetime
 from platform   import system as system_name  # Returns the system/OS name
 from subprocess import call   as system_call, DEVNULL, STDOUT  # Execute a shell command
+from requests.auth import HTTPBasicAuth
 
 from urllib.request import Request, urlopen, ssl, socket
 from urllib.error import URLError, HTTPError
@@ -41,11 +43,25 @@ class Command(BaseCommand):
         #mjl.save()
 
     def get_website(self, monitor,website,string_check):      
-
+        print (monitor.check_name)
         response = None
         html_str = ''
+        cookies={}
+        if monitor.use_auth2_token is True:
+            print (settings.AUTH2_TOKEN_URL)
+            try:
+                auth=auth=HTTPBasicAuth(settings.AUTH2_USERNAME,settings.AUTH2_PASSWORD)
+                auth_response = requests.get(settings.AUTH2_TOKEN_URL, auth=auth)                
+                print (auth_response)
+                cookies = auth_response.cookies.get_dict()
+                print (cookies['sessionid'])
+            except Exception as e:
+                print (e)
+
+
         try:
-            response = requests.get(website, timeout=30)
+            response = requests.get(website, timeout=30, cookies=cookies)       
+            print (response.text)     
         except Exception as e:
             print (e)
             html_str = str(e)

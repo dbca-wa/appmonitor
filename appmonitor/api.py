@@ -45,11 +45,19 @@ def get_checks(request, *args, **kwargs):
                 responsible_group_name= m.group_responsible.group_name   
             if len(mh) > 0:
                 monitor_status_total[mh[0].status] = monitor_status_total[mh[0].status] + 1
-                monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': mh[0].created.astimezone().strftime('%d/%m/%Y %H:%M %p'), 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+m.system_id, 'responsible_group': responsible_group_name})            
+                created = ''
+                if mh[0].created:
+                    created = mh[0].created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                system_id_url = ''
+                if settings.IT_SYSTEM_REGISTER:
+                    if m.system_id:
+                        system_id_url = settings.IT_SYSTEM_REGISTER+'&q='+m.system_id
+
+                monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
             else:
                 monitor_status_total[0] = monitor_status_total[0] + 1
-                monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+m.system_id, 'responsible_group': responsible_group_name})
-        monitors_sorted = sorted(monitors, key=lambda d: d['status']) 
+                monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+m.system_id, 'responsible_group': responsible_group_name})                            
+        monitors_sorted = sorted(monitors, key=lambda d: d['last_check_date'], reverse=True) 
         return HttpResponse(json.dumps({'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}), content_type='application/json', status=200)
     else:
         return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
