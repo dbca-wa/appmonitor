@@ -20,36 +20,153 @@ var appmonitor = {
                 var htmlval = "";
                 if (resp != null) {
                     if (resp.monitors.length > 0) {
-                        for (let i = 0; i < resp.monitors.length; i++) {
-                            htmlval+= "<tr>";                                                                         
-                            htmlval+= "     <td>";                            
-                            if (resp.monitors[i].status == 0 ) {
-                                htmlval+= "<div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>";
-                            } else if (resp.monitors[i].status == 1 ) {
-                                htmlval+= "<div class='bg-danger status-box-white' >DOWN</div>";
-                            } else if (resp.monitors[i].status == 2 ) {
-                                htmlval+= "<div class='bg-warning status-box-white' >WARN</div>";
-                            } else if (resp.monitors[i].status == 3 ) {
-                                htmlval+= "<div class='bg-success status-box-white' >UP</div>";
-                            }
-                            htmlval+= "     </td>";
-                            //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
-                            htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
-                            htmlval+= "     <td>"+resp.monitors[i].name;
-                            if (resp.monitors[i].url != null) {
-                                if (resp.monitors[i].url.length > 0 ) {
-                                    htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
-                                }
-                            }
-                            htmlval+= "     </td>";      
-                            htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
-                            htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                        // for (let i = 0; i < resp.monitors.length; i++) {
+                        //     htmlval+= "<tr>";                                                                         
+                        //     htmlval+= "     <td>";                            
+                        //     if (resp.monitors[i].status == 0 ) {
+                        //         htmlval+= "<div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>";
+                        //     } else if (resp.monitors[i].status == 1 ) {
+                        //         htmlval+= "<div class='bg-danger status-box-white' >DOWN</div>";
+                        //     } else if (resp.monitors[i].status == 2 ) {
+                        //         htmlval+= "<div class='bg-warning status-box-white' >WARN</div>";
+                        //     } else if (resp.monitors[i].status == 3 ) {
+                        //         htmlval+= "<div class='bg-success status-box-white' >UP</div>";
+                        //     }
+                        //     htmlval+= "     </td>";
+                        //     //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                        //     htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                        //     htmlval+= "     <td>"+resp.monitors[i].name;
+                        //     if (resp.monitors[i].url != null) {
+                        //         if (resp.monitors[i].url.length > 0 ) {
+                        //             htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
+                        //         }
+                        //     }
+                        //     htmlval+= "     </td>";      
+                        //     htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                        //     htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
                             
-                            htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
-                            htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
-                            htmlval+= "</tr>";
+                        //     htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
+                        //     htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
+                        //     htmlval+= "</tr>";
+
+                        // }
+
+                  
+
+
+                        for (let i = 0; i < resp.monitors.length; i++) {
+                            if (resp.monitors[i].status == 0 ) {
+                                htmlval+= "<tr>";                                                                         
+                                htmlval+= "     <td>";                            
+                                
+                                    htmlval+= "<div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>";
+                                
+                                htmlval+= "     </td>";
+                                //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].name;
+                                if (resp.monitors[i].url != null) {
+                                    if (resp.monitors[i].url.length > 0 ) {
+                                        htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
+                                    }
+                                }
+                                htmlval+= "     </td>";      
+                                htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                                
+                                htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
+                                htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
+                                htmlval+= "</tr>";
+                            }
+                        }
+
+                        for (let i = 0; i < resp.monitors.length; i++) {
+                            if (resp.monitors[i].status == 1 ) {
+                                htmlval+= "<tr>";                                                                         
+                                htmlval+= "     <td>";                            
+                                
+                                    htmlval+= "<div class='bg-danger status-box-white' >DOWN</div>";
+                                
+                                htmlval+= "     </td>";
+                                //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].name;
+                                if (resp.monitors[i].url != null) {
+                                    if (resp.monitors[i].url.length > 0 ) {
+                                        htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
+                                    }
+                                }
+                                htmlval+= "     </td>";      
+                                htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                                
+                                htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
+                                htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
+                                htmlval+= "</tr>";
+                            }
 
                         }
+
+                        for (let i = 0; i < resp.monitors.length; i++) {
+                            if (resp.monitors[i].status == 2 ) {
+                                htmlval+= "<tr>";                                                                         
+                                htmlval+= "     <td>";                            
+                                
+                                htmlval+= "<div class='bg-warning status-box-white' >WARN</div>";
+                                
+                                htmlval+= "     </td>";
+                                //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].name;
+                                if (resp.monitors[i].url != null) {
+                                    if (resp.monitors[i].url.length > 0 ) {
+                                        htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
+                                    }
+                                }
+                                htmlval+= "     </td>";      
+                                htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                                
+                                htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
+                                htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
+                                htmlval+= "</tr>";
+                            }
+
+                        }
+
+
+                        for (let i = 0; i < resp.monitors.length; i++) {
+                            if (resp.monitors[i].status == 3 ) {
+                                htmlval+= "<tr>";                                                                         
+                                htmlval+= "     <td>";                            
+                                
+                                htmlval+= "<div class='bg-success status-box-white' >UP</div>";
+                                
+                                htmlval+= "     </td>";
+                                //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].name;
+                                if (resp.monitors[i].url != null) {
+                                    if (resp.monitors[i].url.length > 0 ) {
+                                        htmlval+= "     &nbsp;<a href='"+resp.monitors[i].url+"' target='urlmonitor_"+resp.monitors[i].id+"'><i class='bi bi-box-arrow-up-right' style='color: blue; cursor:pointer;'></i></a>";
+                                    }
+                                }
+                                htmlval+= "     </td>";      
+                                htmlval+= "     <td>"+resp.monitors[i].mon_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].responsible_group+"</td>";
+                                
+                                htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
+                                htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a></td>";
+                                htmlval+= "</tr>";
+                            }
+
+                        }                        
+
+
+
+
+
+
                         $('#sensorlist-tbody').html(htmlval);
 
                         $('#total-unknown').html(resp.monitor_status_total[0]);
