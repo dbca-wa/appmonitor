@@ -17,6 +17,6 @@ class Command(BaseCommand):
             t = email_templates.AppCheckList()
             for notification in models.NotificationEmail.objects.all():
                 print ("Sending to "+notification.email)
-                t.send(to_addresses=notification.email, context={"checks": checks, "manual_checks": manual_checks}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})        
+                t.send(to_addresses=notification.email, context={"checks": checks, "manual_checks": manual_checks, "settings": settings}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})        
         
 
