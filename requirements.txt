@@ -1,4 +1,4 @@
-Django==3.2.18
+Django==3.2.19
 django-confy==1.0.4
 whitenoise==5.3.0
 git+https://github.com/dbca-wa/dbca-utils.git#egg=dbca-utils
@@ -9,3 +9,6 @@ django-encrypted-model-fields==0.6.5
 ipaddress==1.0.23
 django-model-utils==4.3.1
 git+https://github.com/dbca-wa/webtemplate2.git#egg=webtemplate_dbca
+django-cron==0.6.0
+git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
+six==1.16.0

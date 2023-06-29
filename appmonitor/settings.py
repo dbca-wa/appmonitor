@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webtemplate_dbca',
     'appmonitor',
+    'django_cron'
 ]
 
 MIDDLEWARE = [
@@ -151,3 +152,21 @@ IT_SYSTEM_REGISTER = env("IT_SYSTEM_REGISTER",None)
 AUTH2_USERNAME = env("AUTH2_USERNAME",None)
 AUTH2_PASSWORD = env("AUTH2_PASSWORD",None)
 AUTH2_TOKEN_URL = env("AUTH2_TOKEN_URL",None)
+
+# Cron
+CRON_CLASSES = [
+
+]
+    
+
+
+EMAIL_BACKEND = "wagov_utils.components.utils.email_backend.EmailBackend"
+EMAIL_HOST = env("EMAIL_HOST","smtp.lan.fyi")
+EMAIL_PORT = env("EMAIL_PORT",25)
+DEFAULT_FROM_EMAIL = "no-reply@dbca.wa.gov.au"
+EMAIL_INSTANCE = env("EMAIL_INSTANCE", "DEV")
+NON_PROD_EMAIL = env("NON_PROD_EMAIL", "")
+PRODUCTION_EMAIL= env("PRODUCTION_EMAIL", "False")
+EMAIL_DELIVERY = env("EMAIL_DELIVERY", "on")
+IT_CHECKS_REPLY_TO_EMAIL=env("IT_CHECKS_REPLY_TO_EMAIL", "no-reply@dbca.wa.gov.au")
+DEFAULT_FROM_EMAIL=env("DEFAULT_FROM_EMAIL", "no-reply@dbca.wa.gov.au")

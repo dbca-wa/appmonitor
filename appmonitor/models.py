@@ -97,4 +97,29 @@ class MonitorGroup(models.Model):
         return self.group.name    
     
 
+class ManualCheck(models.Model):
+    check_name = models.CharField(max_length=50)
+    check_url = models.CharField(max_length=255, default='', null=True, blank=True)
+    notes = models.TextField(null=True,blank=True)
+    system_id = models.CharField(max_length=50, default='',null=True, blank=True)
+    group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
 
+    def __str__(self):
+        return self.check_name 
+    
+    def system_registry_url(self):
+        system_id_url = ''
+        if settings.IT_SYSTEM_REGISTER:
+            if self.system_id:
+                system_id_url = settings.IT_SYSTEM_REGISTER+'&q='+self.system_id
+        return system_id_url
+    
+
+class NotificationEmail(models.Model):
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.email 

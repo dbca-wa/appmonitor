@@ -32,3 +32,11 @@ class MonitorJobLog(admin.ModelAdmin):
 @admin.register(models.ResponsibleGroup)
 class ResponsibleGroup(admin.ModelAdmin):
      list_display = ('id','group_name','active')
+
+@admin.register(models.ManualCheck)
+class ManualCheck(admin.ModelAdmin):
+     list_display = ('id','check_name','system_id','group_responsible','active')
+
+@admin.register(models.NotificationEmail)
+class ResponsibleGroup(admin.ModelAdmin):
+     list_display = ('id','email','created')
