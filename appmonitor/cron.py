@@ -18,7 +18,7 @@ class CronJobNotificationEmailWeekDays(django_cron.CronJobBase):
     RUN_WEEKLY_ON_DAYS = [1, 2, 3, 4, 5]
     RUN_AT_TIMES = ['20:00']
     schedule = django_cron.Schedule(run_at_times=RUN_AT_TIMES)
-    code = "appmonitor.email_checks"
+    code = "appmonitor.weekdays"
 
     def do(self) -> None:
         """Perform the Scanner Cron Job."""
@@ -35,7 +35,7 @@ class CronJobNotificationEmailWeekends(django_cron.CronJobBase):
     RUN_WEEKLY_ON_DAYS = [0, 6]
     RUN_AT_TIMES = ['9:00']
     schedule = django_cron.Schedule(run_at_times=RUN_AT_TIMES)
-    code = "appmonitor.email_checks"
+    code = "appmonitor.weekends"
 
     def do(self) -> None:
         """Perform the Scanner Cron Job."""
