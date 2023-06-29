@@ -155,6 +155,7 @@ AUTH2_TOKEN_URL = env("AUTH2_TOKEN_URL",None)
 
 # Cron
 CRON_CLASSES = [
+    'appmonitor.cron.CronJobNotificationEmail',
 
 ]
     
