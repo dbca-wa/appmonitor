@@ -1,1 +1,2 @@
 */4 * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py run_monitor_checks >> /app/logs/run_monitor_checks.log 2>&1
+*/4 * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python manage.py runcrons >> /app/logs/runcrons.log 2>&1
