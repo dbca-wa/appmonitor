@@ -15,8 +15,10 @@ class Command(BaseCommand):
             checks = utils.get_checks()
             manual_checks = models.ManualCheck.objects.filter(active=True)
             t = email_templates.AppCheckList()
+            to_addresses=[]
             for notification in models.NotificationEmail.objects.all():
-                print ("Sending to "+notification.email)
-                t.send(to_addresses=notification.email, context={"checks": checks, "manual_checks": manual_checks}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})        
+                print ("Preparing to "+notification.email)
+                to_addresses.append(notification.email)
+            t.send(to_addresses=to_addresses, context={"checks": checks, "manual_checks": manual_checks, "settings": settings}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})        
         
 

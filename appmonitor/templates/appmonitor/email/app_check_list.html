@@ -6,21 +6,22 @@
     <tr><td>
     <div><img src="{% include "appmonitor/email/dbca_logo_base64_img.html"%}" style='height:100px'></div>
 
-    <h2 style="font-size: 26px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0">Applications Team IT Checks</h2>
+    <h2 style="font-size: 26px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0">Applications Team IT Checks</h2>    
     {% if checks.monitor_status.time_differnce_last_job > 15 %}
+    <br>
     <table style="width:100%"  cellpadding="0" cellspacing="0">
         <tr>
             <td style='text-align: left; margin: 0; padding: 6px 4px; font-weight: bold; color: #FFFFFF;background-color: #dc3545; border-color: #dc3545; ' >
                 ERROR: The run_monitor_checks.py job has not run in {{checks.monitor_status.time_differnce_last_job}} minutes.
             </td>
         </tr>
-    </table>
-    <br>
+    </table>    
     {% endif %}
+    <br>
     <table style="width:100%"  cellpadding="0" cellspacing="0">
         <thead class='table-dark'>
             <tr>
-                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Current Time</th>   
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Current Server Time</th>   
                 <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Last Job Time</th>                
             </tr>
         </thead>
@@ -140,7 +141,10 @@
 <p><i>
 This is an automated system generated notification.
 </i>
+<br>
+System URL: <a href='{{ settings.APP_URL }}'>{{ settings.APP_URL }}</a>
 </p>
+
 
 </td>
 </tr>
