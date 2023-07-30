@@ -36,10 +36,14 @@ class Monitor(models.Model):
              (5, 'ssl_valid', ('SSL Valid')),  # work in progress
              (6, 'latency', ('Network Latency')),  # work in progress
              (7, 'packet_loss', ('Packet Loss')),  # work in progress
+             (8, 'json_key', ('URL (JSON Key)')),
     )
     CHECK_OPERATOR = Choices(
              (1, 'postive', ('Positive Integer')),  # work in progress
-             (2, 'negative', ('Negative Integer'))  # work in progress
+             (2, 'negative', ('Negative Integer')),  # work in progress
+             (3, 'equal_int', ('Equal Integer')),
+             (4, 'equal_string', ('Equal String'))
+
     )
 
     # name for every check type
@@ -53,6 +57,7 @@ class Monitor(models.Model):
     # web connect (string key word checks)
     url = models.CharField(max_length=255, default='', null=True, blank=True)
     string_check = models.CharField(max_length=50, null=True, blank=True)
+    json_key = models.CharField(max_length=400, null=True, blank=True)
 
     # port
     host = models.CharField(max_length=255, default='', null=True, blank=True)
@@ -65,6 +70,15 @@ class Monitor(models.Model):
     raw_response=models.TextField(null=True,blank=True)
     json_response=models.TextField(null=True,blank=True)
 
+    # Basic Auth
+    use_basic_auth = models.BooleanField(default=False)
+    username = models.CharField(null=True,blank=True, max_length=256)
+    password = models.CharField(null=True,blank=True, max_length=256)
+
+    # status values
+    up_value = models.CharField(null=True,blank=True, max_length=200)
+    warn_value = models.CharField(null=True,blank=True, max_length=200)
+    down_value = models.CharField(null=True,blank=True, max_length=200)
 
     # Status
     active = models.BooleanField(default=True)

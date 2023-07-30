@@ -37,6 +37,9 @@ class Command(BaseCommand):
             if i.mon_type == 5:
                   thread = threading.Thread(target=self.get_ssl_expiry, args=(i,i.host,int(i.port),))
                   thread.start()
+            if i.mon_type == 8:
+                  thread = threading.Thread(target=self.get_json_key_check, args=(i,))
+                  thread.start()
 
         #thread still keep running not accurate finished time.  work in progress                  
         #mjl.finished = datetime.datetime.today()
@@ -47,27 +50,25 @@ class Command(BaseCommand):
         response = None
         html_str = ''
         cookies={}
-        if monitor.use_auth2_token is True:
-            print (settings.AUTH2_TOKEN_URL)
+        auth_response=None
+        response_code = ""
+        if monitor.use_basic_auth is True:
+            
             try:
-                auth=auth=HTTPBasicAuth(settings.AUTH2_USERNAME,settings.AUTH2_PASSWORD)
-                auth_response = requests.get(settings.AUTH2_TOKEN_URL, auth=auth)                
-                print (auth_response)
-                cookies = auth_response.cookies.get_dict()
-                print (cookies['sessionid'])
+                auth_response=auth=HTTPBasicAuth(monitor.username,monitor.password)                
             except Exception as e:
-                print (e)
-
-
+                html_str="Error loading basic auth"
+                print (e)                
+                
         try:
-            response = requests.get(website, timeout=30, cookies=cookies)       
-            print (response.text)     
+            response = requests.get(website, timeout=30, cookies=cookies, auth=auth_response)   
+            response_code = response.status_code 
+            print (response.status_code)     
         except Exception as e:
             print (e)
             html_str = str(e)
             response = None
             pass
-
         
         if response:
            html_str = response.text
@@ -77,14 +78,14 @@ class Command(BaseCommand):
 
         if len(string_check) > 0:
            if string_check in html_str:
-              self.create_monitor_history(monitor,3,'string found', html_str)
+              self.create_monitor_history(monitor,3,'string found', "Response Code: "+str(response_code)+"\n"+html_str)
            else:
-              self.create_monitor_history(monitor,1,'string not found',html_str)
+              self.create_monitor_history(monitor,1,'string not found',"Response Code: "+str(response_code)+"\n"+html_str)
         else:
            if '-!STATUSCHECK!-' in html_str:
-              self.create_monitor_history(monitor,3,'string found',html_str)
+              self.create_monitor_history(monitor,3,'string found',"Response Code: "+str(response_code)+"\n"+html_str)
            else:
-              self.create_monitor_history(monitor,1,'string not found',html_str)
+              self.create_monitor_history(monitor,1,'string not found',"Response Code: "+str(response_code)+"\n"+html_str)
 
         a = dt_datetime.now()
         monitor.last_update =a
@@ -129,6 +130,77 @@ class Command(BaseCommand):
          a = dt_datetime.now()
          monitor.last_update =a
          monitor.save()
+
+    def get_json_key_check(self, monitor):
+
+
+        response = None
+        html_str = ''
+        cookies={}
+        auth_response=None
+        response_code = ""
+        global jsonvalue 
+        jsonvalue = ""
+        jsonresponse = {}
+
+        if monitor.use_basic_auth is True:    
+            try:
+                auth_response=auth=HTTPBasicAuth(monitor.username,monitor.password)                
+            except Exception as e:
+                html_str="Error loading basic auth"
+                print (e)                
+                
+        try:
+
+            response = requests.get(monitor.url, timeout=30, cookies=cookies, auth=auth_response)   
+            response_code = response.status_code
+            jsonresponse = json.loads(response.text)            
+            exec_obj  = {'jsonvalue':jsonvalue,'jsonresponse':jsonresponse}
+            exec("jsonvalue = "+monitor.json_key, exec_obj)            
+            jsonvalue = exec_obj['jsonvalue']
+            
+        except Exception as e:
+            print (e)
+            html_str = str(e)
+            response = None
+            pass
+        
+
+        try:
+            if monitor.check_operator == 1:
+                if int(jsonvalue) > int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                elif int(jsonvalue) > int(monitor.warn_value):
+                    self.create_monitor_history(monitor,2,'Warn', jsonresponse)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+
+            if monitor.check_operator == 2:
+                if int(jsonvalue) < int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                elif int(jsonvalue) < int(monitor.warn_value):
+                    self.create_monitor_history(monitor,2,'Warn', jsonresponse)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+
+            if monitor.check_operator == 3:
+                if int(jsonvalue) == int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+
+            if monitor.check_operator == 4:
+                if str(jsonvalue) == str(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+        except Exception as e:
+            print (e)
+            self.create_monitor_history(monitor,1,'Error', str(e)) 
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
 
 
 
