@@ -40,3 +40,20 @@ class ManualCheck(admin.ModelAdmin):
 @admin.register(models.NotificationEmail)
 class ResponsibleGroup(admin.ModelAdmin):
      list_display = ('id','email','created')
+
+
+class TicketFilterNotificationInline(admin.TabularInline):
+    model = models.TicketFilterNotification
+    extra = 0
+
+@admin.register(models.TicketFilter)
+class TicketFilter(admin.ModelAdmin):
+     list_display = ('id','name','url','active')
+     list_filter = ('active',)
+     search_fields = ('id','name','url')
+     inlines = [TicketFilterNotificationInline]
+
+
+@admin.register(models.Tickets)
+class Tickets(admin.ModelAdmin):
+     list_display = ('id','ticket_reference_no','created')

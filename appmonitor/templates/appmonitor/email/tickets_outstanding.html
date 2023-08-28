@@ -1,0 +1,80 @@
+<html >
+<body style='background-color: #e6e6e6;padding:10px;'>
+
+<div style='background-color: #FFFFFF; padding:20px;'>
+    <table bgcolor='#FFFFFF' cellpadding="0" cellspacing="0" style="padding:20px">
+    <tr><td>
+    <div><img src="{% include "appmonitor/email/dbca_logo_base64_img.html"%}" style='height:100px'></div>
+    <br>
+    <p>Below is a list of outstanding tickets</p>
+
+<table style="width:100%"  cellpadding="0" cellspacing="0">
+    <thead class='table-dark'>
+        <tr>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Ticket ID</th>   
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Subject</th>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">System ID</th>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Status</th>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Updated</th>                                             
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Created</th>            
+        </tr>
+    </thead>
+    <tbody >
+        {% if tickets.tickets %}
+            {% for tk in tickets.tickets%}
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' ><A href='https://dbca.freshservice.com/a/tickets/{{ tk.id }}'>{{ tk.id }}</A></td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.subject }}</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.custom_fields.system_id }}</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">
+                    {% if tk.status == 2 %}    
+                        Open
+                    {% elif tk.status == 12 %}
+                        Work in Progress
+                    {% elif tk.status == 3 %}
+                        Pending
+                    {% elif tk.status == 4 %}
+                        Resolved
+                    {% elif tk.status == 5 %}
+                        Closed    
+                    {% elif tk.status == 8 %}
+                        Waiting on Customer
+                    {% elif tk.status == 9 %}
+                        Waiting on Third Party
+                    {% elif tk.status == 13 %}
+                        Customer Replied
+                    {% elif tk.status == 15 %}
+                        Pending Testing
+                    {% elif tk.status == 16 %}
+                        Pending Deployment
+                    {% else %}
+                        Unknown ID ({{ tk.status}})
+                    {% endif %}
+                    {{ check.mon_type }}
+                
+                
+                </td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.updated_at }}</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.created_at }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" class='text-center'>No Results</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+<br>
+
+<p><i>
+This is an automated system generated notification.
+</i>
+<br>
+System URL: <a href='{{ settings.APP_URL }}'>{{ settings.APP_URL }}</a>
+</p>
+</td>
+</tr>
+</table>
+</body>
+</html>

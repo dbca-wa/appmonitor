@@ -137,3 +137,34 @@ class NotificationEmail(models.Model):
 
     def __str__(self):
         return self.email 
+    
+
+class TicketFilter(models.Model):
+    name = models.CharField(max_length=255, default='', null=True, blank=True)
+    url = models.CharField(max_length=2000, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name    
+    
+class TicketFilterNotification(models.Model):
+    ticket_filter = models.ForeignKey(TicketFilter, null=True, blank=True, on_delete=models.CASCADE)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email    
+    
+
+
+class Tickets(models.Model):
+    ticket_reference_no = models.CharField(max_length=255, default='', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.ticket_reference_no
+
+
+        
