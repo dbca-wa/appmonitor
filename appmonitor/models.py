@@ -156,8 +156,15 @@ class TicketFilterNotification(models.Model):
 
     def __str__(self):
         return self.email    
-    
 
+class NewTicketFilterNotification(models.Model):
+    ticket_filter = models.ForeignKey(TicketFilter, null=True, blank=True, on_delete=models.CASCADE)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email        
 
 class Tickets(models.Model):
     ticket_reference_no = models.CharField(max_length=255, default='', null=True, blank=True)

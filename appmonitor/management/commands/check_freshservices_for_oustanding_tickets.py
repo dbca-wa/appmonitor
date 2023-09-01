@@ -9,7 +9,7 @@ from django.conf import settings
 import requests
 
 class Command(BaseCommand):
-    help = 'Send Notification for New Fresh Service Tickets'
+    help = 'Send Notification for Outstanding Tickets'
 
     def handle(self, *args, **options):
             print ("Running Ticket Check")
