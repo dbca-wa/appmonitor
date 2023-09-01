@@ -32,7 +32,7 @@ class Command(BaseCommand):
                                 ticket_new = email_templates.TicketNew()
                                 ticket_new.subject = "New Ticket : "+t['subject']+" "+str(t['id'])
                                 to_addresses=[]
-                                for notification in models.TicketFilterNotification.objects.filter(active=True):
+                                for notification in models.NewTicketFilterNotification.objects.filter(active=True):
                                     print ("Preparing to "+notification.email)
                                     to_addresses.append(notification.email)
                                 ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings})                                     
