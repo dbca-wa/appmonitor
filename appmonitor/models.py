@@ -142,7 +142,7 @@ class NotificationEmail(models.Model):
 class TicketFilter(models.Model):
     name = models.CharField(max_length=255, default='', null=True, blank=True)
     url = models.CharField(max_length=2000, default='', null=True, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True) 
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -159,7 +159,7 @@ class TicketFilterNotification(models.Model):
 
 class NewTicketFilterNotification(models.Model):
     ticket_filter = models.ForeignKey(TicketFilter, null=True, blank=True, on_delete=models.CASCADE)
-    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)    
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -168,6 +168,7 @@ class NewTicketFilterNotification(models.Model):
 
 class Tickets(models.Model):
     ticket_reference_no = models.CharField(max_length=255, default='', null=True, blank=True)
+    last_update_str = models.CharField(max_length=50, default='', null=True, blank=True)   
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
