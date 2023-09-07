@@ -26,3 +26,9 @@ class TicketNew(WAGovUtilsTemplateEmailBase):
     subject = "Tickets Outstanding"
     html_template = "appmonitor/email/ticket_new.html"
     txt_template = "appmonitor/email/ticket_new.txt"      
+
+class TicketUpdated(WAGovUtilsTemplateEmailBase):
+    """Catalogue Entry Locked Email Abstraction."""
+    subject = "Tickets Outstanding"
+    html_template = "appmonitor/email/ticket_updated.html"
+    txt_template = "appmonitor/email/ticket_updated.txt"          

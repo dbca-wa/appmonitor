@@ -60,4 +60,4 @@ class TicketFilter(admin.ModelAdmin):
 
 @admin.register(models.Tickets)
 class Tickets(admin.ModelAdmin):
-     list_display = ('id','ticket_reference_no','created')
+     list_display = ('id','ticket_reference_no','last_update_str','created')
