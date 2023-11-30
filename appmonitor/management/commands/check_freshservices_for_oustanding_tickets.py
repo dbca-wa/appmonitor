@@ -33,11 +33,11 @@ class Command(BaseCommand):
                     print (e)
 
                 t = email_templates.TicketList()
-                t.subject = "Tickets Outstanding for "+str(tf.name) + " Total Tickets ("+str(tickets_total)+")"
+                t.subject = "Tickets Outstanding for "+str(tf.name) + " (Total: "+str(tickets_total)+")"
                 to_addresses=[]
                 for notification in models.TicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                     print ("Preparing to "+notification.email)
                     to_addresses.append(notification.email)
-                t.send(to_addresses=to_addresses, context={"tickets": tickets_pending, "settings": settings})        
+                t.send(to_addresses=to_addresses, context={"tickets": tickets_pending, "tickets_total": tickets_total, "settings": settings})        
         
 
