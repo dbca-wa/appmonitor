@@ -27,7 +27,8 @@ class Command(BaseCommand):
                         for t in tickets_pending['tickets']:
                             print ("TICKET")
                             print (t['subject']) 
-                            print (t['updated_at']) 
+                            print (t['updated_at'])
+
                             ticket_exists  = models.Tickets.objects.filter(ticket_reference_no=t['id'])
 
                             if ticket_exists.count() > 0:
@@ -37,7 +38,7 @@ class Command(BaseCommand):
                                     ticket_new = email_templates.TicketUpdated()
                                     ticket_new.subject = "Updated Ticket : "+t['subject']+" "+str(t['id'])
                                     to_addresses=[]
-                                    for notification in models.NewTicketFilterNotification.objects.filter(active=True):
+                                    for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                                         print ("Preparing to send updated "+notification.email)
                                         to_addresses.append(notification.email)
                                     ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings})   
@@ -49,7 +50,7 @@ class Command(BaseCommand):
                                 ticket_new = email_templates.TicketNew()
                                 ticket_new.subject = "New Ticket : "+t['subject']+" "+str(t['id'])
                                 to_addresses=[]
-                                for notification in models.NewTicketFilterNotification.objects.filter(active=True):
+                                for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                                     print ("Preparing to send new "+notification.email)
                                     to_addresses.append(notification.email)
                                 ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings})                                     
