@@ -8,6 +8,8 @@
 {% block extra_js %}
     <script type="text/javascript" src="/static/common/node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js?ver={{ GIT_COMMIT_HASH }}"></script>
     <script type="text/javascript" src="/static/appmonitor/js/appmonitor.js?ver={{ GIT_COMMIT_HASH }}"></script>
+    <script type="text/javascript" src="/static/appmonitor/js/appmonitor_platform.js?ver={{ GIT_COMMIT_HASH }}"></script>
+    <script type="text/javascript" src="/static/appmonitor/js/appmonitor_packages.js?ver={{ GIT_COMMIT_HASH }}"></script>
 {% endblock %}
 
 {% block header_top_menu %}
@@ -45,7 +47,9 @@ MENU 2
 {%endblock %}
 
 {% block menu_items_left_brand %}
-<a class="navbar-brand" href="{% url 'home'%}">&nbsp;Home</a>
+<a class="navbar-brand" href="{% url 'home'%}">&nbsp;Monitoring</a>
+<a class="navbar-brand" href="{% url 'platform_status'%}">&nbsp;Platform Status</a>
+<a class="navbar-brand" href="{% url 'packages_status'%}">&nbsp;Packages Status</a>
 <a href=''></a>
 {%endblock %}
 

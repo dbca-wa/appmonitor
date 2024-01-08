@@ -4,3 +4,14 @@
 # Fresh Service Ticket Notification
 */4 * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py check_freshservices_for_new_tickets >> /app/logs/check_freshservices_for_new_tickets.log 2>&1
 30 9 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py check_freshservices_for_oustanding_tickets >> /app/logs/check_freshservices_for_oustanding_tickets.log 2>&1
+
+# Vulnerability Jobs
+*/15 * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py rebuild_platform_packages >> /app/logs/rebuild_platform_packages.log 2>&1
+
+05 10 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py update_vulnerabilities_db >> /app/logs/update_vulnerabilities_db.log 2>&1
+05 11 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py get_python_package_list >> /app/logs/get_python_package_list.log 2>&1
+
+05 12 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
+
+
+

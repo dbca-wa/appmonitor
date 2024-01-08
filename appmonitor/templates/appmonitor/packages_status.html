@@ -1,0 +1,104 @@
+{% extends 'appmonitor/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+  
+{% endblock %}
+
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Messages  -->
+    <h3>Package Status</h3>
+    <br>
+    {% if messages %}
+            
+            <div class="row">
+                <div class="col">
+                    {% for message in messages %}
+                    <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                        {{ message|safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if request.user.is_authenticated %}   
+            <div class="row">
+                <div class="col-4 text-end">
+                    &nbsp;
+                </div>
+                <div class="col-8 text-end">
+                   
+                    <div class="mb-3 row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Package Search</label>
+                        <div class="col-auto">
+                          <input type="text"  class="form-control" id="package_search" value="">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" id="package_search_btn" class="btn btn-primary mb-3">Search</button>
+
+                        </div>
+                      </div>
+                </div>
+            </div>        
+            <br>             
+            <table id="platformpackageslist-table" class="table" style="width:100%">
+                <thead class='table-dark'>
+                    <tr>
+                        <th>System Name</th>   
+                        <th>OS Name</th>
+                        <th>OS Version</th>
+                        <th>Python Version</th>
+                        <th>Django Version</th>
+                        <th>Responsible Group</th>                                             
+                        <th>Last Updated</th>                        
+                        
+                    </tr>
+                </thead>
+                <tbody id='platformpackageslist-tbody'>
+                    <tr>
+                        <td colspan="8" class='text-center'>No Results</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <script>
+                appmonitor_packages.init();
+            </script>
+            <style>
+                .status-box-white {
+                    color: #FFF;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;             
+                    width: 70px;
+                    text-align: center;                  
+                    height: 30px;
+                }
+                .status-box-black {
+                    color: #000;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;                                 
+                    width: 70px;
+                    text-align: center;
+                    height: 30px;
+                }
+
+
+            </style>
+            {% else %}
+            You are not authenticated.  Please login
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}  

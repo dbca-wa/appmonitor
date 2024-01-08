@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 from encrypted_model_fields.fields import EncryptedCharField
 from datetime import datetime
 from django.contrib.auth.models import Group
+from django.utils.crypto import get_random_string
 
 today = datetime.now()
 today_path = today.strftime("%Y/%m/%d/%H")
@@ -37,13 +38,13 @@ class Monitor(models.Model):
              (6, 'latency', ('Network Latency')),  # work in progress
              (7, 'packet_loss', ('Packet Loss')),  # work in progress
              (8, 'json_key', ('URL (JSON Key)')),
+             (9, 'http_status_code', ('HTTP Status Code'))
     )
     CHECK_OPERATOR = Choices(
              (1, 'postive', ('Positive Integer')),  # work in progress
              (2, 'negative', ('Negative Integer')),  # work in progress
              (3, 'equal_int', ('Equal Integer')),
              (4, 'equal_string', ('Equal String'))
-
     )
 
     # name for every check type
@@ -58,6 +59,7 @@ class Monitor(models.Model):
     url = models.CharField(max_length=255, default='', null=True, blank=True)
     string_check = models.CharField(max_length=50, null=True, blank=True)
     json_key = models.CharField(max_length=400, null=True, blank=True)
+    status_code = models.IntegerField(default=200, null=True, blank=True)
 
     # port
     host = models.CharField(max_length=255, default='', null=True, blank=True)
@@ -108,8 +110,7 @@ class MonitorGroup(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.group.name    
-    
+        return self.group.name       
 
 class ManualCheck(models.Model):
     check_name = models.CharField(max_length=50)
@@ -174,5 +175,137 @@ class Tickets(models.Model):
     def __str__(self):
         return self.ticket_reference_no
 
+
+class Platform(models.Model):
+
+    system_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    api_key = models.CharField(max_length=512,null=True, blank=True, default='', help_text="Key is auto generated,  Leave blank or blank out to create a new key")
+    operating_system_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    operating_system_version = models.CharField(max_length=255, default='', null=True, blank=True)
+    python_version = models.CharField(max_length=255, default='', null=True, blank=True)
+    django_version = models.CharField(max_length=255, default='', null=True, blank=True)
+    group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
+    json_response =  models.JSONField(null=True, blank=True)
+    stale_packages = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.system_name      
+
+    def save(self, *args, **kwargs):
+        if self.api_key is not None:
+
+             if len(self.api_key) > 1:
+                  pass
+             else:
+                  self.api_key = self.get_random_key(100)
+        else:
+            self.api_key = self.get_random_key(100)
+        self.updated = datetime.now()
+        self.stale_packages = True
+        super(Platform,self).save(*args,**kwargs)
+
+
+    def get_random_key(self,key_length=100):
+        return get_random_string(length=key_length, allowed_chars=u'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')       
+
+class PlatformAdvisoryEmail(models.Model):
+    platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.email 
+
+class PythonPackage(models.Model):
+    
+    package_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    current_package_version = models.CharField(max_length=255, default='', null=True, blank=True)
+    platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)
+    vulnerability_total = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_name
+    
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        print ("Updating Vulnerability Count")
+        python_package_vunerability_version_advisory_information_obj = 0
+        if PythonPackageVulnerability.objects.filter(package_name=self.package_name).count() > 0:
+            python_package_vunerability_obj = PythonPackageVulnerability.objects.get(package_name=self.package_name)            
+            if python_package_vunerability_obj:
+                python_package_vunerability_version_obj = PythonPackageVulnerabilityVersion.objects.filter(python_package=python_package_vunerability_obj,package_version=self.current_package_version)
+
+                if python_package_vunerability_version_obj.count() > 0:
+                    python_package_vunerability_version_advisory_information_obj = PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0]).count()
+
+        self.vulnerability_total = python_package_vunerability_version_advisory_information_obj
+        super(PythonPackage,self).save(*args,**kwargs)
+
+class PythonPackageVersionHistory(models.Model):
+    
+    python_package = models.ForeignKey(PythonPackage, null=True, blank=True, on_delete=models.SET_NULL)     
+    package_version = models.CharField(max_length=255, default='', null=True, blank=True)    
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_version          
+    
+class PythonPackageVulnerability(models.Model):
+    package_name = models.CharField(max_length=255, default='', null=True, blank=True,unique=True)
+    vulnerability_json =  models.JSONField(null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(PythonPackageVulnerability,self).save(*args,**kwargs)
+
+class PythonPackageVulnerabilityVersion(models.Model):
+    python_package = models.ForeignKey(PythonPackageVulnerability, null=True, blank=True, on_delete=models.SET_NULL)
+    package_version = models.CharField(max_length=255, default='', null=True, blank=True) 
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.python_package.package_name+':'+self.package_version
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(PythonPackageVulnerabilityVersion,self).save(*args,**kwargs)
+
+class PythonPackageVulnerabilityVersionAdvisoryInformation(models.Model):
+    package_version = models.ForeignKey(PythonPackageVulnerabilityVersion, null=True, blank=True, on_delete=models.SET_NULL)
+    advisory = models.TextField(default='', null=True, blank=True)
+    cve = models.CharField(max_length=255, default='', null=True, blank=True) 
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_version.package_version
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(PythonPackageVulnerabilityVersionAdvisoryInformation,self).save(*args,**kwargs)
+
+        python_package_obj = PythonPackage.objects.filter(package_name=self.package_version.python_package.package_name,current_package_version=self.package_version.package_version)
+
+        for pp in python_package_obj:            
+            pp.save()
+
+            from appmonitor import email_templates
+            t = email_templates.NewAdvisory()
+            t.subject = "Python Advisory for package {}:{}".format(self.package_version.python_package.package_name, self.package_version.package_version)
+            to_addresses=[]
+
+            for notification in PlatformAdvisoryEmail.objects.filter(platform=pp.platform):
+                print ("Preparing to "+notification.email)
+                to_addresses.append(notification.email)
+            t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
 
         

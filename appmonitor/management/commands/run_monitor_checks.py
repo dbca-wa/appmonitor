@@ -34,11 +34,24 @@ class Command(BaseCommand):
                  thread = threading.Thread(target=self.get_website, args=(i,i.url,i.string_check))                 
                  thread.start()
 
+            if i.mon_type == 2:
+                thread = threading.Thread(target=self.ping, args=(i,i.host,))
+                thread.start()
+
+            if i.mon_type == 3:
+                thread = threading.Thread(target=self.socket, args=(i,i.host,int(i.port),))
+                thread.start()
+
             if i.mon_type == 5:
                   thread = threading.Thread(target=self.get_ssl_expiry, args=(i,i.host,int(i.port),))
                   thread.start()
+
             if i.mon_type == 8:
                   thread = threading.Thread(target=self.get_json_key_check, args=(i,))
+                  thread.start()
+
+            if i.mon_type == 9:
+                  thread = threading.Thread(target=self.get_http_status_code, args=(i,i.url, i.status_code))
                   thread.start()
 
         #thread still keep running not accurate finished time.  work in progress                  
@@ -91,6 +104,81 @@ class Command(BaseCommand):
         monitor.last_update =a
         monitor.save()
 
+    def get_http_status_code(self, monitor,website,status_code):      
+        print (monitor.check_name)
+        response = None
+        html_str = ''
+        cookies={}
+        auth_response=None
+        response_code = -1000
+        if monitor.use_basic_auth is True:
+            
+            try:
+                auth_response=auth=HTTPBasicAuth(monitor.username,monitor.password)                
+            except Exception as e:
+                html_str="Error loading basic auth"
+                print (e)                
+                
+        try:
+            response = requests.get(website, timeout=30, cookies=cookies, auth=auth_response)   
+            response_code = response.status_code 
+            print (response.status_code)     
+        except Exception as e:
+            print (e)
+            html_str = str(e)
+            response = None
+            pass
+        
+        
+        if status_code == response_code:
+            self.create_monitor_history(monitor,3,'HTTP Status Code Match', "Response Code: "+str(response_code)+"\n"+html_str)
+        else:
+            self.create_monitor_history(monitor,1,'Incorrect HTTP Status Code',"Response Code: "+str(response_code)+"\n"+html_str)
+        
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
+
+    def ping(self,monitor,host):
+        """
+        Returns True if host (str) responds to a ping request.
+        Remember that a host may not respond to a ping (ICMP) request even if the host name is valid.
+        """
+
+        # Ping command count option as function of OS
+        param = '-n' if system_name().lower()=='windows' else '-c'
+
+        # Building the command. Ex: "ping -c 1 google.com"
+        command = ['ping', param, '4', host]
+        ping_response = system_call(command, stdout=DEVNULL, stderr=STDOUT) == 0
+
+        if ping_response is True:
+           self.create_monitor_history(monitor,3,'ping success',ping_response)
+        else:
+           self.create_monitor_history(monitor,1,'ping failed',ping_response)
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
+
+    def socket(self,monitor,host,port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(50)
+        result = None
+
+        try:
+           result = sock.connect_ex((host,port))
+        except socket.gaierror:
+           pass
+
+        if result == 0:
+           self.create_monitor_history(monitor,3,'socket success',result)
+        else:
+           self.create_monitor_history(monitor,1,'socket failed',result)
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
 
     def get_ssl_expiry(self,monitor,host,port):
 

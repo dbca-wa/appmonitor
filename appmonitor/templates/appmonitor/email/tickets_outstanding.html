@@ -47,10 +47,12 @@
                         Pending Testing
                     {% elif tk.status == 16 %}
                         Pending Deployment
+                    {% elif tk.status == 17 %}
+                        With Apps Team                       
                     {% else %}
                         Unknown ID ({{ tk.status}})
                     {% endif %}
-                    {{ check.mon_type }}
+                   
                 
                 
                 </td>
