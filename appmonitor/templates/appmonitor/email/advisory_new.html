@@ -1,0 +1,60 @@
+<html >
+<body style='background-color: #e6e6e6;padding:10px;'>
+
+<div style='background-color: #FFFFFF; padding:20px;'>
+    <table bgcolor='#FFFFFF' cellpadding="0" cellspacing="0" style="padding:20px">
+    <tr><td>
+    <div><img src="{% include "appmonitor/email/dbca_logo_base64_img.html"%}" style='height:100px'></div>
+    <br>
+    <p>A new python package advisory has been detected.</p>
+
+<table style="width:100%"  cellpadding="0" cellspacing="0">
+    <thead class='table-dark'>
+        <tr>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Key</th>   
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Value</th>
+        </tr>
+    </thead>
+    <tbody >
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Package Name</td>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >{{ advisory.package_version.python_package.package_name }}</td>
+                
+            </tr>
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Package Version</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ advisory.package_version.package_version }}</td>
+            </tr>
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >System Affected</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ pp.platform.system_name }}</td>
+            </tr>
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >CVE</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ advisory.cve }}</td>
+            </tr>
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Advisory</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ advisory.advisory }}</td>
+            </tr>
+            
+
+            <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Created</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ advisory.created }}</td>
+            </tr>
+    </tbody>
+</table>
+<br>
+
+<p><i>
+This is an automated system generated notification.
+</i>
+<br>
+System URL: <a href='{{ settings.APP_URL }}'>{{ settings.APP_URL }}</a>
+</p>
+</td>
+</tr>
+</table>
+</body>
+</html>

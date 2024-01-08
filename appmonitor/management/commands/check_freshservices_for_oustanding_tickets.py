@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
             print ("Running Ticket Check")
-            checks = utils.get_checks()
+           
             ticket_filters = models.TicketFilter.objects.filter(active=True)
             FRESHSERVICES_API_KEY = settings.FRESHSERVICES_API_KEY
             auth_request = requests.auth.HTTPBasicAuth(FRESHSERVICES_API_KEY, "X")

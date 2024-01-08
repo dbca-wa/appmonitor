@@ -21,13 +21,29 @@ from appmonitor import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     # Home Page
     path("", views.HomePage.as_view(), name="home"),    
     re_path(r'^monitor/history/(?P<pk>[0-9]+)/record/(?P<monitor_history_id>[0-9]+)/$', views.MonitorHistoryRecord.as_view(), name='monitor_history_record'),
     re_path(r'^monitor/history/(?P<pk>[0-9]+)/$', views.MonitorHistory.as_view(), name='monitor_history'),
     
+    
+    path("platform/status/", views.PlatformStatus.as_view(), name="platform_status"),
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/$', views.PlatformView.as_view(), name='platform_view'),  
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/packages/(?P<package_pk>[0-9]+)/versions/$', views.PlatformPackageView.as_view(), name='platform_view'),  
+    path("packages/status/", views.PackagesStatus.as_view(), name="packages_status"),    
+    re_path(r'^package/(?P<pk>[0-9]+)/version/(?P<version_pk>[0-9]+)/advisory/$', views.PythonPackageAdvisoryView.as_view(), name='python_package_advisory'),  
+
     # API's
     path('api/get-checks/', api.get_checks, name='api_get_checks'),
+    path('api/get-checks-alerts/', api.get_checks_alerts, name='api_get_checks_alerts'),
+    path('api/update-platform-information/', api.update_platform_information, name='api_update_platform_information'),
+    path('api/get-platform-info/', api.get_platform_info, name='get_platform_info'),
+    path('api/get-platform-packages-info/', api.get_platform_packages_info, name='get_platform_packages_info'),
+
+    
+
+    
 ]
 
 

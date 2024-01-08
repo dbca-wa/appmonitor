@@ -1,0 +1,117 @@
+{% extends 'appmonitor/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Messages  -->
+    {% if messages %}
+    <div class="row">
+        <div class="col">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                {{ message|safe }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if request.user.is_authenticated %}            
+            <h5> Package Information for {{ python_package_vunerability_version_obj.python_package.package_name }} with version {{ python_package_vunerability_version_obj.package_version }}</h5>
+            <table id="platformview-table" class="table table-border" style="width:100%">
+                <tbody id='platformview-tbody'>
+ 
+                    
+                        <tr>                        
+                            <td class='bg-dark text-white'>Vunerability Total</td>
+                            <td class='bg-light'>{{vunerability_total }}</td>
+                        </tr>                    
+                        <tr>                        
+                            <td class='bg-dark text-white'>Package Name</td>
+                            <td class='bg-light'>{{ python_package_vunerability_version_obj.python_package.package_name }}</td>
+                        </tr>
+                        <tr>                        
+                            <td class='bg-dark text-white'>Python Version</td>
+                            <td class='bg-light'>{{ python_package_vunerability_version_obj.package_version }}</td>
+                        </tr>                        
+                        <tr>                            
+                            <td class='bg-dark text-white'>Updated</td>
+                            <td>{{ python_package_vunerability_version_obj.updated }}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>Created</td>
+                            <td>{{ python_package_vunerability_version_obj.created }}</td>
+                        </tr>                    
+                </tbody>
+            </table>
+
+            <h5>Advisories</h5>
+            <table id="packagelist-table" class="table" style="width:100%">
+                <thead class='table-dark'>
+                    <tr>
+                        <th>CVE</th>   
+                        <th>Advisory</th>
+                        <th>System Created Date</th>                        
+                    </tr>
+                </thead>
+                <tbody id='platformlist-tbody'>
+                    <tr>
+                        {% if python_package_advisory|length > 0 %}
+                            {% for ppa in python_package_advisory %}
+                                <tr>
+                                    
+                                    <td width=160 >{{ ppa.cve }}</td>
+                                    <td >{{ ppa.advisory }}</td>
+                                    <td >{{ ppa.created }}</td>
+                                </tr>                                
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class='text-center'>No Results</td>
+                            </tr>
+                        {% endif %}
+                
+                    </tr>
+                </tbody>
+            </table>
+
+            <style>
+                .status-box-white {
+                    color: #FFF;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;             
+                    width: 70px;
+                    text-align: center;                  
+                    height: 30px;
+                }
+                .status-box-black {
+                    color: #000;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;                                 
+                    width: 70px;
+                    text-align: center;
+                    height: 30px;
+                }
+
+
+            </style>
+            {% else %}
+            You are not authenticated.
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

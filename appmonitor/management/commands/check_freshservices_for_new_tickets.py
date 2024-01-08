@@ -13,11 +13,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
             print ("Running Ticket Check")
-            checks = utils.get_checks()
+            
             ticket_filters = models.TicketFilter.objects.filter(active=True)
             FRESHSERVICES_API_KEY = settings.FRESHSERVICES_API_KEY
             auth_request = requests.auth.HTTPBasicAuth(FRESHSERVICES_API_KEY, "X")
-            
+           
             for tf in ticket_filters:         
                 tickets = []       
                 try:
@@ -41,7 +41,7 @@ class Command(BaseCommand):
                                     for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                                         print ("Preparing to send updated "+notification.email)
                                         to_addresses.append(notification.email)
-                                    ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings})   
+                                    ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})   
                                     current_ticket = models.Tickets.objects.get(ticket_reference_no=t['id'])
                                     current_ticket.last_update_str = t['updated_at']
                                     current_ticket.save()
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                                 for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                                     print ("Preparing to send new "+notification.email)
                                     to_addresses.append(notification.email)
-                                ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings})                                     
+                                ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})                                     
 
                                 models.Tickets.objects.create(ticket_reference_no=t['id'],last_update_str = t['updated_at'])
 

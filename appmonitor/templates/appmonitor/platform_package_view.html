@@ -1,0 +1,146 @@
+{% extends 'appmonitor/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Messages  -->
+    {% if messages %}
+    <div class="row">
+        <div class="col">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                {{ message|safe }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if request.user.is_authenticated %}            
+            <h5> Version information for '{{ python_package_obj.package_name }}' package on system {{ platform_obj.system_name }}</h5>
+            <table id="platformview-table" class="table table-border" style="width:100%">
+                <tbody id='platformview-tbody'>
+ 
+                        <tr>                        
+                            <td class='bg-dark text-white'>PID</td>
+                            <td class='bg-light'>{{ platform_obj.id }}</td>
+                        </tr>
+                        <tr>                        
+                            <td class='bg-dark text-white'>System Name</td>
+                            <td class='bg-light'>{{ platform_obj.system_name }}</td>
+                        </tr>                        
+                        <tr>                            
+                            <td class='bg-dark text-white'>OS Name</td>
+                            <td>{{ platform_obj.operating_system_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>OS Version</td>
+                            <td>{{ platform_obj.operating_system_version }}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>Python Version</td>            
+                            <td>{{ platform_obj.python_version}}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>Django Version</td>            
+                            <td>{{ platform_obj.django_version}}</td>
+                        </tr>
+                        <tr>
+                            <td class='bg-dark text-white'>Responsible Group</td>            
+                            <td>{{ platform_obj.group_responsible.group_name}}</td>
+                        </tr>                        
+                        <tr>
+                            <td class='bg-dark text-white'>Updated</td>            
+                            <td>{{ platform_obj.updated}}</td>
+                        </tr>   
+                        <tr>
+                            <td class='bg-dark text-white'>Created</td>            
+                            <td>{{ platform_obj.created}}</td>
+                        </tr>   
+                    
+                </tbody>
+            </table>
+
+            <h5>Versions</h5>
+            <table id="packagelist-table" class="table" style="width:100%">
+                <thead class='table-dark'>
+                    <tr>
+                        <th>Package Name</th>   
+                        <th>Package Version</th>
+                        <th>Vunerabilities</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody id='platformlist-tbody'>
+                    <tr>
+                        {% if python_packages_versions_array|length > 0 %}
+                            {% for ppv in python_packages_versions_array %}
+                                <tr>
+                                    
+                                    <td >{{ ppv.python_package }}</td>
+                                    <td >{{ ppv.package_version }}</td>
+                                    <td >
+                                        {% if ppv.vulnerability_total > 0 %}
+
+                                        <a type="button" class="btn btn-danger" href="/package/{{ ppv.ppv_id }}/version/{{ ppv.ppvv_id }}/advisory/">
+                                           {{ ppv.vulnerability_total }}
+                                        </a>    
+                                        {% else %}
+                                        <a type="button" class="btn btn-success" href="/package/{{ ppv.ppv_id }}/version/{{ ppv.ppvv_id }}/advisory/">
+                                            {{ ppv.vulnerability_total }}
+                                        </a>                                            
+                                        {% endif %}
+                                    </td>
+                                    <td >{{ ppv.created }}</td>
+                                </tr>                                
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class='text-center'>No Results</td>
+                            </tr>
+                        {% endif %}
+                
+                    </tr>
+                </tbody>
+            </table>
+
+            <style>
+                .status-box-white {
+                    color: #FFF;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;             
+                    width: 70px;
+                    text-align: center;                  
+                    height: 30px;
+                }
+                .status-box-black {
+                    color: #000;
+                    padding: 3px;   
+                    font-weight: bold;
+                    border-radius: 4px;                                 
+                    width: 70px;
+                    text-align: center;
+                    height: 30px;
+                }
+
+
+            </style>
+            {% else %}
+            You are not authenticated.
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

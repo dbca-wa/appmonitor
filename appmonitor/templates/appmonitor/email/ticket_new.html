@@ -22,6 +22,10 @@
                 
             </tr>
             <tr>
+                <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Ticket Group</td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tf.name }}</td>
+            </tr>            
+            <tr>
                 <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' >Subject</td>
                 <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ ticket.subject }}</td>
             </tr>
@@ -52,6 +56,8 @@
                         Pending Testing
                     {% elif ticket.status == 16 %}
                         Pending Deployment
+                    {% elif ticket.status == 17 %}
+                        With Apps Team                             
                     {% else %}
                         Unknown ID ({{ ticket.status}})
                     {% endif %}

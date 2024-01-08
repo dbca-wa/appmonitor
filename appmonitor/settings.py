@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webtemplate_dbca',
     'appmonitor',
-    'django_cron'
+    'django_cron',
+    'nested_inline'
 ]
 
 MIDDLEWARE = [
@@ -175,3 +176,4 @@ DEFAULT_FROM_EMAIL=env("DEFAULT_FROM_EMAIL", "no-reply@dbca.wa.gov.au")
 APP_URL=env("APP_URL", "http://localhost:8080/")
 FRESHSERVICES_API_KEY = env("FRESHSERVICES_API_KEY","")
 SYSTEM_FROM_ADDRESS=env("SYSTEM_FROM_ADDRESS","no-reply@dbca.wa.gov.au")
+INSECURE_LIST=env("INSECURE_LIST", None)
