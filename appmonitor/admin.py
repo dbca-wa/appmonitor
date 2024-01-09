@@ -101,7 +101,7 @@ class PlatformAdvisoryEmailInline(admin.TabularInline):
 class Platform(admin.ModelAdmin):
      list_display = ('id','system_name','operating_system_name','operating_system_version','python_version','django_version','updated','created')
      search_fields = ('id','system_name')
-     #readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
+     readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
      #exclude = ('json_response',)
      inlines = [PlatformAdvisoryEmailInline,PythonPackageInline]
 
