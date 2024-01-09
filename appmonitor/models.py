@@ -207,6 +207,7 @@ class Platform(models.Model):
     json_response =  models.JSONField(null=True, blank=True)
     stale_packages = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
+    last_sync_dt = models.DateTimeField(null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
