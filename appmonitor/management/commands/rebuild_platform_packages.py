@@ -40,11 +40,11 @@ class Command(BaseCommand):
                                     print (e)
                                     python_package_obj_model = models.PythonPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
                                 
-                                # try: 
-                                #     ppvh = models.PythonPackageVersionHistory.objects.get(python_package=python_package_obj_model, package_version=package_version)
-                                # except Exception as e:
-                                #     print (e)
-                                #     ppvh= models.PythonPackageVersionHistory.objects.create(python_package=python_package_obj_model, package_version=package_version)
+                                try: 
+                                    ppvh = models.PythonPackageVersionHistory.objects.get(python_package=python_package_obj_model, package_version=package_version)
+                                except Exception as e:
+                                    print (e)
+                                    ppvh= models.PythonPackageVersionHistory.objects.create(python_package=python_package_obj_model, package_version=package_version)
                                     
                                 
                                 print (package_name)
