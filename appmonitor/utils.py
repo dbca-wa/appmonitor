@@ -87,6 +87,10 @@ def get_platform_info(*args, **kwargs):
         row["group_responsible_group_name"] = group_responsible_name
         row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
         row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        last_sync_dt = 'No Sync'
+        if pi.last_sync_dt:
+            last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row["last_sync_dt"] = last_sync_dt
         platform_info_array.append(row)
 
     return {"status": 200, "platform_info_array": platform_info_array}

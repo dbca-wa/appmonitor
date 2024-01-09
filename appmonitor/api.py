@@ -48,6 +48,7 @@ def update_platform_information(request, *args, **kwargs):
         platform_obj.django_version = json_data['platform_obj']['system_info']['django_version']
         platform_obj.json_response = json_data
         platform_obj.stale_packages = True
+        platform_obj.last_sync_dt = datetime.now()
         platform_obj.save()
 
         return HttpResponse("Successfully Updated", content_type='text/html', status=200)
