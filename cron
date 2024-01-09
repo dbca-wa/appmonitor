@@ -13,5 +13,6 @@
 
 05 12 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 
+10 9 * * 1 root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && python3 /app/manage.py vulnerable_system_packages_notification >> /app/logs/vulnerable_system_packages_notification.log 2>&1
 
 
