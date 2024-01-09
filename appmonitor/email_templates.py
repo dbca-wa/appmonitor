@@ -29,13 +29,19 @@ class TicketNew(WAGovUtilsTemplateEmailBase):
 
 class TicketUpdated(WAGovUtilsTemplateEmailBase):
     """Updated Ticket Email."""
-    subject = "Tickets Outstanding"
+    subject = "Updated Ticket Email"
     html_template = "appmonitor/email/ticket_updated.html"
     txt_template = "appmonitor/email/ticket_updated.txt"          
 
 
 class NewAdvisory(WAGovUtilsTemplateEmailBase):
     """New Advisory."""
-    subject = "Tickets Outstanding"
+    subject = "New Advisory"
     html_template = "appmonitor/email/advisory_new.html"
     txt_template = "appmonitor/email/advisory_new.txt"      
+
+class OutstandingAdvisory(WAGovUtilsTemplateEmailBase):
+    """Outstanding Advisory."""
+    subject = "Outstanding Advisory"
+    html_template = "appmonitor/email/advisory_outstanding.html"
+    txt_template = "appmonitor/email/advisory_outstanding.txt"      

@@ -31,9 +31,20 @@ class MonitorJobLog(admin.ModelAdmin):
      list_display = ('id','job','started','finished')
      readonly_fields=('job','started','finished')
 
+class ResponsibleGroupAdvisoryEmailInline(admin.TabularInline):
+     list_display = ('id','email','active','created')
+     model = models.ResponsibleGroupAdvisoryEmail
+     extra = 0   
+
+class ResponsibleGroupOutstandingAdvisoryEmailInline(admin.TabularInline):
+     list_display = ('id','email','active','created')
+     model = models.ResponsibleGroupOutstandingAdvisoryEmail
+     extra = 0 
+
 @admin.register(models.ResponsibleGroup)
 class ResponsibleGroup(admin.ModelAdmin):
      list_display = ('id','group_name','active')
+     inlines = [ResponsibleGroupAdvisoryEmailInline,ResponsibleGroupOutstandingAdvisoryEmailInline]
 
 @admin.register(models.ManualCheck)
 class ManualCheck(admin.ModelAdmin):
@@ -90,7 +101,7 @@ class PlatformAdvisoryEmailInline(admin.TabularInline):
 class Platform(admin.ModelAdmin):
      list_display = ('id','system_name','operating_system_name','operating_system_version','python_version','django_version','updated','created')
      search_fields = ('id','system_name')
-     readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
+     #readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
      #exclude = ('json_response',)
      inlines = [PlatformAdvisoryEmailInline,PythonPackageInline]
 

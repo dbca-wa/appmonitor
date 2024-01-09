@@ -95,7 +95,7 @@
                                            {{ ppv.vulnerability_total }}
                                         </a>    
                                         {% else %}
-                                        <a type="button" class="btn btn-success" href="/package/{{ ppv.ppv_id }}/version/{{ ppv.ppvv_id }}/advisory/">
+                                        <a type="button" class="btn btn-success" style='cursor: default ;'>
                                             {{ ppv.vulnerability_total }}
                                         </a>                                            
                                         {% endif %}
@@ -132,12 +132,10 @@
                     text-align: center;
                     height: 30px;
                 }
-
-
+                
             </style>
             {% else %}
-            You are not authenticated.
-            
+                You are not authenticated.
             {% endif %}
         </div>
     </div>
