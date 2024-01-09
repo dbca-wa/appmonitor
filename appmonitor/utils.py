@@ -78,7 +78,10 @@ def get_platform_info(*args, **kwargs):
         row["operating_system_version"] = pi.operating_system_version
         row["python_version"] = pi.python_version
         row["django_version"] = pi.django_version
-        row["group_responsible_id"] = pi.group_responsible.id
+        group_responsible_id = None
+        if pi.group_responsible:
+            group_responsible_id = pi.group_responsible.id
+        row["group_responsible_id"] = group_responsible_id
         row["group_responsible_group_name"] = pi.group_responsible.group_name
         row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
         row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
