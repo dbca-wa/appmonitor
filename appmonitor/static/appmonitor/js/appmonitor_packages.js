@@ -15,11 +15,15 @@ var appmonitor_packages = {
     },
     get_platform_packages: function() {
         data = {}
-        url_params = "?"
+        var only_vulnerable = $('#only_vulnerable').prop('checked');
+        var exact_match = $('#exact_match').prop('checked');
+        
+        url_params = "?only_vulnerable="+only_vulnerable+'&exact_match='+exact_match;
         var package_search = $('#package_search').val();
         if (package_search.length > 0) {
             url_params += '&search_package='+package_search;
         }
+        
         // $('#sensorlist-tbody').html("<tr><td colspan='5' class='text-center'>"+appmonitor.var.loader+"</td></tr>");
         $('#loading-progress').html(appmonitor_packages.var.loader);
         $.ajax({
@@ -36,12 +40,22 @@ var appmonitor_packages = {
                         for (let i = 0; i < resp.platform_packages_info_array.length; i++) {
                           
                                 htmlval+= "<tr>";                                                                                                      
-                                htmlval+= "     <td><a href='/platform/view/"+resp.platform_packages_info_array[i].platform_id+"/'>"+resp.platform_packages_info_array[i].system_name+"</a></td>";
+                                htmlval+= "     <td><a href='/platform/view/"+resp.platform_packages_info_array[i].platform_id+"/' '>"+resp.platform_packages_info_array[i].system_name+"</a></td>";
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].package_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].current_package_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].python_version+"</td>";
-                                htmlval+= "     <td>"+resp.platform_packages_info_array[i].django_version+"</td>";
+                                
+
+                                if (resp.platform_packages_info_array[i].vulnerability_total > 0) {
+                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:default;'>"+resp.platform_packages_info_array[i].vulnerability_total+"</a></td>";
+                                } else {
+                                    htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_packages_info_array[i].vulnerability_total+"</a></td>";
+
+                                }
+
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].group_responsible_group_name+"</td>";
+                                
+                                
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].updated+"</td>";                                
                             
                                 htmlval+= "</tr>";

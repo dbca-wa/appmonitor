@@ -14,3 +14,4 @@ git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 six==1.16.0
 django-nested-inline==0.4.6
 packaging==23.2
+xlsxwriter==3.1.9

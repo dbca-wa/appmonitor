@@ -86,12 +86,19 @@ def get_platform_info(*args, **kwargs):
 
     return {"status": 200, "platform_info_array": platform_info_array}
 
-def get_platform_packages_info(search_package, *args, **kwargs):    
-    query_obj = None
+def get_platform_packages_info(search_package, only_vulnerable, exact_match, *args, **kwargs):    
+    query_obj = Q()
     if search_package:
-        query_obj = Q(package_name__icontains=search_package,active=True)
+        if exact_match == 'true':
+            query_obj = Q(package_name=search_package,active=True) | Q(current_package_version=search_package)
+        else:
+            query_obj = Q(package_name__icontains=search_package,active=True) | Q(current_package_version__icontains=search_package)
     else:
         query_obj = Q(active=True)  
+    
+    if only_vulnerable == 'true':
+        query_obj &= Q(vulnerability_total__gt=0)
+
     platform_packages_info_obj = models.PythonPackage.objects.filter(query_obj)
     platform_packages_info_array = []
     for ppi in platform_packages_info_obj:
@@ -99,6 +106,7 @@ def get_platform_packages_info(search_package, *args, **kwargs):
         row["id"] = ppi.id
         row['package_name'] = ppi.package_name
         row['current_package_version'] = ppi.current_package_version
+        row['vulnerability_total'] = ppi.vulnerability_total
         row['active'] = ppi.active
         row['updated'] = ppi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
         row['created'] =  ppi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')

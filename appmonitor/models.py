@@ -29,6 +29,25 @@ class ResponsibleGroup(models.Model):
     def __str__(self):
         return self.group_name        
 
+class ResponsibleGroupAdvisoryEmail(models.Model):
+    responsible_group = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.email 
+    
+
+class ResponsibleGroupOutstandingAdvisoryEmail(models.Model):
+    responsible_group = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.email     
+
 class Monitor(models.Model):
     MON_TYPE = Choices(
              (1, 'webconnect', ('Web Page')),

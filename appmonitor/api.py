@@ -70,9 +70,11 @@ def get_platform_info(request, *args, **kwargs):
 
 def get_platform_packages_info(request, *args, **kwargs):    
     search_package = request.GET.get('search_package', None)
+    only_vulnerable = request.GET.get('only_vulnerable', False)
+    exact_match = request.GET.get('exact_match', False)
 
     if request.user.is_authenticated:
-        data = utils.get_platform_packages_info(search_package)
+        data = utils.get_platform_packages_info(search_package, only_vulnerable, exact_match)
         return HttpResponse(json.dumps(data), content_type='application/json', status=200)
     else:
         return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 

@@ -29,22 +29,44 @@
             {% endif %}
             
             {% if request.user.is_authenticated %}   
-            <div class="row">
+            <div class="row"style='background-color: #f8f8f8;' >
                 <div class="col-4 text-end">
                     &nbsp;
                 </div>
                 <div class="col-8 text-end">
-                   
-                    <div class="mb-3 row">
-                        <label for="staticEmail" class="col-sm-4 col-form-label">Package Search</label>
-                        <div class="col-auto">
-                          <input type="text"  class="form-control" id="package_search" value="">
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" id="package_search_btn" class="btn btn-primary mb-3">Search</button>
+                    <div class='col-12' >
+                        <div class="mb-3 row">
+                            <div class="col-4">
+                                &nbsp;
+                            </div>
+
+                            <div class="col-4">
+                                &nbsp;
+                                <input class="form-check-input" type="checkbox" id="only_vulnerable" value="option1">
+                                <label class="form-check-label" for="OnlyVulnerable">Only Vulnerable </label>
+   
+                            </div>
+                            <div class="col-4">
+                                <input class="form-check-input" type="checkbox" id="exact_match" value="option1">
+                                <label class="form-check-label" for="ExactMatch">Exact Match </label>
+                            </div>
 
                         </div>
-                      </div>
+                    </div>
+                    <div class='col-12' >
+                        <div class="mb-3 row">
+                            <div class='col-4' >
+                                <label for="staticEmail" class="col-sm-4 col-form-label">Package Search</label>
+                            </div>
+                            <div class="col-4" >
+                                <input type="text"  class="form-control" id="package_search" value="">
+                            </div>
+
+                            <div class="col-4 text-center"  >
+                                <button type="submit" id="package_search_btn" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>        
             <br>             
@@ -52,10 +74,11 @@
                 <thead class='table-dark'>
                     <tr>
                         <th>System Name</th>   
-                        <th>OS Name</th>
-                        <th>OS Version</th>
+                        <th>Package Name</th>
+                        <th>Package Version</th>
                         <th>Python Version</th>
-                        <th>Django Version</th>
+                        
+                        <th>Vulnerabilities</th>
                         <th>Responsible Group</th>                                             
                         <th>Last Updated</th>                        
                         
