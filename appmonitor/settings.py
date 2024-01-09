@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'webtemplate_dbca',
     'appmonitor',
     'django_cron',
-    'nested_inline'
+    'nested_inline',
+    'appmonitor_client'
 ]
 
 MIDDLEWARE = [
