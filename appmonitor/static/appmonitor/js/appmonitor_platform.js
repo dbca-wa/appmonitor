@@ -30,6 +30,7 @@ var appmonitor_platform = {
                                 htmlval+= "     <td>"+resp.platform_info_array[i].python_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].django_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
+                                htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
                                 
                                 htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a></td>";
