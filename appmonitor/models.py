@@ -284,10 +284,13 @@ class PythonPackage(models.Model):
 
 
         self.vulnerability_total = python_package_vunerability_version_advisory_information_obj
-        
-        pp_sum = PythonPackage.objects.filter(platform=self.platform).aggregate(Sum('vulnerability_total'))
-        print (pp_sum)
-        #pp_vul_count =  PythonPackage.objects.filter(vulnerability_total__gt=0).count()
+
+        vulnerability_total = 0
+        if PythonPackage.objects.filter(platform=self.platform).count() > 0:
+            pp_sum = PythonPackage.objects.filter(platform=self.platform).aggregate(Sum('vulnerability_total'))
+            vulnerability_total = pp_sum['vulnerability_total__sum']
+            
+
         platform = Platform.objects.get(id=self.platform.id)
         platform.vulnerability_total = pp_sum['vulnerability_total__sum']
         platform.save()
