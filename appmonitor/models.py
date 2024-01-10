@@ -12,6 +12,8 @@ from encrypted_model_fields.fields import EncryptedCharField
 from datetime import datetime
 from django.contrib.auth.models import Group
 from django.utils.crypto import get_random_string
+from django.db.models import Sum
+
 
 today = datetime.now()
 today_path = today.strftime("%Y/%m/%d/%H")
@@ -217,9 +219,10 @@ class Platform(models.Model):
     operating_system_name = models.CharField(max_length=255, default='', null=True, blank=True)
     operating_system_version = models.CharField(max_length=255, default='', null=True, blank=True)
     python_version = models.CharField(max_length=255, default='', null=True, blank=True)
-    django_version = models.CharField(max_length=255, default='', null=True, blank=True)
+    django_version = models.CharField(max_length=255, default='', null=True, blank=True)    
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
-    json_response =  models.JSONField(null=True, blank=True)
+    vulnerability_total = models.IntegerField(default=0)
+    json_response =  models.JSONField(null=True, blank=True)    
     stale_packages = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
     last_sync_dt = models.DateTimeField(null=True, blank=True)
@@ -239,7 +242,7 @@ class Platform(models.Model):
         else:
             self.api_key = self.get_random_key(100)
         self.updated = datetime.now()
-        self.stale_packages = True
+        #self.stale_packages = True
         super(Platform,self).save(*args,**kwargs)
 
 
@@ -279,7 +282,17 @@ class PythonPackage(models.Model):
                 if python_package_vunerability_version_obj.count() > 0:
                     python_package_vunerability_version_advisory_information_obj = PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0]).count()
 
+
         self.vulnerability_total = python_package_vunerability_version_advisory_information_obj
+        
+        pp_sum = PythonPackage.objects.filter(platform=self.platform).aggregate(Sum('vulnerability_total'))
+        print (pp_sum)
+        #pp_vul_count =  PythonPackage.objects.filter(vulnerability_total__gt=0).count()
+        platform = Platform.objects.get(id=self.platform.id)
+        platform.vulnerability_total = pp_sum['vulnerability_total__sum']
+        platform.save()
+
+        #vulnerability_total        
         super(PythonPackage,self).save(*args,**kwargs)
 
 class PythonPackageVersionHistory(models.Model):
