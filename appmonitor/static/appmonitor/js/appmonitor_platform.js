@@ -117,6 +117,7 @@ var appmonitor_platform = {
                     $('#edit-platform-systemname').val(resp.platform_info_array.system_name);
                     $('#edit-platform-apikey').val(resp.platform_info_array.api_key);
                     $('#edit-platform-responsiblegroup').val(resp.platform_info_array.group_responsible_id);
+
                     if (resp.platform_info_array.stale_packages == true) {
                         $("#edit-platform-stalepackage").prop( "checked", true );
                     } else {
@@ -156,6 +157,15 @@ var appmonitor_platform = {
                                 htmlval+= "     <td>"+resp.platform_info_array[i].operating_system_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].python_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].django_version+"</td>";
+                                // htmlval+= "     <td>"+resp.platform_info_array[i].vulnerability_total+"</td>";
+
+                                if (resp.platform_info_array[i].vulnerability_total > 0) {
+                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:default;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                } else {
+                                    htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+
+                                }
+
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                

@@ -79,6 +79,7 @@ def get_platform_info(pid, *args, **kwargs):
             row["operating_system_version"] = pi.operating_system_version
             row["python_version"] = pi.python_version
             row["django_version"] = pi.django_version
+            row['vulnerability_total'] = pi.vulnerability_total
             group_responsible_id = None
             group_responsible_name = None
             if pi.group_responsible:
