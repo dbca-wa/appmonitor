@@ -3,7 +3,7 @@ django-confy==1.0.4
 whitenoise==5.3.0
 git+https://github.com/dbca-wa/dbca-utils.git#egg=dbca-utils
 aws-requests-auth==0.4.3
-gunicorn==19.9.0
+gunicorn==21.2.0
 gevent==22.10.2
 django-encrypted-model-fields==0.6.5
 ipaddress==1.0.23
@@ -17,3 +17,4 @@ packaging==23.2
 xlsxwriter==3.1.9
 git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 python-decouple==3.8
+cryptography==41.0.7
