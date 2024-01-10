@@ -155,6 +155,8 @@ AUTH2_USERNAME = env("AUTH2_USERNAME",None)
 AUTH2_PASSWORD = env("AUTH2_PASSWORD",None)
 AUTH2_TOKEN_URL = env("AUTH2_TOKEN_URL",None)
 
+EMAIL_INSTANCE = env('EMAIL_INSTANCE','PROD')
+
 # Cron
 CRON_CLASSES = [
     'appmonitor.cron.CronJobNotificationEmailWeekDays',
