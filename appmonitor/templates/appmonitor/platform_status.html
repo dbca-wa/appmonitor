@@ -11,75 +11,96 @@
 
 {% block content %}
 
-<div class="container">
-    <h3>Platform Status</h3>
-    <br>
-    <!-- Messages  -->
-    {% if messages %}
-            <div class="row">
-                <div class="col">
-                    {% for message in messages %}
-                    <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
-                        {{ message|safe }}
-                    </div>
-                    {% endfor %}
-                </div>
+{% if view_access is True %}
+
+    <input type="hidden" id="csrfmiddlewaretoken" name="csrfmiddlewaretoken" value="{{ csrf_token  }}">
+    {% include "appmonitor/platform_new.html" %}
+    {% include "appmonitor/platform_change.html" %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3>Platform Status</h3>
             </div>
-            {% endif %}
-            
-            {% if request.user.is_authenticated %}            
-            <table id="platformlist-table" class="table" style="width:100%">
-                <thead class='table-dark'>
-                    <tr>
-                        <th>System Name</th>   
-                        <th>OS Name</th>
-                        <th>OS Version</th>
-                        <th>Python Version</th>
-                        <th>Django Version</th>
-                        <th>Responsible Group</th> 
-                        <th>Last Sync</th>                                            
-                        <th>Last Updated</th>                        
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id='platformlist-tbody'>
-                    <tr>
-                        <td colspan="8" class='text-center'>No Results</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <script>
-                appmonitor_platform.init();
-            </script>
-            <style>
-                .status-box-white {
-                    color: #FFF;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;             
-                    width: 70px;
-                    text-align: center;                  
-                    height: 30px;
-                }
-                .status-box-black {
-                    color: #000;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;                                 
-                    width: 70px;
-                    text-align: center;
-                    height: 30px;
-                }
+            <div class="col text-end">
+                {% if edit_access is True %}
+                    <button type="button" class="btn btn-primary" id='new_platform_btn'>New Platform</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <br>
+        <!-- Messages  -->
+        {% if messages %}
+                <div class="row">
+                    <div class="col">
+                        {% for message in messages %}
+                        <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                            {{ message|safe }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if request.user.is_authenticated %}            
+                <table id="platformlist-table" class="table" style="width:100%">
+                    <thead class='table-dark'>
+                        <tr>
+                            <th>System Name</th>   
+                            <th>OS Name</th>
+                            <th>OS Version</th>
+                            <th>Python Version</th>
+                            <th>Django Version</th>
+                            <th>Responsible Group</th> 
+                            <th>Last Sync</th>                                            
+                            <th>Last Updated</th>                        
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id='platformlist-tbody'>
+                        <tr>
+                            <td colspan="8" class='text-center'>No Results</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <script>
+                    appmonitor_platform.init();
+                </script>
+                <style>
+                    .status-box-white {
+                        color: #FFF;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;             
+                        width: 70px;
+                        text-align: center;                  
+                        height: 30px;
+                    }
+                    .status-box-black {
+                        color: #000;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;                                 
+                        width: 70px;
+                        text-align: center;
+                        height: 30px;
+                    }
 
 
-            </style>
-            {% else %}
-            You are not authenticated.  Please login
-            
-            {% endif %}
+                </style>
+                {% else %}
+                You are not authenticated.  Please login
+                
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+{% else %}
+<div class="container">
 
+    <div class='alert alert-danger'>Access Forbidden</div>
+</div>
+{% endif %}
 {% endblock %}

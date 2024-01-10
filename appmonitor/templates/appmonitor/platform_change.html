@@ -1,0 +1,49 @@
+<div class="modal fade" id="EditPlatformModal" tabindex="-1" aria-labelledby="EditPlatformModal" aria-hidden="true" data-bs-backdrop="static" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+         <div class="modal-content">
+              <div class="modal-header">
+                   <h5 class="modal-title" id="exampleModalLabel">Edit Platform</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <div class="alert alert-danger" role="alert" id='edit-platform-error' style='display:none'>
+              </div>
+              <div class="alert alert-success" role="alert" id='edit-platform-success' style='display:none'>
+              </div>
+              <form>
+          
+
+          </div>
+          <div id='platform-new-div'>
+ 
+               {% include "appmonitor/platform_new_change.html" with formstatus="edit" %}
+          </div>
+    
+         </div>
+ 
+          <div class='col-12 px-3'>
+                    <div class='col-12'>
+                             <div class='col-12'>
+                             <label for="" class="form-label">&nbsp;</label>
+                             </div>
+                             <div class='col-12 text-end'>
+                                  <button type="button" class="btn btn-primary" id='save-platform-btn'>Save</button>                                   
+                                  &nbsp;&nbsp;
+                                  
+                                  <div class="spinner-border text-primary" role="status" style="display:none" id="newpublish-loader-popup">
+                                       <span class="visually-hidden">Loading...</span>
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;
+                                  <BR>
+                             </div>
+                             <BR>
+                    </div>
+             </div>
+         </div>         
+       </div>
+       </form>
+          <div class="modal-footer">
+          </div>
+     </div>
+   </div>
+ </div>

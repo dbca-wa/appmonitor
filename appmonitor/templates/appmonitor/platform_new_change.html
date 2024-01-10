@@ -1,0 +1,55 @@
+<div class='col-12 round-box px-3 ' id='platform-new-form'>
+
+    <div class='row'>
+     {% if formstatus == 'edit' %}
+          <div class='col-12'>
+               <label for="" class="form-label">Platform ID</label>
+               
+               <input type="hidden" class="form-control" id="{{formstatus}}-platform-id" value="" autocomplete="off">
+               <div class="col-sm-12">
+                    <label class="form-label" for="{{ formstatus }}-platform-id-label" id="{{ formstatus }}-platform-id-label"></label>
+               </div>
+          </div>
+     {% endif %}
+
+         <div class='col-12'>
+              <label for="" class="form-label">System Name</label>
+              <input type="text" class="form-control" id="{{formstatus}}-platform-systemname" value="" autocomplete="off">
+         </div>
+         <div class='col-12'>
+         <label for="" class="form-label">API Key</label>
+         <input type="text" class="form-control" id="{{formstatus}}-platform-apikey" value="" autocomplete="off">
+    </div>
+    
+    <div class='col-12'>
+         <label for="" class="form-label">Group Responsible</label>
+             <select type="text" class="form-control" id="{{formstatus}}-platform-responsiblegroup" >
+                  <option value="">Select One</option>
+                  {% for rp in responsible_group %}
+                       <option value="{{ rp.id }}">{{ rp.group_name }}</option>
+                  {% endfor %}                                                            
+            </select>
+
+         </select>
+    </div>
+
+    <div class='col-12'>
+        <Br>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="{{formstatus}}-platform-stalepackage" checked>
+            <label class="form-check-label" for="platform-stalepackage">
+              Stale Packages
+            </label>
+          </div>                        
+    </div>
+
+    <div class='col-12'>
+        <Br>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="{{formstatus}}-platform-active" checked>
+            <label class="form-check-label" for="platform-active">
+              Active
+            </label>
+          </div>
+    </div>
+</div>

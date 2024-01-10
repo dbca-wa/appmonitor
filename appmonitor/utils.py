@@ -66,14 +66,43 @@ def get_checks(status_types, *args, **kwargs):
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
 
-def get_platform_info(*args, **kwargs):    
+def get_platform_info(pid, *args, **kwargs):    
     
-    platform_info_obj = models.Platform.objects.filter(active=True)
-    platform_info_array = []
-    for pi in platform_info_obj:
+    if pid is None:
+        platform_info_obj = models.Platform.objects.filter(active=True)
+        platform_info_array = []
+        for pi in platform_info_obj:
+            row = {}
+            row["id"] = pi.id
+            row["system_name"] = pi.system_name
+            row["operating_system_name"] = pi.operating_system_name
+            row["operating_system_version"] = pi.operating_system_version
+            row["python_version"] = pi.python_version
+            row["django_version"] = pi.django_version
+            group_responsible_id = None
+            group_responsible_name = None
+            if pi.group_responsible:
+                group_responsible_id = pi.group_responsible.id
+                group_responsible_name = pi.group_responsible.group_name
+            row["group_responsible_id"] = group_responsible_id
+            row["group_responsible_group_name"] = group_responsible_name
+            row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+            row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+            last_sync_dt = 'No Sync'
+            if pi.last_sync_dt:
+                last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
+            row["last_sync_dt"] = last_sync_dt
+            platform_info_array.append(row)
+        return {"status": 200, "platform_info_array": platform_info_array}
+    else:
+        pi = platform_info_obj = models.Platform.objects.get(id=pid)
+
         row = {}
         row["id"] = pi.id
         row["system_name"] = pi.system_name
+        row["api_key"] = pi.api_key
+        row['stale_packages'] = pi.stale_packages
+        row['active'] = pi.active
         row["operating_system_name"] = pi.operating_system_name
         row["operating_system_version"] = pi.operating_system_version
         row["python_version"] = pi.python_version
@@ -91,9 +120,11 @@ def get_platform_info(*args, **kwargs):
         if pi.last_sync_dt:
             last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
         row["last_sync_dt"] = last_sync_dt
-        platform_info_array.append(row)
+        return {"status": 200, "platform_info_array": row}
 
-    return {"status": 200, "platform_info_array": platform_info_array}
+
+
+    
 
 def get_platform_packages_info(search_package, only_vulnerable, exact_match, *args, **kwargs):    
     query_obj = Q()

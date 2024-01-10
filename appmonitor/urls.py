@@ -29,21 +29,25 @@ urlpatterns = [
     
     
     path("platform/status/", views.PlatformStatus.as_view(), name="platform_status"),
-    re_path(r'^platform/view/(?P<pk>[0-9]+)/$', views.PlatformView.as_view(), name='platform_view'),  
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/$', views.PlatformView.as_view(), name='platform_view'),      
     re_path(r'^platform/view/(?P<pk>[0-9]+)/packages/(?P<package_pk>[0-9]+)/versions/$', views.PlatformPackageView.as_view(), name='platform_view'),  
+
     path("packages/status/", views.PackagesStatus.as_view(), name="packages_status"),    
     re_path(r'^package/(?P<pk>[0-9]+)/version/(?P<version_pk>[0-9]+)/advisory/$', views.PythonPackageAdvisoryView.as_view(), name='python_package_advisory'),  
 
     # API's
     path('api/get-checks/', api.get_checks, name='api_get_checks'),
-    path('api/get-checks-alerts/', api.get_checks_alerts, name='api_get_checks_alerts'),
-    path('api/update-platform-information/', api.update_platform_information, name='api_update_platform_information'),
+    path('api/get-checks-alerts/', api.get_checks_alerts, name='api_get_checks_alerts'),    
     path('api/get-platform-info/', api.get_platform_info, name='get_platform_info'),
     path('api/get-platform-packages-info/', api.get_platform_packages_info, name='get_platform_packages_info'),
-
+    path('api/platform/create', api.platform_create, name='platform_create'),
+    path('api/platform/update', api.platform_update, name='platform_update'),
+    re_path(r'^api/platform/(?P<pk>[0-9]+)/$', api.get_platform_info_by_id, name='python_package_advisory'),  
     
 
-    
+
+    # Strictly used by appmonitor_client
+    path('api/update-platform-information/', api.update_platform_information, name='api_update_platform_information'),
 ]
 
 

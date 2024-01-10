@@ -109,6 +109,10 @@ class Platform(admin.ModelAdmin):
 class PythonPackageVersionHistory(admin.ModelAdmin):
      list_display = ('id','python_package','package_version','created')
 
+@admin.register(models.AccessGroup)
+class AccessGroupAdmin(admin.ModelAdmin):
+     list_display = ('id','access_type','group_name','active', 'created')
+
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
      list_display = ('id','package_version','advisory','cve','updated','created')

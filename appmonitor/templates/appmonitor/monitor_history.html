@@ -10,95 +10,104 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-        <!-- Messages  -->
-        {% if messages %}
-        <div class="row">
-            <div class="col">
-                {% for message in messages %}
-                <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
-                    {{ message|safe }}
+
+{% if view_access is True %}
+
+    <div class="container">
+            <!-- Messages  -->
+            {% if messages %}
+            <div class="row">
+                <div class="col">
+                    {% for message in messages %}
+                    <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                        {{ message|safe }}
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+            </div>
+            {% endif %}
+
+        <div class="row">
+            
+            <div class="col-md-12">
+                {% if request.user.is_authenticated %}            
+                <h3>{{ monitor.check_name }} History</h3>
+                <table id="sensorlist-table" class="table" style="width:100%">
+                    <thead class='table-dark'>
+                        <tr>
+                            <th>RID</th>                         
+                            <th>Status</th>   
+                            <th>Check Type</th>                                             
+                            <th>Last Status Change</th>                        
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id='sensorlist-tbody'>
+                        {% if monitor_history|length > 0 %}
+                            {% for mh in monitor_history %}
+                            <tr>                        
+                                <td>{{ mh.id }}</td>
+                                <td>
+                                    {% if mh.status == 0 %}
+                                        <div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>
+                                    {% elif mh.status == 1 %}                            
+                                        <div class='bg-danger status-box-white' >DOWN</div>
+                                    {% elif mh.status == 2 %}              
+                                        <div class='bg-warning status-box-white' >WARN</div>
+                                    {% elif mh.status == 3 %}              
+                                        <div class='bg-success status-box-white' >UP</div>
+                                    {% endif %}
+
+                                </td>
+                                <td>{{ mh.mon_type }}</td>
+                                <td>{{ mh.last_changed}}</td>
+                                <td><a class='btn btn-primary btn-sm' href='/monitor/history/{{ mh.monitor_id }}/record/{{ mh.id }}/'>View</a><td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class='text-center'>No Results</td>
+                            </tr>
+                        {% endif %}
+                        
+                    </tbody>
+                </table>
+
+
+                <style>
+                    .status-box-white {
+                        color: #FFF;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;             
+                        width: 70px;
+                        text-align: center;                  
+                        height: 30px;
+                    }
+                    .status-box-black {
+                        color: #000;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;                                 
+                        width: 70px;
+                        text-align: center;
+                        height: 30px;
+                    }
+
+
+                </style>
+                {% else %}
+                You are not authenticated.
+                
+                {% endif %}
             </div>
         </div>
-        {% endif %}
-
-    <div class="row">
-        
-        <div class="col-md-12">
-            {% if request.user.is_authenticated %}            
-            <h3>{{ monitor.check_name }} History</h3>
-            <table id="sensorlist-table" class="table" style="width:100%">
-                <thead class='table-dark'>
-                    <tr>
-                        <th>RID</th>                         
-                        <th>Status</th>   
-                        <th>Check Type</th>                                             
-                        <th>Last Status Change</th>                        
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id='sensorlist-tbody'>
-                    {% if monitor_history|length > 0 %}
-                        {% for mh in monitor_history %}
-                        <tr>                        
-                            <td>{{ mh.id }}</td>
-                            <td>
-                                {% if mh.status == 0 %}
-                                    <div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>
-                                {% elif mh.status == 1 %}                            
-                                    <div class='bg-danger status-box-white' >DOWN</div>
-                                {% elif mh.status == 2 %}              
-                                    <div class='bg-warning status-box-white' >WARN</div>
-                                {% elif mh.status == 3 %}              
-                                    <div class='bg-success status-box-white' >UP</div>
-                                {% endif %}
-
-                            </td>
-                            <td>{{ mh.mon_type }}</td>
-                            <td>{{ mh.last_changed}}</td>
-                            <td><a class='btn btn-primary btn-sm' href='/monitor/history/{{ mh.monitor_id }}/record/{{ mh.id }}/'>View</a><td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="5" class='text-center'>No Results</td>
-                        </tr>
-                    {% endif %}
-                    
-                </tbody>
-            </table>
-
-
-            <style>
-                .status-box-white {
-                    color: #FFF;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;             
-                    width: 70px;
-                    text-align: center;                  
-                    height: 30px;
-                }
-                .status-box-black {
-                    color: #000;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;                                 
-                    width: 70px;
-                    text-align: center;
-                    height: 30px;
-                }
-
-
-            </style>
-            {% else %}
-            You are not authenticated.
-            
-            {% endif %}
-        </div>
     </div>
+{% else %}
+<div class="container">
+
+    <div class='alert alert-danger'>Access Forbidden</div>
 </div>
+{% endif %}
 
 {% endblock %}

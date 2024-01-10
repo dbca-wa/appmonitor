@@ -56,15 +56,83 @@ def update_platform_information(request, *args, **kwargs):
     except Exception as e:
         print (e)
         return HttpResponse("ERROR:"+ str(e), content_type='text/html', status=500)
-    print (json_data['platform_obj'])
+    
     
     #print (request.REQUEST.get('platform_obj','{}'))
 
+def platform_create(request, *args, **kwargs):  
+    if request.user.is_authenticated:
+        try:
+            json_body = json.loads(request.body.decode())
+            print (json_body)
+
+            responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['platform_responsiblegroup'])
+            models.Platform.objects.create(system_name=json_body['platform_systemname'], api_key=json_body['platform_apikey'],group_responsible=responsiblegroup,stale_packages=json_body['platform_stalepackage'],active=json_body['platform_active'])
+
+
+            #json_body['platform_stalepackage']
+            data = {"working": "working"}
+            
+            return HttpResponse(json.dumps(data), content_type='application/json', status=200)
+        except Exception as e:
+
+            print (e)
+            return HttpResponse("ERROR:"+ str(e), content_type='text/html', status=500)    
+
+    else:
+        return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
+
+def platform_update(request, *args, **kwargs):  
+    if request.user.is_authenticated:
+        try:
+            json_body = json.loads(request.body.decode())
+            print (json_body)
+
+            responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['platform_responsiblegroup'])
+            platform = models.Platform.objects.get(id=json_body['platform_id'])
+            platform.system_name =json_body['platform_systemname']
+            platform.api_key = json_body['platform_apikey']
+            platform.group_responsible =responsiblegroup
+            platform.stale_packages = json_body['platform_stalepackage']
+            platform.active = json_body['platform_active']
+            platform.save()
+
+            #json_body['platform_stalepackage']
+            data = {"working": "working"}
+            
+            return HttpResponse(json.dumps(data), content_type='application/json', status=200)
+        except Exception as e:
+
+            print (e)
+            return HttpResponse("ERROR:"+ str(e), content_type='text/html', status=500)    
+
+    else:
+        return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
+    
 def get_platform_info(request, *args, **kwargs):    
 
     if request.user.is_authenticated:
-        data = utils.get_platform_info()
+        data = utils.get_platform_info(None)
         return HttpResponse(json.dumps(data), content_type='application/json', status=200)
+    else:
+        return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
+
+def get_platform_info_by_id(request, *args, **kwargs):    
+
+    if request.user.is_authenticated:
+        data = {}
+        try:
+            print (kwargs)
+            pid = kwargs['pk']
+            #pid = request.GET.get('pid',None)
+            if pid:
+                data = utils.get_platform_info(pid)
+            else:
+                return HttpResponse(json.dumps({'status': 404, 'message': "No PID data"}), content_type='application/json', status=403)  
+            return HttpResponse(json.dumps(data), content_type='application/json', status=200)
+        except Exception as e:
+            print (e)
+            return HttpResponse(json.dumps({'status': 500, 'message': str(e)}), content_type='application/json', status=403) 
     else:
         return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
 

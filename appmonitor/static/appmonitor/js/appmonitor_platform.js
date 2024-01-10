@@ -4,6 +4,133 @@ var appmonitor_platform = {
     },
     init: function() {
         appmonitor_platform.get_platforms();
+        
+        $( "#new_platform_btn" ).on( "click", function() {
+            $('#new-platform-error').text("");
+            $('#new-platform-error').hide();
+            $('#new-platform-success').text("");
+            $('#new-platform-success').hide();
+
+            $('#new-platform-systemname').val("");
+            $('#new-platform-apikey').val(appmonitor_platform.generateId().toUpperCase());
+            $('#new-platform-responsiblegroup').val("");
+            $("#new-platform-stalepackage").prop( "checked", true );
+            $("#new-platform-active").prop( "checked", true );
+            $('#NewPlatformModal').modal('show');
+            
+        });
+
+        $( "#create-platform-btn" ).on( "click", function() {
+            appmonitor_platform.save_platform("create");           
+        });  
+        $( "#save-platform-btn" ).on( "click", function() {
+            appmonitor_platform.save_platform("save");           
+        });                      
+    },
+    save_platform: function(save_type) {
+        save_url = '/api/platform/create';
+        messages_class = 'new';
+       
+        var platform_id = null;
+        if (save_type == 'save') {
+            messages_class  = 'edit';
+            save_url = '/api/platform/update'
+            platform_id = $('#edit-platform-id').val();
+        }
+
+        var csrf_token = $("#csrfmiddlewaretoken").val();
+        var platform_systemname = $('#'+messages_class+'-platform-systemname').val();
+        var platform_apikey = $('#'+messages_class+'-platform-apikey').val();
+        var platform_responsiblegroup = $('#'+messages_class+'-platform-responsiblegroup').val();
+        var platform_stalepackage = $('#'+messages_class+'-platform-stalepackage').prop('checked');
+        var platform_active = $('#'+messages_class+'-platform-active').prop('checked');
+
+       
+        if (platform_systemname.length > 7) { 
+            // Continue toward saving data
+        } else {
+            $('#'+messages_class+'-platform-error').text("Please enter a valid system name 8-150 characters");
+            $('#'+messages_class+'-platform-error').show();
+            return;
+        }
+       
+        if ((platform_apikey == 0) || (platform_apikey.length > 99)) {
+
+        } else {
+            $('#'+messages_class+'-platform-error').text("Minimum API key length is 100");
+            $('#'+messages_class+'-platform-error').show();
+            return;
+        }
+
+        if (platform_responsiblegroup > 0) { 
+            // Continue toward saving data
+        } else {
+            $('#'+messages_class+'-platform-error').text("Please select an option for Group Responsible.");
+            $('#'+messages_class+'-platform-error').show();
+            return;
+        }
+        
+        $.ajax({
+            url: save_url,
+            type: 'POST',
+            data: JSON.stringify({'platform_id' : platform_id, 'platform_systemname':platform_systemname, 'platform_apikey':platform_apikey, 'platform_responsiblegroup': platform_responsiblegroup,"platform_stalepackage": platform_stalepackage, "platform_active": platform_active}),
+            headers: {'X-CSRFToken' : csrf_token},
+            contentType: 'application/json',
+            success: function (response) {
+                appmonitor_platform.get_platforms();
+                if (save_type == 'save') {
+                    $('#EditPlatformModal').modal('hide');
+                } else {
+                    $('#NewPlatformModal').modal('hide');
+                }
+                
+            },
+            error: function (error) {
+                
+            },
+        });
+        
+    },
+    edit_platform: function() {        
+        alert('test');
+    },
+    get_update_platform_by_id: function(pid) {
+
+        $.ajax({
+            type: "GET",
+            url: "/api/platform/"+pid,
+            data: {},
+            error: function(resp) {
+                $('#platformlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');
+            },
+            success: function (resp) {
+                console.log(resp);
+                var htmlval = "";
+                if (resp != null) {
+                    $('#edit-platform-error').text();
+                    $('#edit-platform-error').hide();
+                    $('#edit-platform-success').text("");
+                    $('#edit-platform-success').hide();
+        
+                    $('#edit-platform-id-label').html(resp.platform_info_array.id);
+                    $('#edit-platform-id').val(resp.platform_info_array.id);
+                    $('#edit-platform-systemname').val(resp.platform_info_array.system_name);
+                    $('#edit-platform-apikey').val(resp.platform_info_array.api_key);
+                    $('#edit-platform-responsiblegroup').val(resp.platform_info_array.group_responsible_id);
+                    if (resp.platform_info_array.stale_packages == true) {
+                        $("#edit-platform-stalepackage").prop( "checked", true );
+                    } else {
+                        $("#edit-platform-stalepackage").prop( "checked", false );
+                    }
+                    if (resp.platform_info_array.active == true) {
+                        $("#edit-platform-active").prop( "checked", true );
+                    } else {
+                        $("#edit-platform-active").prop( "checked", false );
+                    }
+
+                }
+            }
+        });      
 
     },
     get_platforms: function() {
@@ -22,7 +149,7 @@ var appmonitor_platform = {
                 if (resp != null) {
                     if (resp.platform_info_array.length > 0) {
                         for (let i = 0; i < resp.platform_info_array.length; i++) {
-                          
+                                button_json = '{"id": "'+resp.platform_info_array[i].id+'"}'
                                 htmlval+= "<tr>";                                                                                                      
                                 htmlval+= "     <td>"+resp.platform_info_array[i].system_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].operating_system_name+"</td>";
@@ -32,16 +159,21 @@ var appmonitor_platform = {
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
-                                
-                                htmlval+= "     <td><a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a></td>";
+
+                                htmlval+= "     <td><button class='btn btn-primary btn-sm platform-edit-btn' id='platform-edit-btn-"+resp.platform_info_array[i].id+"' data-json='"+button_json+"' >Edit</button> <a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a></td>";
                                 htmlval+= "</tr>";
                             
                         }
 
-
-                      
-
                         $('#platformlist-tbody').html(htmlval);
+                        $(".platform-edit-btn").on( "click", function() {
+                            var btndata_json = $(this).attr('data-json');
+                            var btndata = JSON.parse(btndata_json);
+                            appmonitor_platform.get_update_platform_by_id(btndata['id'])
+                            // appmonitor_platform.edit_platform();  
+                            $("#EditPlatformModal").modal("show");
+                                     
+                        });
                         
                     } else {
                         $('#platformlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');                    
@@ -55,5 +187,13 @@ var appmonitor_platform = {
                 
             }
         })        
+    }, 
+    byteToHex: function(byte) {
+        return ('0' + byte.toString(16)).slice(-2);
+    },
+    generateId: function(len = 100) {
+        var arr = new Uint8Array(len / 2);
+        window.crypto.getRandomValues(arr);
+        return Array.from(arr, appmonitor_platform.byteToHex).join("");
     }
 }

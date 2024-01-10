@@ -10,109 +10,117 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-            <!-- Messages  -->
-            {% if messages %}
-            <div class="row">
-                <div class="col">
-                    {% for message in messages %}
-                    <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
-                        {{ message|safe }}
+
+{% if view_access is True %}
+    <div class="container">
+                <!-- Messages  -->
+                {% if messages %}
+                <div class="row">
+                    <div class="col">
+                        {% for message in messages %}
+                        <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                            {{ message|safe }}
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
+                {% endif %}
+        <div class="row">
+            <div class="col-md-12">
+                {% if request.user.is_authenticated %}            
+                <table id="sensorlist-table" class="table table-border" style="width:100%">
+                    <tbody id='sensorlist-tbody'>
+    
+                            <tr>                        
+                                <td class='bg-dark text-white'>RID</td>
+                                <td class='bg-light'>{{ monitor_history_obj.id }}</td>
+                            </tr>
+                            <tr>                        
+                                <td class='bg-dark text-white'>Check Name</td>
+                                <td class='bg-light'>{{ monitor_history_obj.monitor.check_name }}</td>
+                            </tr>                        
+                            <tr>                            
+                                <td class='bg-dark text-white'>Status</td>
+                                <td>
+                                    {% if monitor_history_obj.status == 0 %}
+                                        <div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>
+                                    {% elif monitor_history_obj.status == 1 %}                            
+                                        <div class='bg-danger status-box-white' >DOWN</div>
+                                    {% elif monitor_history_obj.status == 2 %}              
+                                        <div class='bg-warning status-box-white' >WARN</div>
+                                    {% elif monitor_history_obj.status == 3 %}              
+                                        <div class='bg-success status-box-white' >UP</div>
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Monitor Type</td>
+                                <td>{{ monitor_history_obj.monitor.get_mon_type_display }}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Last Changed</td>            
+                                <td>{{ monitor_history_obj.created}}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Responsible Group</td>            
+                                <td>{{ monitor_history_obj.monitor.group_responsible.group_name}}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>System ID</td>            
+                                <td>{{ monitor_history_obj.monitor.system_id}}</td>
+                            </tr>                        
+                            <tr>                            
+                                <td class='bg-dark text-white' colspan='2'>Response</td>                                        
+                            </tr>
+                            <tr>                            
+                                <td class='bg-light text-dark' colspan='2'>{{ monitor_history_obj.response}}</td>                                        
+                            </tr>
+                            <tr>                            
+                                <td class='bg-dark text-white' colspan='2'>Raw Response</td>                                        
+                            </tr>
+                            <tr>                            
+                                <td class='bg-light text-dark' colspan='2'><textarea class='form-control' style='height: 400px; width: 100%;'>{{ monitor_history_obj.response_raw}}</textarea></td>                                        
+                            </tr>
+                        
+                    </tbody>
+                </table>
+
+
+                <style>
+                    .status-box-white {
+                        color: #FFF;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;             
+                        width: 70px;
+                        text-align: center;                  
+                        height: 30px;
+                    }
+                    .status-box-black {
+                        color: #000;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;                                 
+                        width: 70px;
+                        text-align: center;
+                        height: 30px;
+                    }
+
+
+                </style>
+                {% else %}
+                You are not authenticated.
+                
+                {% endif %}
             </div>
-            {% endif %}
-    <div class="row">
-        <div class="col-md-12">
-            {% if request.user.is_authenticated %}            
-            <table id="sensorlist-table" class="table table-border" style="width:100%">
-                <tbody id='sensorlist-tbody'>
- 
-                        <tr>                        
-                            <td class='bg-dark text-white'>RID</td>
-                            <td class='bg-light'>{{ monitor_history_obj.id }}</td>
-                        </tr>
-                        <tr>                        
-                            <td class='bg-dark text-white'>Check Name</td>
-                            <td class='bg-light'>{{ monitor_history_obj.monitor.check_name }}</td>
-                        </tr>                        
-                        <tr>                            
-                            <td class='bg-dark text-white'>Status</td>
-                            <td>
-                                {% if monitor_history_obj.status == 0 %}
-                                    <div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>
-                                {% elif monitor_history_obj.status == 1 %}                            
-                                    <div class='bg-danger status-box-white' >DOWN</div>
-                                {% elif monitor_history_obj.status == 2 %}              
-                                    <div class='bg-warning status-box-white' >WARN</div>
-                                {% elif monitor_history_obj.status == 3 %}              
-                                    <div class='bg-success status-box-white' >UP</div>
-                                {% endif %}
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Monitor Type</td>
-                            <td>{{ monitor_history_obj.monitor.get_mon_type_display }}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Last Changed</td>            
-                            <td>{{ monitor_history_obj.created}}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Responsible Group</td>            
-                            <td>{{ monitor_history_obj.monitor.group_responsible.group_name}}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>System ID</td>            
-                            <td>{{ monitor_history_obj.monitor.system_id}}</td>
-                        </tr>                        
-                        <tr>                            
-                            <td class='bg-dark text-white' colspan='2'>Response</td>                                        
-                        </tr>
-                        <tr>                            
-                            <td class='bg-light text-dark' colspan='2'>{{ monitor_history_obj.response}}</td>                                        
-                        </tr>
-                        <tr>                            
-                            <td class='bg-dark text-white' colspan='2'>Raw Response</td>                                        
-                        </tr>
-                        <tr>                            
-                            <td class='bg-light text-dark' colspan='2'><textarea class='form-control' style='height: 400px; width: 100%;'>{{ monitor_history_obj.response_raw}}</textarea></td>                                        
-                        </tr>
-                    
-                </tbody>
-            </table>
-
-
-            <style>
-                .status-box-white {
-                    color: #FFF;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;             
-                    width: 70px;
-                    text-align: center;                  
-                    height: 30px;
-                }
-                .status-box-black {
-                    color: #000;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;                                 
-                    width: 70px;
-                    text-align: center;
-                    height: 30px;
-                }
-
-
-            </style>
-            {% else %}
-            You are not authenticated.
-            
-            {% endif %}
         </div>
     </div>
-</div>
 
+{% else %}
+<div class="container">
+
+    <div class='alert alert-danger'>Access Forbidden</div>
+</div>
+{% endif %}
 {% endblock %}

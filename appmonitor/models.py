@@ -48,6 +48,21 @@ class ResponsibleGroupOutstandingAdvisoryEmail(models.Model):
     def __str__(self):
         return self.email     
 
+class AccessGroup(models.Model):
+    
+    ACCESS_TYPE = Choices(
+             (1, 'view_access', ('View Access')),
+             (2, 'edit_access', ('Create and Edit Access')), 
+    )
+
+    access_type = models.IntegerField(choices=ACCESS_TYPE, null=True, blank=True, default=None)
+    group_name = models.CharField(max_length=250)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.group_name   
+
 class Monitor(models.Model):
     MON_TYPE = Choices(
              (1, 'webconnect', ('Web Page')),

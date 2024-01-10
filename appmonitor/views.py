@@ -106,6 +106,14 @@ class PlatformStatus(base.TemplateView):
     def get(self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> http.HttpResponse:
         # Construct Context
         context: dict[str, Any] = {}
+        
+        if request.user.is_authenticated:
+            try:
+                responsible_group = models.ResponsibleGroup.objects.filter(active=True)
+                context['responsible_group'] = responsible_group
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, str(e))
+                print (e)
         #   id = self.kwargs['pk']
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)
@@ -123,10 +131,12 @@ class PlatformView(base.TemplateView):
         platform_id = self.kwargs['pk']
         platform_obj = None
         if request.user.is_authenticated:
-            try:      
-           
+            try:
+                 
                 platform_obj = models.Platform.objects.get(id=platform_id)
                 python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id)
+                
+
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))
                 print (e)
