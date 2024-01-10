@@ -10,149 +10,155 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Messages  -->
-    {% if messages %}
-    <div class="row">
-        <div class="col">
-            {% for message in messages %}
-            <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
-                {{ message|safe }}
+{% if view_access is True %}
+    <div class="container">
+        <!-- Messages  -->
+        {% if messages %}
+        <div class="row">
+            <div class="col">
+                {% for message in messages %}
+                <div class="alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warn' %}warning{% endif %}           {% endif %}">
+                    {{ message|safe }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-    {% endif %}
-    <div class="row">
-        <div class="col-md-12">
-            {% if request.user.is_authenticated %}      
-            <h5>{{ platform_obj.system_name }} ({{ platform_obj.id }})</h5>      
-            <table id="platformview-table" class="table table-border" style="width:100%">
-                <tbody id='platformview-tbody'>
- 
-                        <tr>                        
-                            <td class='bg-dark text-white'>PID</td>
-                            <td class='bg-light'>{{ platform_obj.id }}</td>
-                        </tr>
-                        <tr>                        
-                            <td class='bg-dark text-white'>System Name</td>
-                            <td class='bg-light'>{{ platform_obj.system_name }}</td>
-                        </tr>                        
-                        <tr>                            
-                            <td class='bg-dark text-white'>OS Name</td>
-                            <td>{{ platform_obj.operating_system_name }}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>OS Version</td>
-                            <td>{{ platform_obj.operating_system_version }}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Python Version</td>            
-                            <td>{{ platform_obj.python_version}}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Django Version</td>            
-                            <td>{{ platform_obj.django_version}}</td>
-                        </tr>
-                        <tr>
-                            <td class='bg-dark text-white'>Responsible Group</td>            
-                            <td>{{ platform_obj.group_responsible.group_name}}</td>
-                        </tr>                        
-                        <tr>
-                            <td class='bg-dark text-white'>Updated</td>            
-                            <td>{{ platform_obj.updated}}</td>
-                        </tr>   
-                        <tr>
-                            <td class='bg-dark text-white'>Created</td>            
-                            <td>{{ platform_obj.created}}</td>
-                        </tr>   
-                    
-                </tbody>
-            </table>
-
-            <h5>Python Packages</h5>
-            <table id="packagelist-table" class="table" style="width:100%">
-                <thead class='table-dark'>
-                    <tr>
-                        <th>Package Name</th>   
-                        <th>Package Version</th>
-                        <th>Vulnerable</th>
-                        <th>Active</th>
-                        <th>Updated</th>
-                        <th>Created</th>
-                    </tr>
-                </thead>
-                <tbody id='platformlist-tbody'>
-                    <tr>
-                        {% if python_packages_obj|length > 0 %}
-                            {% for ppo in python_packages_obj %}
-                                <tr>
-                                    <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/'>{{ ppo.package_name }}</a></td>
-                                    <td >{{ ppo.current_package_version }}</td>
-                                    <td >
-                                        {% if ppo.vulnerability_total > 0 %}
-
-                                        <a type="button" class="btn btn-danger" style='cursor: default ;' alt="Click the Package Name First">
-                                           {{ ppo.vulnerability_total }}
-                                        </a>    
-                                        {% else %}
-                                        <a type="button" class="btn btn-success" style='cursor: default ;' > 
-                                            {{ ppo.vulnerability_total }}
-                                        </a>                                            
-                                        {% endif %}
-                                        
-
-
-                                    </td>
-                                    <td>
-                                        {% if ppo.active is True %}
-                                            <i class="bi bi-check-circle-fill" style='color: #06e806;'></i>
-                                        {% else %}
-                                            <i class="bi bi-x-circle-fill" style='color: red;'></i>
-                                        {% endif %}
-                                    </td>
-                                    <td >{{ ppo.updated }}</td>
-                                    <td >{{ ppo.created }}</td>
-                                </tr>                                
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="4" class='text-center'>No Results</td>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-12">
+                {% if request.user.is_authenticated %}      
+                <h5>{{ platform_obj.system_name }} ({{ platform_obj.id }})</h5>      
+                <table id="platformview-table" class="table table-border" style="width:100%">
+                    <tbody id='platformview-tbody'>
+    
+                            <tr>                        
+                                <td class='bg-dark text-white'>PID</td>
+                                <td class='bg-light'>{{ platform_obj.id }}</td>
                             </tr>
-                        {% endif %}
+                            <tr>                        
+                                <td class='bg-dark text-white'>System Name</td>
+                                <td class='bg-light'>{{ platform_obj.system_name }}</td>
+                            </tr>                        
+                            <tr>                            
+                                <td class='bg-dark text-white'>OS Name</td>
+                                <td>{{ platform_obj.operating_system_name }}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>OS Version</td>
+                                <td>{{ platform_obj.operating_system_version }}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Python Version</td>            
+                                <td>{{ platform_obj.python_version}}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Django Version</td>            
+                                <td>{{ platform_obj.django_version}}</td>
+                            </tr>
+                            <tr>
+                                <td class='bg-dark text-white'>Responsible Group</td>            
+                                <td>{{ platform_obj.group_responsible.group_name}}</td>
+                            </tr>                        
+                            <tr>
+                                <td class='bg-dark text-white'>Updated</td>            
+                                <td>{{ platform_obj.updated}}</td>
+                            </tr>   
+                            <tr>
+                                <td class='bg-dark text-white'>Created</td>            
+                                <td>{{ platform_obj.created}}</td>
+                            </tr>   
+                        
+                    </tbody>
+                </table>
+
+                <h5>Python Packages</h5>
+                <table id="packagelist-table" class="table" style="width:100%">
+                    <thead class='table-dark'>
+                        <tr>
+                            <th>Package Name</th>   
+                            <th>Package Version</th>
+                            <th>Vulnerable</th>
+                            <th>Active</th>
+                            <th>Updated</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody id='platformlist-tbody'>
+                        <tr>
+                            {% if python_packages_obj|length > 0 %}
+                                {% for ppo in python_packages_obj %}
+                                    <tr>
+                                        <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/'>{{ ppo.package_name }}</a></td>
+                                        <td >{{ ppo.current_package_version }}</td>
+                                        <td >
+                                            {% if ppo.vulnerability_total > 0 %}
+
+                                            <a type="button" class="btn btn-danger" style='cursor: default ;' alt="Click the Package Name First">
+                                            {{ ppo.vulnerability_total }}
+                                            </a>    
+                                            {% else %}
+                                            <a type="button" class="btn btn-success" style='cursor: default ;' > 
+                                                {{ ppo.vulnerability_total }}
+                                            </a>                                            
+                                            {% endif %}
+                                            
+
+
+                                        </td>
+                                        <td>
+                                            {% if ppo.active is True %}
+                                                <i class="bi bi-check-circle-fill" style='color: #06e806;'></i>
+                                            {% else %}
+                                                <i class="bi bi-x-circle-fill" style='color: red;'></i>
+                                            {% endif %}
+                                        </td>
+                                        <td >{{ ppo.updated }}</td>
+                                        <td >{{ ppo.created }}</td>
+                                    </tr>                                
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class='text-center'>No Results</td>
+                                </tr>
+                            {% endif %}
+                    
+                        </tr>
+                    </tbody>
+                </table>
+
+                <style>
+                    .status-box-white {
+                        color: #FFF;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;             
+                        width: 70px;
+                        text-align: center;                  
+                        height: 30px;
+                    }
+                    .status-box-black {
+                        color: #000;
+                        padding: 3px;   
+                        font-weight: bold;
+                        border-radius: 4px;                                 
+                        width: 70px;
+                        text-align: center;
+                        height: 30px;
+                    }
+
+
+                </style>
+                {% else %}
+                You are not authenticated.
                 
-                    </tr>
-                </tbody>
-            </table>
-
-            <style>
-                .status-box-white {
-                    color: #FFF;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;             
-                    width: 70px;
-                    text-align: center;                  
-                    height: 30px;
-                }
-                .status-box-black {
-                    color: #000;
-                    padding: 3px;   
-                    font-weight: bold;
-                    border-radius: 4px;                                 
-                    width: 70px;
-                    text-align: center;
-                    height: 30px;
-                }
-
-
-            </style>
-            {% else %}
-            You are not authenticated.
-            
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+{% else %}
+<div class="container">
 
+    <div class='alert alert-danger'>Access Forbidden</div>
+</div>
+{% endif %}
 {% endblock %}
