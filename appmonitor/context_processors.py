@@ -5,7 +5,7 @@
 from django import conf
 from django import http
 from appmonitor import models
-
+from django.conf import settings
 # Typing
 from typing import Any
 
@@ -51,5 +51,6 @@ def variables(request):
         "GIT_COMMIT_HASH": conf.settings.GIT_COMMIT_HASH,
         "user_groups" : user_groups,
         "view_access" : view_access,
-        "edit_access" : edit_access
+        "edit_access" : edit_access,
+        "DJANGO_SETTINGS" : settings
     }
