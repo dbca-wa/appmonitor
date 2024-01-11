@@ -295,7 +295,7 @@ class PythonPackage(models.Model):
             
 
         platform = Platform.objects.get(id=self.platform.id)
-        platform.vulnerability_total = pp_sum['vulnerability_total__sum']
+        platform.vulnerability_total = vulnerability_total
         platform.save()
 
         #vulnerability_total        
