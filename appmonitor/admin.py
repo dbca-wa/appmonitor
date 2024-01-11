@@ -112,6 +112,7 @@ class PythonPackageVersionHistory(admin.ModelAdmin):
 @admin.register(models.AccessGroup)
 class AccessGroupAdmin(admin.ModelAdmin):
      list_display = ('id','access_type','group_name','active', 'created')
+     list_filter = ('access_type','group_name')
 
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):

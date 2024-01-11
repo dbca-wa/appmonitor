@@ -53,8 +53,11 @@ class ResponsibleGroupOutstandingAdvisoryEmail(models.Model):
 class AccessGroup(models.Model):
     
     ACCESS_TYPE = Choices(
-             (1, 'view_access', ('View Access')),
-             (2, 'edit_access', ('Create and Edit Access')), 
+             (1, 'view_access', ('View Monitoring Status')),
+             (2, 'edit_access', ('Create and Edit Access Platforms')), 
+             (3, 'view_access_platform_status', ('View Access Platform Status')),
+             (4, 'view_access_package_status', ('View Access Package Status')),
+
     )
 
     access_type = models.IntegerField(choices=ACCESS_TYPE, null=True, blank=True, default=None)

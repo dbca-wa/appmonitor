@@ -45,3 +45,17 @@ class CronJobNotificationEmailWeekends(django_cron.CronJobBase):
         # Run Management Command
         management.call_command("notification_email_checks")
         return "Job Completed Successfully"
+    
+class CronJobDBArchive(django_cron.CronJobBase):
+    """Cron Job for the Catalogue Scanner."""
+    RUN_ON_DAYS = [0, 1, 2, 3, 4, 5, 6]
+    RUN_AT_TIMES = ['8:00']
+    schedule = django_cron.Schedule(run_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+    code = "appmonitor.dbarchive"
+
+    def do(self) -> None:
+        """Make of backup of the sqlite database directory."""
+        
+        # Run Management Command
+        management.call_command("db_archive")
+        return "Job Completed Successfully"

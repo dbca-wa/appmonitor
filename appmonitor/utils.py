@@ -211,3 +211,58 @@ def get_operator_plus_version(vun):
     return {"operator": operator, "version": version}
 
 
+def user_group_permissions(request):
+    view_monitor_status_access = False
+    edit_platform_access = False
+    view_access_platform_status = False
+    view_access_package_status = False
+
+    # Get acccess riles
+    view_access_groups = models.AccessGroup.objects.filter(active=True, access_type=1)
+    view_access_groups_array = []
+    for vag in view_access_groups:
+        view_access_groups_array.append(vag.group_name)
+
+    edit_access_groups = models.AccessGroup.objects.filter(active=True, access_type=2)
+    edit_access_groups_array = []
+    for eag in edit_access_groups:
+        edit_access_groups_array.append(eag.group_name)
+
+    view_access_platform_status_groups = models.AccessGroup.objects.filter(active=True, access_type=3)
+    view_access_platform_status_array = []
+    for eag in view_access_platform_status_groups:
+        view_access_platform_status_array.append(eag.group_name)
+    print (view_access_platform_status_array)
+    view_access_package_status_groups = models.AccessGroup.objects.filter(active=True, access_type=4)
+    view_access_package_status_array = []
+    for eag in view_access_package_status_groups:
+        view_access_package_status_array.append(eag.group_name)
+
+    user_groups = []
+    for g in request.user.groups.all():
+        user_groups.append(g.name)
+    
+    for ug in user_groups:
+        if ug in view_access_groups_array:
+            view_monitor_status_access = True
+
+    for ug in user_groups:
+        if ug in edit_access_groups_array:
+            edit_platform_access = True
+
+    for ug in user_groups:
+        if ug in view_access_platform_status_array:
+            view_access_platform_status = True            
+
+    for ug in user_groups:
+        if ug in view_access_package_status_array:
+            view_access_package_status = True       
+
+    access_type = {
+        'view_monitor_status_access' : view_monitor_status_access,
+        'edit_platform_access' : edit_platform_access,
+        'view_access_platform_status' : view_access_platform_status,
+        'view_access_package_status' : view_access_package_status
+    }
+    print (access_type)
+    return access_type
