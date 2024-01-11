@@ -11,8 +11,10 @@ class Command(BaseCommand):
     help = 'Backup sqlite database.'
 
     def handle(self, *args, **options):
+        DB_DIRECTORY_TO_ARCHIVE = settings.DB_DIRECTORY_TO_ARCHIVE
         DAYS_TO_ARCHIVE = settings.DAYS_TO_ARCHIVE
         DB_ARCHIVE_DIR = str(settings.BASE_DIR)+'/'+settings.DB_ARCHIVE_DIR
+
         print (DB_ARCHIVE_DIR)
         if os.path.exists(DB_ARCHIVE_DIR):
             pass
@@ -21,6 +23,7 @@ class Command(BaseCommand):
             return False
 
         print ("LASTEST DIRECTORY")
+        INIT_ARCHIVE_DIR =  DB_ARCHIVE_DIR+'/1/'
         LATEST_DIR = DB_ARCHIVE_DIR+'/'+str(DAYS_TO_ARCHIVE)
         if os.path.exists(LATEST_DIR):
             print (LATEST_DIR)
@@ -55,3 +58,14 @@ class Command(BaseCommand):
                 shutil.move(src_path, dst_path)
 
             count = count - 1
+
+        # Copy Orginal Files into Backup Rotation
+        allfiles = os.listdir(DB_DIRECTORY_TO_ARCHIVE)
+        for file in allfiles: 
+            source_file = os.path.join(DB_DIRECTORY_TO_ARCHIVE, file) 
+            destination_file = os.path.join(INIT_ARCHIVE_DIR, file) 
+            shutil.copy(source_file, destination_file) 
+            print(f"Copied {file} to {INIT_ARCHIVE_DIR}") 
+
+        
+       
