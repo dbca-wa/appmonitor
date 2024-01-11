@@ -11,7 +11,7 @@
 
 {% block content %}
 
-{% if view_access is True %}
+{% if access_type.view_access_platform_status is True %}
     <div class="container">
         <!-- Messages  -->
         {% if messages %}

@@ -1,9 +1,11 @@
 var appmonitor_platform = {
     var: {
         loader: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        edit_access: false
     },
     init: function() {
         appmonitor_platform.get_platforms();
+        appmonitor_platform.var.edit_platform_access = $('#edit_platform_access').val();
         
         $( "#new_platform_btn" ).on( "click", function() {
             $('#new-platform-error').text("");
@@ -170,7 +172,13 @@ var appmonitor_platform = {
                                 htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
 
-                                htmlval+= "     <td><button class='btn btn-primary btn-sm platform-edit-btn' id='platform-edit-btn-"+resp.platform_info_array[i].id+"' data-json='"+button_json+"' >Edit</button> <a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a></td>";
+                                htmlval+= "     <td>";
+                                if (appmonitor_platform.var.edit_platform_access == 'True') {
+                                    htmlval+= "     <button class='btn btn-primary btn-sm platform-edit-btn' id='platform-edit-btn-"+resp.platform_info_array[i].id+"' data-json='"+button_json+"' >Edit</button>";
+                                }
+                                htmlval+= "     <a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a>";
+
+                                htmlval+= "     </td>";
                                 htmlval+= "</tr>";
                             
                         }

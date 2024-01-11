@@ -11,9 +11,11 @@
 
 {% block content %}
 
-{% if view_access is True %}
+{% if access_type.view_access_platform_status is True %}
 
     <input type="hidden" id="csrfmiddlewaretoken" name="csrfmiddlewaretoken" value="{{ csrf_token  }}">
+    <input type="hidden" id="edit_platform_access" name="edit_platform_access" value="{{ access_type.edit_platform_access }}"/>
+
     {% include "appmonitor/platform_new.html" %}
     {% include "appmonitor/platform_change.html" %}
 
@@ -23,7 +25,7 @@
                 <h3>Platform Status</h3>
             </div>
             <div class="col text-end">
-                {% if edit_access is True %}
+                {% if access_type.edit_platform_access is True %}
                     <button type="button" class="btn btn-primary" id='new_platform_btn'>New Platform</button>
                 {% endif %}
             </div>

@@ -149,6 +149,8 @@ GIT_COMMIT_DATE = os.popen(f"cd {BASE_DIR}; git log -1 --format=%cd").read()
 VERSION_NO = "2.00"
 IT_SYSTEM_REGISTER = env("IT_SYSTEM_REGISTER",None)
 
+DB_ARCHIVE_DIR = env("DB_ARCHIVE_DIR",'db_archive')
+DAYS_TO_ARCHIVE = env("DAYS_TO_ARCHIVE",30)
 
 # AUTH2 Token
 AUTH2_USERNAME = env("AUTH2_USERNAME",None)
@@ -161,6 +163,7 @@ EMAIL_INSTANCE = env('EMAIL_INSTANCE','PROD')
 CRON_CLASSES = [
     'appmonitor.cron.CronJobNotificationEmailWeekDays',
     'appmonitor.cron.CronJobNotificationEmailWeekends',
+    'appmonitor.cron.CronJobDBArchive'
 
 ]
     
