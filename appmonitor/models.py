@@ -57,7 +57,7 @@ class AccessGroup(models.Model):
              (2, 'edit_access', ('Create and Edit Access Platforms')), 
              (3, 'view_access_platform_status', ('View Access Platform Status')),
              (4, 'view_access_package_status', ('View Access Package Status')),
-
+             (5, 'edit_access_monitoring', ('Edit Monitoring')),
     )
 
     access_type = models.IntegerField(choices=ACCESS_TYPE, null=True, blank=True, default=None)
@@ -77,8 +77,10 @@ class Monitor(models.Model):
              (6, 'latency', ('Network Latency')),  # work in progress
              (7, 'packet_loss', ('Packet Loss')),  # work in progress
              (8, 'json_key', ('URL (JSON Key)')),
-             (9, 'http_status_code', ('HTTP Status Code'))
+             (9, 'http_status_code', ('HTTP Status Code')),
+             (10, 'sharepoint_auth_check', ('SharePoint Auth Check'))
     )
+
     CHECK_OPERATOR = Choices(
              (1, 'postive', ('Positive Integer')),  # work in progress
              (2, 'negative', ('Negative Integer')),  # work in progress
@@ -115,6 +117,11 @@ class Monitor(models.Model):
     use_basic_auth = models.BooleanField(default=False)
     username = models.CharField(null=True,blank=True, max_length=256)
     password = models.CharField(null=True,blank=True, max_length=256)
+
+    # sharepoint auth check
+    sharepoint_url =  models.CharField(null=True,blank=True, max_length=1024)
+    sharepoint_username = models.CharField(null=True,blank=True, max_length=256)
+    sharepoint_password = models.CharField(null=True,blank=True, max_length=256)
 
     # status values
     up_value = models.CharField(null=True,blank=True, max_length=200)

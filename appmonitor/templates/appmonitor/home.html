@@ -11,6 +11,9 @@
 
 {% block content %}
 {% if access_type.view_monitor_status_access is True %}
+<input type="hidden" id="csrfmiddlewaretoken" name="csrfmiddlewaretoken" value="{{ csrf_token  }}">
+<input type="hidden" id="edit_access_monitoring" name="edit_access_monitoring" value="{{ access_type.edit_access_monitoring }}"/>
+
     <div class="container">
         <!-- Messages  -->
         {% if messages %}
@@ -69,7 +72,21 @@
                 <div class="col-md-6 text-end">
                     <div id='loading-progress'></div>
                 </div>
-            </div>            
+            </div>           
+            
+            {% include "appmonitor/monitoring_new.html" with formstatus="new" %}
+            {% include "appmonitor/monitoring_change.html" with formstatus="new" %}
+            <div class="row">
+                <div class="col">
+                    <h5>Monitoring</h5>
+                </div>
+                <div class="col text-end">
+                    {% if access_type.edit_access_monitoring is True %}
+                        <button type="button" class="btn btn-sm btn-primary" id='new_monitoring_btn'>New Monitoring</button><br>
+                    {% endif %}
+                </div>
+            </div>       
+              
             <div class="col-md-12">
                 {% if request.user.is_authenticated %}            
                 <table id="sensorlist-table" class="table" style="width:100%">

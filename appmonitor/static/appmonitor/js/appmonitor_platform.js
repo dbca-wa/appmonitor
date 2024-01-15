@@ -88,7 +88,7 @@ var appmonitor_platform = {
                 
             },
             error: function (error) {
-                
+                alert('error saving platform.')
             },
         });
         

@@ -1,0 +1,144 @@
+<div class='col-12 round-box px-3 ' id='monitoring-new-form'>
+
+    <div class='row'>
+        {% if formstatus == 'edit' %}
+        <div class='col-12'>
+            <label for="" class="form-label">Monitoring ID</label>
+            
+            <input type="hidden" class="form-control" id="{{formstatus}}-monitoring-id" value="" autocomplete="off">
+            <div class="col-sm-12">
+                <label class="form-label" for="{{ formstatus }}-monitoring-id-label" id="{{ formstatus }}-monitoring-id-label"></label>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class='col-12'>
+            <label for="" class="form-label">Check Name</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-checkname" value="" autocomplete="off">
+        </div>
+        <div class='col-12'>
+            <label for="" class="form-label">Mon Type</label>
+                <select type="text" class="form-control" id="{{formstatus}}-monitoring-montype" >
+                    <option value="">Select One</option> 
+                    {% for mt in mon_types %}
+                    <option value="{{ mt.0 }}" >{{ mt.1 }} ({{ mt.0 }})</option>
+                    {% endfor %}                                                          
+                </select>
+        </div> 
+        
+        <div class='col-12'>
+            <label for="" class="form-label">System ID</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-systemid" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-operator-div">
+            <label for="" class="form-label">Check Operator</label>
+                <select type="text" class="form-control" id="{{formstatus}}-monitoring-operator" >
+                    <option value="">Select One</option> 
+                    {% for co in check_operators %}
+                        <option value="{{ co.0 }}" >{{ co.1 }}</option>
+                    {% endfor %}                                                          
+                </select>
+        </div>        
+
+        <div class='col-12'>
+            <label for="" class="form-label">Group Responsible</label>
+                <select type="text" class="form-control" id="{{formstatus}}-monitoring-responsiblegroup" >
+                    <option value="">Select One</option>
+                    {% for rp in responsible_group %}
+                        <option value="{{ rp.id }}">{{ rp.group_name }}</option>
+                    {% endfor %}                                                            
+                </select>
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-url-div">
+            <label for="" class="form-label">URL</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-url" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-stringcheck-div">
+            <label for="" class="form-label">String check</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-stringcheck" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-jsonkey-div">
+            <label for="" class="form-label">JSON Key</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-jsonkey" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-statuscode-div">
+            <label for="" class="form-label">Status Code</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-statuscode" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-host-div">
+            <label for="" class="form-label">Host</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-host" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-port-div">
+            <label for="" class="form-label">Port</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-port" value="" autocomplete="off">
+        </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-ignoressl-div">
+            <Br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="{{formstatus}}-monitoring-ignoressl" checked>
+                <label class="form-check-label" for="monitoring-ignoressl-label">
+                Ignore SSL Verification
+                </label>
+            </div>                        
+        </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-sharepointurl-div">
+            <label for="" class="form-label">Share Point URL</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-sharepointurl" value="" autocomplete="off">
+        </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-sharepointusername-div">
+            <label for="" class="form-label">Share Point Username</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-sharepointusername" value="" autocomplete="off">
+        </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-sharepointpassword-div">
+            <label for="" class="form-label">Share Point Password</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-sharepointpassword" value="" autocomplete="off">
+        </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-basicauth-div">
+            <Br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="{{formstatus}}-monitoring-basicauth" checked>
+                <label class="form-check-label" for="monitoring-basicauth">
+                Use Basic Auth
+                </label>
+            </div>
+        </div>
+        <div class='col-12' id='{{formstatus}}-monitoring-basic-auth-user-pass'>
+            <div class='col-12'>
+                <label for="" class="form-label">Username</label>
+                <input type="text" class="form-control" id="{{formstatus}}-monitoring-username" value="" autocomplete="off">
+            </div>
+            <div class='col-12'>
+                <label for="" class="form-label">Password</label>
+                <input type="text" class="form-control" id="{{formstatus}}-monitoring-password" value="" autocomplete="off">
+            </div>
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-up-div">
+            <label for="" class="form-label">UP Value</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-up" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-warn-div">
+            <label for="" class="form-label">WARN Value</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-warn" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-down-div">
+            <label for="" class="form-label">DOWN Value</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-down" value="" autocomplete="off">
+        </div>
+    
+        <div class='col-12' id="{{formstatus}}-monitoring-active-div">
+            <Br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="{{formstatus}}-monitoring-active" >
+                <label class="form-check-label" for="monitoring-active">
+                Active
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

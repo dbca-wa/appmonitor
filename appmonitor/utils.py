@@ -60,8 +60,14 @@ def get_checks(status_types, *args, **kwargs):
                 
                 monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
         else:
+            
+            if m.system_id is None:
+                system_id = ''
+            else:
+                system_id = m.system_id
+
             monitor_status_total[0] = monitor_status_total[0] + 1
-            monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+m.system_id, 'responsible_group': responsible_group_name})                            
+            monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+system_id, 'responsible_group': responsible_group_name})                            
     monitors_sorted = sorted(monitors, key=lambda d: d['last_check_date'], reverse=True) 
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
@@ -123,9 +129,47 @@ def get_platform_info(pid, *args, **kwargs):
         row["last_sync_dt"] = last_sync_dt
         return {"status": 200, "platform_info_array": row}
 
+def get_monitor_info(mid, *args, **kwargs): 
+        mo = monitor_info_obj = models.Monitor.objects.get(id=mid)
+        row = {}
+        row["id"] = mo.id
+        row["check_name"] = mo.check_name
+        row["mon_type"] = mo.mon_type   
+        row['check_operator'] = mo.check_operator
+        row['system_id'] = mo.system_id
 
+        group_responsible_id = None
+        group_responsible_name = None
+        if mo.group_responsible:
+            group_responsible_id = mo.group_responsible.id
+            group_responsible_name = mo.group_responsible.group_name
 
-    
+        row["group_responsible_id"] = group_responsible_id
+        row["group_responsible_group_name"] = group_responsible_name
+        row["url"] = mo.url
+        row["string_check"] = mo.string_check
+        row["json_key"] = mo.json_key
+        row["status_code"] = mo.status_code
+        row["host"] = mo.host
+        row["port"] = mo.port
+        row["ignore_ssl_verification"] = mo.ignore_ssl_verification
+        
+        row["use_basic_auth"] = mo.use_basic_auth
+        row["username"] = mo.username
+        row["password"] = mo.password
+
+        row["sharepoint_url"] = mo.sharepoint_url
+        row["sharepoint_username"] = mo.sharepoint_username
+        row["sharepoint_password"] = mo.sharepoint_password        
+
+        row["up_value"] = mo.up_value
+        row["warn_value"] = mo.warn_value
+        row["down_value"] = mo.down_value
+        row["active"] = mo.active
+
+        # row["updated"] = mo.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        # row["created"] = mo.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        return {"status": 200, "monitor_info_array": row}    
 
 def get_platform_packages_info(search_package, only_vulnerable, exact_match, *args, **kwargs):    
     query_obj = Q()
@@ -216,6 +260,7 @@ def user_group_permissions(request):
     edit_platform_access = False
     view_access_platform_status = False
     view_access_package_status = False
+    edit_access_monitoring = False
 
     # Get acccess riles
     view_access_groups = models.AccessGroup.objects.filter(active=True, access_type=1)
@@ -232,11 +277,17 @@ def user_group_permissions(request):
     view_access_platform_status_array = []
     for eag in view_access_platform_status_groups:
         view_access_platform_status_array.append(eag.group_name)
-    print (view_access_platform_status_array)
+    
     view_access_package_status_groups = models.AccessGroup.objects.filter(active=True, access_type=4)
     view_access_package_status_array = []
     for eag in view_access_package_status_groups:
         view_access_package_status_array.append(eag.group_name)
+
+    edit_access_monitoring_groups = models.AccessGroup.objects.filter(active=True, access_type=5)
+    edit_access_monitoring_array = []
+    for eag in edit_access_monitoring_groups:
+        edit_access_monitoring_array.append(eag.group_name)
+
 
     user_groups = []
     for g in request.user.groups.all():
@@ -256,13 +307,18 @@ def user_group_permissions(request):
 
     for ug in user_groups:
         if ug in view_access_package_status_array:
-            view_access_package_status = True       
+            view_access_package_status = True      
+
+    for ug in user_groups:
+        if ug in edit_access_monitoring_array:
+            edit_access_monitoring = True     
 
     access_type = {
         'view_monitor_status_access' : view_monitor_status_access,
         'edit_platform_access' : edit_platform_access,
         'view_access_platform_status' : view_access_platform_status,
-        'view_access_package_status' : view_access_package_status
+        'view_access_package_status' : view_access_package_status,
+        'edit_access_monitoring' : edit_access_monitoring
     }
-    print (access_type)
+    
     return access_type
