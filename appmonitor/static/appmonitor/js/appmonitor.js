@@ -343,11 +343,10 @@ var appmonitor = {
 
                         // }
 
-                  
-
 
                         for (let i = 0; i < resp.monitors.length; i++) {
                             button_json = '{"id": "'+resp.monitors[i].id+'"}'
+                            
                             if (resp.monitors[i].status == 0 ) {
                                 
                                 htmlval+= "<tr>";                                                                         
@@ -371,7 +370,7 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
-                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+button_json+"' >Edit</button>";
+                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
                                 htmlval+= "     </td>";
@@ -402,7 +401,7 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
-                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+button_json+"' >Edit</button>";
+                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "         <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
                                 htmlval+= "     </td>";
@@ -434,7 +433,7 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
-                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+button_json+"' >Edit</button>";
+                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }                                
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
                                 htmlval+= "     </td>";
@@ -466,7 +465,7 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
-                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+button_json+"' >Edit</button>";
+                                    htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
                                 htmlval+= "</td>";
@@ -477,10 +476,10 @@ var appmonitor = {
 
                         $('#sensorlist-tbody').html(htmlval);
                         $(".monitor-edit-btn").on( "click", function() {
-                            var btndata_json = $(this).attr('data-json');
-                            var btndata = JSON.parse(btndata_json);
-                            
-                            appmonitor.get_update_monitor_by_id(btndata['id'])
+                            var btndata_json = $(this).attr('data-json');                                                   
+                            var btndata_one = JSON.parse(btndata_json);
+                            var btndata = JSON.parse(btndata_one);                            
+                            appmonitor.get_update_monitor_by_id(btndata['id']);
                             // appmonitor_platform.edit_platform();
                             
                             $("#EditMonitorModal").modal("show");
