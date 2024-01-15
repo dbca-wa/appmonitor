@@ -1,0 +1,40 @@
+<div class="modal fade" id="NewMonitorModal" tabindex="-1" aria-labelledby="NewMonitorModal" aria-hidden="true" data-bs-backdrop="static" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Monitor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="alert alert-danger" role="alert" id='new-monitoring-error' style='display:none'>
+                    </div>
+                    <div class="alert alert-success" role="alert" id='new-monitoring-success' style='display:none'>
+                    </div>
+                    <div id='monitoring-new-div'>
+                        {% include "appmonitor/monitoring_new_change.html" with formstatus="new" %}
+                    </div>
+                </form>
+            </div>
+ 
+            <div class='col-12 px-3'>
+                <div class='col-12'>
+                    <div class='col-12'>
+                    <label for="" class="form-label">&nbsp;</label>
+                    </div>
+                    <div class='col-12 text-end'>
+                        <button type="button" class="btn btn-primary" id='create-monitoring-btn'>Create</button>                                   
+                        &nbsp;&nbsp;
+                        
+                        <div class="spinner-border text-primary" role="status" style="display:none" id="monitoring-loader-popup">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <BR>
+                    </div>
+                    <BR>
+                </div>
+            </div>
+        </div>         
+    </div> 
+</div>

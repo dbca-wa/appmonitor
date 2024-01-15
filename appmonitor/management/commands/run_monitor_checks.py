@@ -10,7 +10,8 @@ from requests.auth import HTTPBasicAuth
 from urllib.request import Request, urlopen, ssl, socket
 from urllib.error import URLError, HTTPError
 import json
-
+import shareplum
+import urllib
 import subprocess, platform
 import requests
 import socket
@@ -53,10 +54,37 @@ class Command(BaseCommand):
             if i.mon_type == 9:
                   thread = threading.Thread(target=self.get_http_status_code, args=(i,i.url, i.status_code))
                   thread.start()
+            if i.mon_type == 10:
+                  thread = threading.Thread(target=self.get_sharepoint_auth, args=(i,))
+                  thread.start()                  
 
         #thread still keep running not accurate finished time.  work in progress                  
         #mjl.finished = datetime.datetime.today()
         #mjl.save()
+
+    def get_sharepoint_auth(self, monitor):
+
+        auth_passed = False
+        html_str = ''
+        try:
+            auth_url = urllib.parse.urljoin(monitor.sharepoint_url, "/")
+            auth = shareplum.Office365(auth_url, monitor.sharepoint_username, monitor.sharepoint_password)
+            site = shareplum.Site(monitor.sharepoint_url, authcookie=auth.get_cookies(), version=shareplum.site.Version.v365)
+            auth_passed = True
+        except Exception as e:           
+            print (e)
+            html_str = str(e)
+            auth_passed = False
+
+        if auth_passed is True:
+            self.create_monitor_history(monitor,3,'auth passed', html_str)
+        else:
+            self.create_monitor_history(monitor,1,'auth failed',html_str)
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
+
 
     def get_website(self, monitor,website,string_check):      
         print (monitor.check_name)
@@ -289,7 +317,6 @@ class Command(BaseCommand):
         a = dt_datetime.now()
         monitor.last_update =a
         monitor.save()
-
 
 
     def create_monitor_history(self,monitor,status,response, response_raw):

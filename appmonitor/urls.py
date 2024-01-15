@@ -43,8 +43,9 @@ urlpatterns = [
     path('api/platform/create', api.platform_create, name='platform_create'),
     path('api/platform/update', api.platform_update, name='platform_update'),
     re_path(r'^api/platform/(?P<pk>[0-9]+)/$', api.get_platform_info_by_id, name='python_package_advisory'),  
-    
-
+    path('api/monitor/create', api.monitoring_create, name='monitoring_create'),
+    path('api/monitor/update', api.monitoring_update, name='monitoring_update'), 
+    re_path(r'^api/monitor/(?P<pk>[0-9]+)/$', api.get_monitor_info_by_id, name='python_package_advisory'),  
 
     # Strictly used by appmonitor_client
     path('api/update-platform-information/', api.update_platform_information, name='api_update_platform_information'),
