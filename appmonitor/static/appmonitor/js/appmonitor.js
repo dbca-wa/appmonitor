@@ -379,6 +379,7 @@ var appmonitor = {
                         }
 
                         for (let i = 0; i < resp.monitors.length; i++) {
+                            button_json = '{"id": "'+resp.monitors[i].id+'"}'
                             if (resp.monitors[i].status == 1 ) {
                                 htmlval+= "<tr>";                                                                         
                                 htmlval+= "     <td>";                            
@@ -411,6 +412,8 @@ var appmonitor = {
                         }
 
                         for (let i = 0; i < resp.monitors.length; i++) {
+                            button_json = '{"id": "'+resp.monitors[i].id+'"}'
+
                             if (resp.monitors[i].status == 2 ) {
                                 htmlval+= "<tr>";                                                                         
                                 htmlval+= "     <td>";                            
@@ -443,6 +446,7 @@ var appmonitor = {
                         }
 
                         for (let i = 0; i < resp.monitors.length; i++) {
+                            button_json = '{"id": "'+resp.monitors[i].id+'"}'
                             if (resp.monitors[i].status == 3 ) {
                                 htmlval+= "<tr>";                                                                         
                                 htmlval+= "     <td>";                            
