@@ -171,14 +171,14 @@ var appmonitor = {
         var jsonkey = $('#'+messages_class+'-monitoring-jsonkey').val(); 
         var statuscode = $('#'+messages_class+'-monitoring-statuscode').val(); 
         var host = $('#'+messages_class+'-monitoring-host').val(); 
-        var port = $('#'+messages_class+'-monitoring-port').val(); ;
+        var port = $('#'+messages_class+'-monitoring-port').val();
         var ignoressl = $('#'+messages_class+'-monitoring-ignoressl').prop('checked');
-        var sharepointurl = $('#new-monitoring-sharepointurl').val("");
-        var sharepointusername = $('#new-monitoring-sharepointusername').val("");
-        var sharepointpassword = $('#new-monitoring-sharepointpassword').val("");
+        var sharepointurl = $('#'+messages_class+'-monitoring-sharepointurl').val();
+        var sharepointusername = $('#'+messages_class+'-monitoring-sharepointusername').val();
+        var sharepointpassword = $('#'+messages_class+'-monitoring-sharepointpassword').val();
         var basicauth = $('#'+messages_class+'-monitoring-basicauth').prop('checked');
-        var username = $('#new-monitoring-username').val("");
-        var password = $('#new-monitoring-password').val("");
+        var username = $('#'+messages_class+'-monitoring-username').val();
+        var password = $('#'+messages_class+'-monitoring-password').val();
         var up = $('#'+messages_class+'-monitoring-up').val(); 
         var warn = $('#'+messages_class+'-monitoring-warn').val(); 
         var down = $('#'+messages_class+'-monitoring-down').val();
@@ -269,17 +269,17 @@ var appmonitor = {
                     } else {
                         $('#'+messages_class+'-monitoring-ignoressl').prop('checked', false);
                     }
-                    $('#new-monitoring-sharepointurl').val(resp.monitor_info_array.sharepoint_url);
-                    $('#new-monitoring-sharepointusername').val(resp.monitor_info_array.sharepoint_username);
-                    $('#new-monitoring-sharepointpassword').val(resp.monitor_info_array.sharepoint_password);
+                    $('#'+messages_class+'-monitoring-sharepointurl').val(resp.monitor_info_array.sharepoint_url);
+                    $('#'+messages_class+'-monitoring-sharepointusername').val(resp.monitor_info_array.sharepoint_username);
+                    $('#'+messages_class+'-monitoring-sharepointpassword').val(resp.monitor_info_array.sharepoint_password);
                     
                     if (resp.monitor_info_array.use_basic_auth == true) {
                         $('#'+messages_class+'-monitoring-basicauth').prop('checked', true);
                     } else {
                         $('#'+messages_class+'-monitoring-basicauth').prop('checked', false);
                     }
-                    $('#new-monitoring-username').val(resp.monitor_info_array.username);
-                    $('#new-monitoring-password').val(resp.monitor_info_array.password);
+                    $('#'+messages_class+'-monitoring-username').val(resp.monitor_info_array.username);
+                    $('#'+messages_class+'-monitoring-password').val(resp.monitor_info_array.password);
                     $('#'+messages_class+'-monitoring-up').val(resp.monitor_info_array.up_value); 
                     $('#'+messages_class+'-monitoring-warn').val(resp.monitor_info_array.warn_value); 
                     $('#'+messages_class+'-monitoring-down').val(resp.monitor_info_array.down_value);
