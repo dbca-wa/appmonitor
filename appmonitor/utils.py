@@ -162,6 +162,14 @@ def get_monitor_info(mid, *args, **kwargs):
         row["sharepoint_username"] = mo.sharepoint_username
         row["sharepoint_password"] = mo.sharepoint_password        
 
+        row["db_type"] = mo.db_type
+        row["db_host"] = mo.db_host
+        row["db_name"] = mo.db_name
+        row["db_username"] = mo.db_username
+        row["db_password"] = mo.db_password
+        row["db_port"] = mo.db_port
+        row["db_query"] = mo.db_query
+
         row["up_value"] = mo.up_value
         row["warn_value"] = mo.warn_value
         row["down_value"] = mo.down_value

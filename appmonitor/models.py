@@ -76,16 +76,22 @@ class Monitor(models.Model):
              (5, 'ssl_valid', ('SSL Valid')),  # work in progress
              (6, 'latency', ('Network Latency')),  # work in progress
              (7, 'packet_loss', ('Packet Loss')),  # work in progress
-             (8, 'json_key', ('URL (JSON Key)')),
+             (8, 'json_key', ('URL (JSON Key)')),  
              (9, 'http_status_code', ('HTTP Status Code')),
-             (10, 'sharepoint_auth_check', ('SharePoint Auth Check'))
+             (10, 'sharepoint_auth_check', ('SharePoint Auth Check')),
+             (11, 'db_query_timing', ('DB Timing')),
+             (12, 'db_query_check', ('DB Query')),
     )
 
     CHECK_OPERATOR = Choices(
-             (1, 'postive', ('Positive Integer')),  # work in progress
-             (2, 'negative', ('Negative Integer')),  # work in progress
+             (1, 'postive', ('Positive Integer')),  
+             (2, 'negative', ('Negative Integer')),  
              (3, 'equal_int', ('Equal Integer')),
              (4, 'equal_string', ('Equal String'))
+    )
+
+    DB_TYPE = Choices(
+             (1, 'postgres', ('Postgres')),  
     )
 
     # name for every check type
@@ -122,6 +128,14 @@ class Monitor(models.Model):
     sharepoint_url =  models.CharField(null=True,blank=True, max_length=1024)
     sharepoint_username = models.CharField(null=True,blank=True, max_length=256)
     sharepoint_password = models.CharField(null=True,blank=True, max_length=256)
+
+    db_type = models.IntegerField(choices=DB_TYPE, null=True, blank=True, default=DB_TYPE.postgres)
+    db_host = models.CharField(null=True,blank=True, max_length=1024)
+    db_name = models.CharField(null=True,blank=True, max_length=1024)
+    db_username = models.CharField(null=True,blank=True, max_length=1024)
+    db_password = models.CharField(null=True,blank=True, max_length=1024)
+    db_port = models.CharField(null=True,blank=True, max_length=20)
+    db_query = models.TextField(null=True,blank=True)
 
     # status values
     up_value = models.CharField(null=True,blank=True, max_length=200)

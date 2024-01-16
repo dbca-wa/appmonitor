@@ -34,7 +34,8 @@ class HomePage(base.TemplateView):
         context['responsible_group'] = responsible_group       
         context['mon_types'] = models.Monitor.MON_TYPE
         context['check_operators'] = models.Monitor.CHECK_OPERATOR
-        
+        context['db_type'] = models.Monitor.DB_TYPE
+
         mjl = models.MonitorJobLog.objects.all().order_by('-id').first()
         if mjl is not None:
             if mjl.started:
