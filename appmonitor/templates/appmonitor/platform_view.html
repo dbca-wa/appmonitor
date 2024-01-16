@@ -77,6 +77,7 @@
                         <tr>
                             <th>Package Name</th>   
                             <th>Package Version</th>
+                            <th>PyPi</th>
                             <th>Vulnerable</th>
                             <th>Active</th>
                             <th>Updated</th>
@@ -90,6 +91,7 @@
                                     <tr>
                                         <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/'>{{ ppo.package_name }}</a></td>
                                         <td >{{ ppo.current_package_version }}</td>
+                                        <td ><a href='https://pypi.org/project/{{ ppo.package_name }}/#history'>PyPi</a></td>
                                         <td >
                                             {% if ppo.vulnerability_total > 0 %}
 
