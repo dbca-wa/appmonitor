@@ -24,6 +24,7 @@ RUN apt-get install --no-install-recommends -y sqlite3 vim postgresql-client ssh
 RUN ln -s /usr/bin/python3 /usr/bin/python 
 #RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN pip install --upgrade pip
+
 # Install Python libs from requirements.txt.
 FROM builder_base_appmonitor as python_libs_appmonitor
 WORKDIR /app
@@ -37,6 +38,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt \
 # Install the project (ensure that frontend projects have been built prior to this step).
 FROM python_libs_appmonitor
 COPY timezone /etc/timezone
+COPY deb_packages/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl /tmp
+RUN pip install /tmp/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 ENV TZ=Australia/Perth
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
