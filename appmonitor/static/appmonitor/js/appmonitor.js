@@ -4,7 +4,7 @@ var appmonitor = {
         edit_monitor_access: false
     },
     init: function() {
-        appmonitor.get_checks();
+        appmonitor.get_checks(false);
         appmonitor.var.edit_monitor_access = $('#edit_access_monitoring').val();
 
         $("#new_monitoring_btn" ).on( "click", function() { 
@@ -86,6 +86,18 @@ var appmonitor = {
         $( "#save-monitoring-btn" ).on( "click", function() {
             appmonitor.save_monitoring("save");           
         });  
+        
+        $("#live-responsiblegroup-monitor" ).on( "change", function() { 
+            appmonitor.get_checks(true);
+        });
+        $("#live-inactive-monitor" ).on( "change", function() { 
+            appmonitor.get_checks(true);
+        });
+        $("#live-keyword-monitor" ).on( "keyup", function() { 
+                        
+            appmonitor.get_checks(true);
+            
+        });       
     },
     mon_type_load: function(value,save_type) {
         
@@ -379,14 +391,17 @@ var appmonitor = {
         });      
 
     },
-    get_checks: function() {
-
+    get_checks: function(filter_change) {
+        var responsiblegroup = $('#live-responsiblegroup-monitor').val();        
+        var inactive = $('#live-inactive-monitor').prop('checked');
+        var keyword = $('#live-keyword-monitor').val();
+        
         // $('#sensorlist-tbody').html("<tr><td colspan='5' class='text-center'>"+appmonitor.var.loader+"</td></tr>");
         $('#loading-progress').html(appmonitor.var.loader);
         $.ajax({
             type: "post",
             url: "/api/get-checks/",
-            data: {},
+            data: {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword": keyword},
             error: function(resp) {
                 $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');
             },
@@ -582,7 +597,9 @@ var appmonitor = {
                         $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');                    
                     }   
                     $('#loading-progress').html(""); 
-                    setTimeout("appmonitor.get_checks()", 30000)                      
+                    if (filter_change == false) { 
+                        setTimeout("appmonitor.get_checks()", 30000);
+                    }
                 } else {
                     $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');
                     $('#loading-progress').html("");
