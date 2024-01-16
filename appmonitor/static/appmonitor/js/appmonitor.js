@@ -598,7 +598,7 @@ var appmonitor = {
                     }   
                     $('#loading-progress').html(""); 
                     if (filter_change == false) { 
-                        setTimeout("appmonitor.get_checks()", 30000);
+                        setTimeout("appmonitor.get_checks(false)", 30000);
                     }
                 } else {
                     $('#sensorlist-tbody').html('<tr><td colspan="5" class="text-center">No Results</td></tr>');
