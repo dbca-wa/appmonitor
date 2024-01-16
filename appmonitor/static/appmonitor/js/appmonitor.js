@@ -440,6 +440,8 @@ var appmonitor = {
 
                         // }
 
+                        var active_tick = "<i class='bi bi-check-circle-fill' style='color: #32b332'></i>";
+                        var inactive_cross = "<i class='bi bi-x-circle-fill' style='color: #ff2626'></i>";
 
                         for (let i = 0; i < resp.monitors.length; i++) {
                             button_json = '{"id": "'+resp.monitors[i].id+'"}'
@@ -447,11 +449,15 @@ var appmonitor = {
                             if (resp.monitors[i].status == 0 ) {
                                 
                                 htmlval+= "<tr>";                                                                         
-                                htmlval+= "     <td>";                            
-                                
-                                    htmlval+= "<div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>";
-                                
+                                htmlval+= "     <td>";                                                            
+                                htmlval+= "<div class='bg-secondary status-box-white' style='font-size: 10px; padding-top: 7px;'>UNKNOWN</div>";
+                                if (resp.monitors[i].active == true) {
+                                    htmlval+= "     <td>"+active_tick+"</td>";
+                                } else {
+                                    htmlval+= "     <td>"+inactive_cross+"</td>";
+                                }                                
                                 htmlval+= "     </td>";
+                                htmlval+= "     <td>A</td>"; 
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
                                 htmlval+= "     <td>"+resp.monitors[i].name;
@@ -482,7 +488,11 @@ var appmonitor = {
                                 htmlval+= "     <td>";                            
                                 
                                 htmlval+= "<div class='bg-danger status-box-white' >DOWN</div>";
-                                
+                                if (resp.monitors[i].active == true) {
+                                    htmlval+= "     <td>"+active_tick+"</td>";
+                                } else {
+                                    htmlval+= "     <td>"+inactive_cross+"</td>";
+                                }                                
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
@@ -516,7 +526,11 @@ var appmonitor = {
                                 htmlval+= "     <td>";                            
                                 
                                 htmlval+= "<div class='bg-warning status-box-white' >WARN</div>";
-                                
+                                if (resp.monitors[i].active == true) {
+                                    htmlval+= "     <td>"+active_tick+"</td>";
+                                } else {
+                                    htmlval+= "     <td>"+inactive_cross+"</td>";
+                                }                                
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
@@ -551,6 +565,11 @@ var appmonitor = {
                                 htmlval+= "<div class='bg-success status-box-white' >UP</div>";
                                 
                                 htmlval+= "     </td>";
+                                if (resp.monitors[i].active == true) {
+                                    htmlval+= "     <td>"+active_tick+"</td>";
+                                } else {
+                                    htmlval+= "     <td>"+inactive_cross+"</td>";
+                                }
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
                                 htmlval+= "     <td>"+resp.monitors[i].name;
