@@ -19,6 +19,8 @@ import threading
 import datetime
 import json
 import re
+import psycopg2
+import time
 
 from appmonitor import models
 
@@ -56,11 +58,108 @@ class Command(BaseCommand):
                   thread.start()
             if i.mon_type == 10:
                   thread = threading.Thread(target=self.get_sharepoint_auth, args=(i,))
-                  thread.start()                  
+                  thread.start()  
 
+            if i.mon_type == 11:
+                  thread = threading.Thread(target=self.db_timing_check, args=(i,))
+                  thread.start()  
+
+            if i.mon_type == 12:
+                  thread = threading.Thread(target=self.db_query_check, args=(i,))
+                  thread.start()  
         #thread still keep running not accurate finished time.  work in progress                  
         #mjl.finished = datetime.datetime.today()
         #mjl.save()
+
+    def db_query_check(self, monitor):
+        html_str = ''
+        try:
+            conn = psycopg2.connect(database=monitor.db_name, 
+                    user=monitor.db_username, 
+                    password=monitor.db_password,
+                    host=monitor.db_host,                   
+                    port = monitor.db_port)
+            cursor = conn.cursor()
+            
+            cursor.execute(monitor.db_query)
+            rows = cursor.fetchall()
+            row_one_column_one = rows[0][0]
+        except Exception as e:           
+            print (e)
+            html_str = str(e)
+
+        try:
+            if monitor.check_operator == 1:
+                if int(row_one_column_one) > int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', row_one_column_one)
+                elif int(row_one_column_one) > int(monitor.warn_value):
+                    self.create_monitor_history(monitor,2,'Warn', row_one_column_one)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', row_one_column_one)  
+
+            if monitor.check_operator == 2:
+                if int(row_one_column_one) < int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', row_one_column_one)
+                elif int(row_one_column_one) < int(monitor.warn_value):
+                    self.create_monitor_history(monitor,2,'Warn', row_one_column_one)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', row_one_column_one)  
+
+            if monitor.check_operator == 3:
+                if int(row_one_column_one) == int(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', row_one_column_one)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', row_one_column_one)  
+
+            if monitor.check_operator == 4:
+                if str(row_one_column_one) == str(monitor.up_value):
+                    self.create_monitor_history(monitor,3,'Success ', row_one_column_one)
+                else:
+                    self.create_monitor_history(monitor,1,'Down', row_one_column_one+":"+html_str)    
+  
+        except Exception as e:
+            print (e)
+            self.create_monitor_history(monitor,1,'Error', str(e)+":"+html_str)
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
+
+    def db_timing_check(self, monitor):
+
+        html_str = ''
+        try:
+
+            conn = psycopg2.connect(database=monitor.db_name, 
+                    user=monitor.db_username, 
+                    password=monitor.db_password,
+                    host=monitor.db_host,                   
+                    port = monitor.db_port)
+            cursor = conn.cursor()
+            tic = time.time()
+            cursor.execute(monitor.db_query)
+            toc = time.time()
+            time_lapse = toc - tic
+        except Exception as e:           
+            print (e)
+            html_str = str(e)
+            auth_passed = False
+
+        try:
+            if int(time_lapse) < int(monitor.up_value):
+                self.create_monitor_history(monitor,3,'Success ', time_lapse)
+            elif int(time_lapse) < int(monitor.warn_value):
+                self.create_monitor_history(monitor,2,'Warn', time_lapse)
+            else:
+                self.create_monitor_history(monitor,1,'Down', time_lapse)   
+  
+        except Exception as e:
+            print (e)
+            self.create_monitor_history(monitor,1,'Error', str(e)+":"+html_str)
+
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
 
     def get_sharepoint_auth(self, monitor):
 

@@ -191,6 +191,9 @@ def monitoring_create(request, *args, **kwargs):
                 status_code = None
                 if json_body['statuscode'].isnumeric() > 0:
                     status_code = int(json_body['statuscode'])
+                db_type = None
+                if json_body['dbtype'].isnumeric() > 0:
+                    db_type = int(json_body['dbtype'])
                 
                     
                 
@@ -214,6 +217,13 @@ def monitoring_create(request, *args, **kwargs):
                                                 sharepoint_url = json_body['sharepointurl'],
                                                 sharepoint_username = json_body['sharepointusername'],
                                                 sharepoint_password = json_body['sharepointpassword'],
+                                                db_type = db_type,
+                                                db_host = json_body['dbhost'],
+                                                db_name = json_body['dbname'],
+                                                db_username = json_body['dbusername'],
+                                                db_password = json_body['dbpassword'],
+                                                db_port = json_body['dbport'],
+                                                db_query = json_body['dbquery'],                                            
                                                 up_value = json_body['up'],
                                                 warn_value = json_body['warn'],
                                                 down_value = json_body['down'],
@@ -247,6 +257,10 @@ def monitoring_update(request, *args, **kwargs):
                 status_code = None
                 if json_body['statuscode'].isnumeric() > 0:
                     status_code = int(json_body['statuscode'])
+
+                db_type = None
+                if json_body['dbtype'].isnumeric() > 0:
+                    db_type = int(json_body['dbtype'])
                
                 responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['responsiblegroup'])                
                 monitor = models.Monitor.objects.get(id=json_body['monitor_id'])
@@ -268,6 +282,13 @@ def monitoring_update(request, *args, **kwargs):
                 monitor.sharepoint_url = json_body['sharepointurl']
                 monitor.sharepoint_username = json_body['sharepointusername']
                 monitor.sharepoint_password = json_body['sharepointpassword']
+                monitor.db_type = db_type
+                monitor.db_host = json_body['dbhost']  
+                monitor.db_name = json_body['dbname']
+                monitor.db_username = json_body['dbusername']
+                monitor.db_password = json_body['dbpassword']
+                monitor.db_port = json_body['dbport']
+                monitor.db_query = json_body['dbquery']
                 monitor.up_value = json_body['up']
                 monitor.warn_value = json_body['warn']
                 monitor.down_value = json_body['down']

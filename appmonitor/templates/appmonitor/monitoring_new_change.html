@@ -118,6 +118,41 @@
                 <input type="text" class="form-control" id="{{formstatus}}-monitoring-password" value="" autocomplete="off">
             </div>
         </div>
+
+        <div class='col-12' id="{{formstatus}}-monitoring-dbtype-div">
+            <label for="" class="form-label">Database Type</label>
+                <select type="text" class="form-control" id="{{formstatus}}-monitoring-dbtype" >
+                    <option value="">Select One</option> 
+                    {% for co in db_type %}
+                        <option value="{{ co.0 }}" >{{ co.1 }}</option>
+                    {% endfor %}                                                          
+                </select>
+        </div>  
+        <div class='col-12' id="{{formstatus}}-monitoring-dbhost-div">
+            <label for="" class="form-label">Database Host</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-dbhost" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-dbname-div">
+            <label for="" class="form-label">Database Name</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-dbname" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-dbusername-div">
+            <label for="" class="form-label">Database Username</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-dbusername" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-dbpassword-div">
+            <label for="" class="form-label">Database Password</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-dbpassword" value="" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-dbport-div">
+            <label for="" class="form-label">Database Port</label>
+            <input type="text" class="form-control" id="{{formstatus}}-monitoring-dbport" value="5432" autocomplete="off">
+        </div>
+        <div class='col-12' id="{{formstatus}}-monitoring-dbquery-div">
+            <label for="" class="form-label">Database Query</label>
+            <textarea type="text" class="form-control" id="{{formstatus}}-monitoring-dbquery" value="" autocomplete="off"></textarea>
+        </div>
+
         <div class='col-12' id="{{formstatus}}-monitoring-up-div">
             <label for="" class="form-label">UP Value</label>
             <input type="text" class="form-control" id="{{formstatus}}-monitoring-up" value="" autocomplete="off">

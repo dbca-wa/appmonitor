@@ -9,7 +9,6 @@ var appmonitor = {
 
         $("#new_monitoring_btn" ).on( "click", function() { 
 
-
             $('#new-monitoring-operator-div').hide(); 
             $('#new-monitoring-url-div').hide();
             $('#new-monitoring-stringcheck-div').hide();
@@ -22,12 +21,19 @@ var appmonitor = {
             $('#new-monitoring-sharepointusername-div').hide();
             $('#new-monitoring-sharepointpassword-div').hide();
 
+            $('#new-monitoring-dbtype-div').hide();
+            $('#new-monitoring-dbhost-div').hide();
+            $('#new-monitoring-dbname-div').hide();
+            $('#new-monitoring-dbusername-div').hide();
+            $('#new-monitoring-dbpassword-div').hide();
+            $('#new-monitoring-dbport-div').hide();
+            $('#new-monitoring-dbquery-div').hide();
+
             $('#new-monitoring-basicauth-div').hide();
             $('#new-monitoring-basic-auth-user-pass').hide();
             $('#new-monitoring-up-div').hide();
             $('#new-monitoring-warn-div').hide();
             $('#new-monitoring-down-div').hide();
-
 
             $('#new-monitoring-checkname').val("");         
             $('#new-monitoring-systemid').val("");
@@ -42,9 +48,19 @@ var appmonitor = {
             $('#new-monitoring-host').val(""); 
             $('#new-monitoring-port').val(""); 
             $('#new-monitoring-ignoressl').prop( "checked", false );
+
             $('#new-monitoring-sharepointurl').val("");
             $('#new-monitoring-sharepointusername').val("");
             $('#new-monitoring-sharepointpassword').val("");
+
+            $('#new-monitoring-dbtype').val("");
+            $('#new-monitoring-dbhost').val("");
+            $('#new-monitoring-dbname').val("");
+            $('#new-monitoring-dbusername').val("");
+            $('#new-monitoring-dbpassword').val("");
+            $('#new-monitoring-dbport').val("5432");
+            $('#new-monitoring-dbquery').val("");
+
             $('#new-monitoring-basicauth').prop( "checked", false );
             $('#new-monitoring-username').val("");
             $('#new-monitoring-password').val("");            
@@ -124,6 +140,37 @@ var appmonitor = {
             
         }  
 
+        if (value == 11) {         
+            $('#'+save_type+'-monitoring-dbtype-div').show();
+            $('#'+save_type+'-monitoring-dbhost-div').show();
+            $('#'+save_type+'-monitoring-dbname-div').show();
+            $('#'+save_type+'-monitoring-dbusername-div').show();   
+            $('#'+save_type+'-monitoring-dbpassword-div').show(); 
+            $('#'+save_type+'-monitoring-dbport-div').show(); 
+            $('#'+save_type+'-monitoring-dbquery-div').show(); 
+
+            $('#'+save_type+'-monitoring-operator-div').show(); 
+            $('#'+save_type+'-monitoring-up-div').show();
+            $('#'+save_type+'-monitoring-warn-div').show();
+            $('#'+save_type+'-monitoring-down-div').show();
+        
+        }  
+
+        if (value == 12) {         
+            $('#'+save_type+'-monitoring-dbtype-div').show();
+            $('#'+save_type+'-monitoring-dbhost-div').show();
+            $('#'+save_type+'-monitoring-dbname-div').show();
+            $('#'+save_type+'-monitoring-dbusername-div').show();   
+            $('#'+save_type+'-monitoring-dbpassword-div').show(); 
+            $('#'+save_type+'-monitoring-dbport-div').show(); 
+            $('#'+save_type+'-monitoring-dbquery-div').show(); 
+
+            $('#'+save_type+'-monitoring-operator-div').show(); 
+            $('#'+save_type+'-monitoring-up-div').show();
+            $('#'+save_type+'-monitoring-warn-div').show();
+            $('#'+save_type+'-monitoring-down-div').show();
+        }  
+
     },
     reset_new_monitoring_form: function(save_type) {
         
@@ -140,7 +187,16 @@ var appmonitor = {
         $('#'+save_type+'-monitoring-ignoressl-div').hide();
         $('#'+save_type+'-monitoring-sharepointurl-div').hide();
         $('#'+save_type+'-monitoring-sharepointusername-div').hide();
-        $('#'+save_type+'-monitoring-sharepointpassword-div').hide();   
+        $('#'+save_type+'-monitoring-sharepointpassword-div').hide();  
+
+        $('#'+save_type+'-monitoring-dbtype-div').hide();
+        $('#'+save_type+'-monitoring-dbhost-div').hide();
+        $('#'+save_type+'-monitoring-dbname-div').hide();
+        $('#'+save_type+'-monitoring-dbusername-div').hide();        
+        $('#'+save_type+'-monitoring-dbpassword-div').hide();
+        $('#'+save_type+'-monitoring-dbquery-div').hide(); 
+        $('#'+save_type+'-monitoring-dbport-div').hide();
+
         $('#'+save_type+'-monitoring-basicauth-div').hide();
         $('#'+save_type+'-monitoring-basic-auth-user-pass').hide();
         $('#'+save_type+'-monitoring-up-div').hide();
@@ -176,9 +232,19 @@ var appmonitor = {
         var sharepointurl = $('#'+messages_class+'-monitoring-sharepointurl').val();
         var sharepointusername = $('#'+messages_class+'-monitoring-sharepointusername').val();
         var sharepointpassword = $('#'+messages_class+'-monitoring-sharepointpassword').val();
+        
+        var dbtype = $('#'+messages_class+'-monitoring-dbtype').val();
+        var dbhost = $('#'+messages_class+'-monitoring-dbhost').val();
+        var dbname = $('#'+messages_class+'-monitoring-dbname').val();
+        var dbusername = $('#'+messages_class+'-monitoring-dbusername').val();
+        var dbpassword = $('#'+messages_class+'-monitoring-dbpassword').val();
+        var dbquery = $('#'+messages_class+'-monitoring-dbquery').val();
+        var dbport = $('#'+messages_class+'-monitoring-dbport').val();
+
         var basicauth = $('#'+messages_class+'-monitoring-basicauth').prop('checked');
         var username = $('#'+messages_class+'-monitoring-username').val();
         var password = $('#'+messages_class+'-monitoring-password').val();
+
         var up = $('#'+messages_class+'-monitoring-up').val(); 
         var warn = $('#'+messages_class+'-monitoring-warn').val(); 
         var down = $('#'+messages_class+'-monitoring-down').val();
@@ -200,6 +266,13 @@ var appmonitor = {
                             'sharepointurl' : sharepointurl,
                             'sharepointusername' : sharepointusername,
                             'sharepointpassword' : sharepointpassword,
+                            'dbtype' : dbtype,
+                            'dbhost' : dbhost,
+                            'dbname' : dbname,
+                            'dbusername' : dbusername,
+                            'dbpassword' : dbpassword,
+                            'dbport' : dbport,
+                            'dbquery' : dbquery,                            
                             'basicauth' : basicauth,
                             'username' : username,
                             'password' : password,
@@ -280,6 +353,15 @@ var appmonitor = {
                     }
                     $('#'+messages_class+'-monitoring-username').val(resp.monitor_info_array.username);
                     $('#'+messages_class+'-monitoring-password').val(resp.monitor_info_array.password);
+
+                    $('#'+messages_class+'-monitoring-dbtype').val(resp.monitor_info_array.db_type); 
+                    $('#'+messages_class+'-monitoring-dbhost').val(resp.monitor_info_array.db_host);
+                    $('#'+messages_class+'-monitoring-dbname').val(resp.monitor_info_array.db_name); 
+                    $('#'+messages_class+'-monitoring-dbusername').val(resp.monitor_info_array.db_username); 
+                    $('#'+messages_class+'-monitoring-dbpassword').val(resp.monitor_info_array.db_password);
+                    $('#'+messages_class+'-monitoring-dbport').val(resp.monitor_info_array.db_port); 
+                    $('#'+messages_class+'-monitoring-dbquery').val(resp.monitor_info_array.db_query); 
+
                     $('#'+messages_class+'-monitoring-up').val(resp.monitor_info_array.up_value); 
                     $('#'+messages_class+'-monitoring-warn').val(resp.monitor_info_array.warn_value); 
                     $('#'+messages_class+'-monitoring-down').val(resp.monitor_info_array.down_value);
