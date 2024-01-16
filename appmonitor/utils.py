@@ -13,10 +13,29 @@ from django.utils.timezone import utc
 from django.conf import settings
 
 
-def get_checks(status_types, *args, **kwargs):    
+def get_checks(status_types, filters, *args, **kwargs):    
     current_time = datetime.today()
     monitors = []
-    monitor = models.Monitor.objects.filter(active=True)
+    filters_query = Q()
+    if filters:
+    
+        active = True
+        if filters['responsiblegroup'] == '':
+            filters['responsiblegroup'] = 0
+        if filters['inactive'] == 'true' or filters['inactive'] is True:        
+            active = False
+
+        if int(filters['responsiblegroup']) > 0:
+            filters_query &= Q(group_responsible=int(filters['responsiblegroup']))
+        if active is True:
+            filters_query &= Q(active=True)
+            
+        if len(filters['keyword']) > 2: 
+            filters_query &= Q(check_name__icontains=filters['keyword'])
+
+        monitor = models.Monitor.objects.filter(filters_query)  
+    else:
+        monitor = models.Monitor.objects.filter(active=True)
     monitor_status_total = {0 : 0, 1 : 0, 2 : 0, 3:0}
     monitor_status = {"last_job_run": "", "time_differnce_last_job" : "","current_time": current_time.astimezone().strftime('%d %b %Y %H:%M %p')}
     now = datetime.utcnow().replace(tzinfo=utc)

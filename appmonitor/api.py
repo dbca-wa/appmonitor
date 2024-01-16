@@ -19,8 +19,13 @@ def get_checks(request, *args, **kwargs):
 
     if request.user.is_authenticated:
         access_type = utils.user_group_permissions(request)
-        if access_type['view_monitor_status_access'] is True:   
-            checks = utils.get_checks(None)
+        if access_type['view_monitor_status_access'] is True: 
+            responsiblegroup = request.POST.get('responsiblegroup', None)  
+            inactive = request.POST.get('inactive', None)  
+            keyword = request.POST.get('keyword', None)  
+            filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
+
+            checks = utils.get_checks(None,filters)
             return HttpResponse(json.dumps(checks), content_type='application/json', status=200)
         else:
             return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403)         
