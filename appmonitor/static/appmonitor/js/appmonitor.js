@@ -1,6 +1,7 @@
 var appmonitor = {
     var: {
-        loader: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        loader_old: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        loader: '<button class="btn btn-primary" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please Wait Loading...</button>',
         edit_monitor_access: false
     },
     init: function() {
