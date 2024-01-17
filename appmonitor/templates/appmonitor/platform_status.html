@@ -19,15 +19,52 @@
     {% include "appmonitor/platform_new.html" %}
     {% include "appmonitor/platform_change.html" %}
 
+    <div class="row" style='height: 50px;'>
+        <div class="col-md-12 text-center">
+            <div id='loading-progress'></div>
+        </div>
+    </div> 
+
     <div class="container">
         <div class="row">
             <div class="col">
                 <h3>Platform Status</h3>
             </div>
-            <div class="col text-end">
-                {% if access_type.edit_platform_access is True %}
-                    <button type="button" class="btn btn-primary" id='new_platform_btn'>New Platform</button>
-                {% endif %}
+            <div class="col-9 text-end">
+                <div class='row' >
+                    <div class='col-1 text-start p-2 fw-bold' style='background-color: #f7f7f7;'>
+                        Filters
+                    </div>
+
+                    <div class='col-3 pt-1 pb-1' style='background-color: #f7f7f7;'>
+                        
+                            
+                            <input type="email" class="form-control" id="platform-keyword-monitor" placeholder="Keyword">
+                          
+                                                 
+                    </div>                        
+                    <div class='col-3 pt-1 pb-1' style='background-color: #f7f7f7;'>
+
+                            <input class="form-check-input" type="checkbox" value="" id="platform-inactive-monitor">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Include Inactive
+                            </label>
+                                                     
+                    </div>
+                    <div class='col-3 text-end pb-1 pt-1' style='background-color: #f7f7f7;'>
+
+                        <select class="form-select" id='platform-responsiblegroup-monitor' aria-label="Select a Responsible Group">
+                            <option value='' selected >All Groups</option>
+                            {% for rp in responsible_group %}
+                            <option value="{{ rp.id }}">{{ rp.group_name }}</option>
+                            {% endfor %}    
+                        </select>
+                    </div>
+                    <div class='col-2 text-end'>
+                        {% if access_type.edit_platform_access is True %}
+                            <button type="button" class="btn btn-primary" id='new_platform_btn'>New Platform</button>
+                        {% endif %}
+                    </div>
             </div>
         </div>
 

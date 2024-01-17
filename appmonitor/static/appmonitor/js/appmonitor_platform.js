@@ -1,10 +1,11 @@
 var appmonitor_platform = {
     var: {
-        loader: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        loader: '<button class="btn btn-primary" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please Wait Loading...</button>',
+        loader_old: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
         edit_access: false
     },
     init: function() {
-        appmonitor_platform.get_platforms();
+        appmonitor_platform.get_platforms(false);
         appmonitor_platform.var.edit_platform_access = $('#edit_platform_access').val();
         
         $( "#new_platform_btn" ).on( "click", function() {
@@ -27,7 +28,20 @@ var appmonitor_platform = {
         });  
         $( "#save-platform-btn" ).on( "click", function() {
             appmonitor_platform.save_platform("save");           
-        });                      
+        });
+
+        $("#platform-responsiblegroup-monitor" ).on( "change", function() { 
+            appmonitor_platform.get_platforms(true);
+        });
+        $("#platform-inactive-monitor" ).on( "change", function() { 
+            appmonitor_platform.get_platforms(true);
+        });
+        $("#platform-keyword-monitor" ).on( "keyup", function() { 
+                        
+            appmonitor_platform.get_platforms(true);
+            
+        });           
+        
     },
     save_platform: function(save_type) {
         save_url = '/api/platform/create';
@@ -79,7 +93,7 @@ var appmonitor_platform = {
             headers: {'X-CSRFToken' : csrf_token},
             contentType: 'application/json',
             success: function (response) {
-                appmonitor_platform.get_platforms();
+                appmonitor_platform.get_platforms(true);
                 if (save_type == 'save') {
                     $('#EditPlatformModal').modal('hide');
                 } else {
@@ -136,14 +150,17 @@ var appmonitor_platform = {
         });      
 
     },
-    get_platforms: function() {
-        
+    get_platforms: function(filter_change) {
+        var responsiblegroup = $('#platform-responsiblegroup-monitor').val();        
+        var inactive = $('#platform-inactive-monitor').prop('checked');
+        var keyword = $('#platform-keyword-monitor').val();  
+              
         // $('#sensorlist-tbody').html("<tr><td colspan='5' class='text-center'>"+appmonitor.var.loader+"</td></tr>");
         $('#loading-progress').html(appmonitor_platform.var.loader);
         $.ajax({
             type: "GET",
             url: "/api/get-platform-info/",
-            data: {},
+            data: {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword": keyword},
             error: function(resp) {
                 $('#platformlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');
             },
@@ -197,7 +214,9 @@ var appmonitor_platform = {
                         $('#platformlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');                    
                     }   
                     $('#loading-progress').html(""); 
-                    setTimeout("appmonitor_platform.get_platforms()", 60000)                      
+                    if (filter_change == false) {
+                        setTimeout("appmonitor_platform.get_platforms()", 60000);
+                    }                      
                 } else {
                     $('#platformlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');
                     $('#loading-progress').html("");

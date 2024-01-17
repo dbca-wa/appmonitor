@@ -91,10 +91,34 @@ def get_checks(status_types, filters, *args, **kwargs):
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
 
-def get_platform_info(pid, *args, **kwargs):    
+def get_platform_info(pid, filters=None, *args, **kwargs):    
     
     if pid is None:
-        platform_info_obj = models.Platform.objects.filter(active=True)
+        
+        filters_query = Q()
+        if filters:
+        
+            active = True
+            if filters['responsiblegroup'] is None:
+               filters['responsiblegroup'] = 0 
+            if filters['responsiblegroup'] == '':
+                filters['responsiblegroup'] = 0
+            if filters['inactive'] == 'true' or filters['inactive'] is True:        
+                active = False
+
+            if int(filters['responsiblegroup']) > 0:
+                filters_query &= Q(group_responsible=int(filters['responsiblegroup']))
+            if active is True:
+                filters_query &= Q(active=True)
+                
+            if len(filters['keyword']) > 2: 
+                filters_query &= Q(system_name__icontains=filters['keyword'])
+            platform_info_obj = models.Platform.objects.filter(filters_query)
+             
+        else:
+            platform_info_obj = models.Platform.objects.filter(active=True)
+
+        
         platform_info_array = []
         for pi in platform_info_obj:
             row = {}
