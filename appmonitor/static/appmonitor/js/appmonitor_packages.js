@@ -1,17 +1,33 @@
 var appmonitor_packages = {
     var: {
-        loader: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        loader: '<button class="btn btn-primary" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please Wait Loading...</button>',
+        loader_old: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
     },
     init: function() {
         appmonitor_packages.get_platform_packages();
-        $( "#package_search_btn" ).on( "click", function() {
-            appmonitor_packages.get_platform_packages();   
+        // $( "#package_search_btn" ).on( "click", function() {
+        //     appmonitor_packages.get_platform_packages();   
+        // });
+        // $("#package_search").on('keyup', function (e) {
+        //     if (e.key === 'Enter' || e.keyCode === 13) {
+        //         appmonitor_packages.get_platform_packages();   
+        //     }
+        // })
+
+        $("#only_vulnerable" ).on( "change", function() { 
+            appmonitor_packages.get_platform_packages();  
         });
-        $("#package_search").on('keyup', function (e) {
-            if (e.key === 'Enter' || e.keyCode === 13) {
-                appmonitor_packages.get_platform_packages();   
-            }
-        })
+        $("#exact_match" ).on( "change", function() { 
+            appmonitor_packages.get_platform_packages();  
+        });
+
+        $("#package_search" ).on( "keyup", function() { 
+                        
+            appmonitor_packages.get_platform_packages();  
+            
+        });  
+
+
     },
     get_platform_packages: function() {
         data = {}

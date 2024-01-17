@@ -322,6 +322,8 @@ var appmonitor = {
             url: "/api/monitor/"+pid,
             data: {},
             error: function(resp) {
+                
+                alert("Error Loading Monitor Data");
                 $('#monitorlist-tbody').html('<tr><td colspan="8" class="text-center">No Results</td></tr>');
             },
             success: function (resp) {
@@ -385,7 +387,7 @@ var appmonitor = {
                         $('#'+messages_class+'-monitoring-active').prop('checked', false);
                     }
 
-
+                    $("#EditMonitorModal").modal("show");
                     
                 }
             }
@@ -603,7 +605,7 @@ var appmonitor = {
                             appmonitor.get_update_monitor_by_id(btndata['id']);
                             // appmonitor_platform.edit_platform();
                             
-                            $("#EditMonitorModal").modal("show");
+                           
                                      
                         });
                         $('#total-unknown').html(resp.monitor_status_total[0]);

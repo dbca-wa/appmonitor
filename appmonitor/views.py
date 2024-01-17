@@ -31,11 +31,11 @@ class HomePage(base.TemplateView):
         context['current_time'] = datetime.today
         now = datetime.utcnow().replace(tzinfo=utc)
         responsible_group = models.ResponsibleGroup.objects.filter(active=True)
-        context['responsible_group'] = responsible_group       
+        context['responsible_group'] = responsible_group    
         context['mon_types'] = models.Monitor.MON_TYPE
         context['check_operators'] = models.Monitor.CHECK_OPERATOR
         context['db_type'] = models.Monitor.DB_TYPE
-
+        
         mjl = models.MonitorJobLog.objects.all().order_by('-id').first()
         if mjl is not None:
             if mjl.started:
@@ -135,12 +135,19 @@ class PlatformView(base.TemplateView):
         context: dict[str, Any] = {}
         platform_id = self.kwargs['pk']
         platform_obj = None
+
+
+
         if request.user.is_authenticated:
+            only_vulnerable = 'false'
             try:
-                 
+                only_vulnerable = request.GET.get('only_vulnerable','false')
+                python_packages_obj = []
                 platform_obj = models.Platform.objects.get(id=platform_id)
-                python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id)
-                
+                if only_vulnerable == 'true':
+                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0)
+                else:
+                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id)                
 
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))
@@ -149,6 +156,7 @@ class PlatformView(base.TemplateView):
             context['platform_obj'] = platform_obj
             context['python_packages_obj'] = python_packages_obj
             context['request'] = request
+            context['only_vulnerable'] = only_vulnerable
         
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)            

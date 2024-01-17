@@ -13,6 +13,13 @@
 {% if access_type.view_access_package_status is True %}
     <div class="container">
         <!-- Messages  -->
+
+        <div class="row" style='height: 50px;'>
+            <div class="col-md-12 text-center">
+                <div id='loading-progress'></div>
+            </div>
+
+        </div> 
         <h3>Package Status</h3>
         <br>
         {% if messages %}
@@ -55,15 +62,16 @@
                         <div class='col-12' >
                             <div class="mb-3 row">
                                 <div class='col-4' >
+                                    &nbsp;
+                                </div>
+                                <div class='col-4' >
                                     <label for="staticEmail" class="col-sm-4 col-form-label">Package Search</label>
                                 </div>
                                 <div class="col-4" >
                                     <input type="text"  class="form-control" id="package_search" value="">
                                 </div>
 
-                                <div class="col-4 text-center"  >
-                                    <button type="submit" id="package_search_btn" class="btn btn-primary">Search</button>
-                                </div>
+
                             </div>
                         </div>
                     </div>

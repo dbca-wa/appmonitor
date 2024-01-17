@@ -38,8 +38,13 @@ def get_checks_alerts(request, *args, **kwargs):
 
     if request.user.is_authenticated:
         access_type = utils.user_group_permissions(request)
-        if access_type['view_monitor_status_access'] is True:          
-            checks = utils.get_checks([1,2])
+        if access_type['view_monitor_status_access'] is True:
+            responsiblegroup = request.POST.get('responsiblegroup', None)  
+            inactive = request.POST.get('inactive', None)  
+            keyword = request.POST.get('keyword', None)  
+            filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
+
+            checks = utils.get_checks([1,2],filters)
             return HttpResponse(json.dumps(checks), content_type='application/json', status=200)
         else:
             return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403)            
@@ -137,8 +142,14 @@ def get_platform_info(request, *args, **kwargs):
 
     if request.user.is_authenticated:
         access_type = utils.user_group_permissions(request)
-        if access_type['view_access_platform_status'] is True:           
-            data = utils.get_platform_info(None)        
+        if access_type['view_access_platform_status'] is True:
+            responsiblegroup = request.GET.get('responsiblegroup', '')  
+            inactive = request.GET.get('inactive', 'false')  
+            keyword = request.GET.get('keyword', '')  
+            filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
+
+
+            data = utils.get_platform_info(None,filters)        
             return HttpResponse(json.dumps(data), content_type='application/json', status=200)
         else:
             return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403)      
@@ -186,7 +197,7 @@ def monitoring_create(request, *args, **kwargs):
             access_type = utils.user_group_permissions(request)
             if access_type['edit_access_monitoring'] is True:
                 json_body = json.loads(request.body.decode())
-                print (json_body)
+                
                 check_operator = None
                 if len(json_body['operator']) == 0:
                     pass
@@ -252,7 +263,7 @@ def monitoring_update(request, *args, **kwargs):
             access_type = utils.user_group_permissions(request)
             if access_type['edit_access_monitoring'] is True:            
                 json_body = json.loads(request.body.decode())
-                print (json_body)
+                
                 check_operator = None
                 if len(json_body['operator']) == 0:
                     pass
