@@ -1,7 +1,8 @@
 {% extends "webtemplate_dbca/base_b5_auth_session.html" %}
 
 {% block extra_css %}
-    <link rel="icon" type="image/png" href="/static/appmonitor/img/favicon.ico">
+    
+    
     <link type="text/css" href="/static/common/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css?ver={{ GIT_COMMIT_HASH }}" rel="stylesheet">
 {% endblock %}
 
@@ -13,6 +14,7 @@
 {% endblock %}
 
 {% block header_top_menu %}
+    
     <style>
        @font-face { font-family: "Glyphicons Halflings"; src: url('/static/ps/fonts/glyphicons-halflings-regular.ttf');} 
     </style>
@@ -47,6 +49,7 @@ MENU 2
 {%endblock %}
 
 {% block menu_items_left_brand %}
+<link rel="icon" type="image/png" href="/static/appmonitor/images/appfavicon.ico">
 <a class="navbar-brand" href="{% url 'home'%}">&nbsp;Monitoring</a>
 <a class="navbar-brand" href="{% url 'platform_status'%}">&nbsp;Platform Status</a>
 <a class="navbar-brand" href="{% url 'packages_status'%}">&nbsp;Packages Status</a>
