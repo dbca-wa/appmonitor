@@ -49,6 +49,14 @@ class Command(BaseCommand):
                   thread = threading.Thread(target=self.get_ssl_expiry, args=(i,i.host,int(i.port),))
                   thread.start()
 
+            if i.mon_type == 6:
+                 thread = threading.Thread(target=self.ping2, args=(i,i.host,10,1))
+                 thread.start()
+
+            if i.mon_type == 7:
+                 thread = threading.Thread(target=self.ping2, args=(i,i.host,10,1))
+                 thread.start()
+
             if i.mon_type == 8:
                   thread = threading.Thread(target=self.get_json_key_check, args=(i,))
                   thread.start()
@@ -287,6 +295,62 @@ class Command(BaseCommand):
         a = dt_datetime.now()
         monitor.last_update =a
         monitor.save()
+
+    def ping2(self, monitor, server='www.google.com', count=1, wait_sec=1):
+        """
+        :rtype: dict or None
+        """
+        print ("RUNNING PING 2")
+        resp = {}
+        output = ""
+        cmd = "ping -c {} -W {} {}".format(count, wait_sec, server).split(' ')
+        try:
+            output = subprocess.check_output(cmd).decode().strip()
+            lines = output.split("\n")
+            total = lines[-2].split(',')[3].split()[1]
+            loss = lines[-2].split(',')[2].split()[0]
+            timing = lines[-1].split()[3].split('/')
+            resp = {
+                'type': 'rtt',
+                'min': timing[0],
+                'avg': timing[1],
+                'max': timing[2],
+                'mdev': timing[3],
+                'total': total,
+                'loss': loss,
+            }
+            
+        except Exception as e:
+            print(e)
+            output = str(e)
+            resp = {'avg': None,'loss' : '100%'}
+        print ("PING 2 OUT PUT")
+        print (output)
+        print (resp)
+        if monitor.mon_type == 6:
+            if resp['avg'] is None:
+                 self.create_monitor_history(monitor,0,'unknown latency', output)
+            else:
+                if float(resp['avg']) >= int(monitor.down_value):
+                   self.create_monitor_history(monitor,1,'latency : '+str(resp['avg']), output)
+                elif float(resp['avg']) >= int(monitor.warn_value):
+                   self.create_monitor_history(monitor,2,'latency : '+str(resp['avg']), output)
+                elif float(resp['avg']) >= int(monitor.up_value):
+                   self.create_monitor_history(monitor,3,'latency : '+str(resp['avg']), output)
+                else:
+                   self.create_monitor_history(monitor,0,'no latency matches for down/warn/up.  Check values', output)
+
+        if monitor.mon_type == 7:
+            if int(resp['loss'].rstrip("%")) >= int(monitor.down_value):
+                self.create_monitor_history(monitor,1,'packet loss : '+str(resp['loss']), output)
+            elif int(resp['loss'].rstrip("%")) >= int(monitor.warn_value):
+                self.create_monitor_history(monitor,2,'packet loss : '+str(resp['loss']), output)
+            elif int(resp['loss'].rstrip("%")) >= int(monitor.up_value):
+                self.create_monitor_history(monitor,3,'packet loss : '+str(resp['loss']), output)
+        a = dt_datetime.now()
+        monitor.last_update =a
+        monitor.save()
+
 
     def socket(self,monitor,host,port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

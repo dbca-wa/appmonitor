@@ -124,6 +124,18 @@ var appmonitor = {
             $('#'+save_type+'-monitoring-host-div').show();           
         }
 
+        if (value == 6) { 
+            $('#'+save_type+'-monitoring-host-div').show();          
+            $('#'+save_type+'-monitoring-up-div').show();
+            $('#'+save_type+'-monitoring-warn-div').show();
+            $('#'+save_type+'-monitoring-down-div').show();       
+        }
+        if (value == 7) {  
+            $('#'+save_type+'-monitoring-host-div').show();         
+            $('#'+save_type+'-monitoring-up-div').show();
+            $('#'+save_type+'-monitoring-warn-div').show();
+            $('#'+save_type+'-monitoring-down-div').show();       
+        }
         if (value == 8) {         
             $('#'+save_type+'-monitoring-url-div').show();
             $('#'+save_type+'-monitoring-operator-div').show(); 
@@ -460,7 +472,7 @@ var appmonitor = {
                                     htmlval+= "     <td>"+inactive_cross+"</td>";
                                 }                                
                                 htmlval+= "     </td>";
-                                htmlval+= "     <td>A</td>"; 
+                                
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
                                 htmlval+= "     <td>"+resp.monitors[i].name;
