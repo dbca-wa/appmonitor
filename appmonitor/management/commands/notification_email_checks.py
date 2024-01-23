@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
             print ("Running Notificaiton Job")
-            checks = utils.get_checks()
+            checks = utils.get_checks(None,None)
             manual_checks = models.ManualCheck.objects.filter(active=True)
             t = email_templates.AppCheckList()
             to_addresses=[]
