@@ -164,7 +164,8 @@ EMAIL_INSTANCE = env('EMAIL_INSTANCE','PROD')
 CRON_CLASSES = [
     'appmonitor.cron.CronJobNotificationEmailWeekDays',
     'appmonitor.cron.CronJobNotificationEmailWeekends',
-    'appmonitor.cron.CronJobDBArchive'
+    'appmonitor_client.cron.CronJobAppMonitorClient',
+    'appmonitor.cron.CronJobDBArchive',
 
 ]
     
