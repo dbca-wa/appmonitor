@@ -341,6 +341,9 @@ class PythonPackageVulnerability(models.Model):
         self.updated = datetime.now()
         super(PythonPackageVulnerability,self).save(*args,**kwargs)
 
+    def __str__(self):
+        return self.package_name            
+
 class PythonPackageVulnerabilityVersion(models.Model):
     python_package = models.ForeignKey(PythonPackageVulnerability, null=True, blank=True, on_delete=models.SET_NULL)
     package_version = models.CharField(max_length=255, default='', null=True, blank=True) 
