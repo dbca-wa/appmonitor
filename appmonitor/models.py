@@ -383,4 +383,11 @@ class PythonPackageVulnerabilityVersionAdvisoryInformation(models.Model):
                 to_addresses.append(notification.email)
             t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
 
-        
+            if pp.platform.group_responsible:
+                for notification in ResponsibleGroupAdvisoryEmail.objects.filter(id=pp.platform.group_responsible.id,active=True):
+                    print ("Preparing to "+notification.email)
+                    to_addresses.append(notification.email)
+                t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
+
+
+            
