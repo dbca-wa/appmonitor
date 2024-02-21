@@ -39,10 +39,20 @@ def get_checks_alerts(request, *args, **kwargs):
     if request.user.is_authenticated:
         access_type = utils.user_group_permissions(request)
         if access_type['view_monitor_status_access'] is True:
-            responsiblegroup = request.POST.get('responsiblegroup', None)  
-            inactive = request.POST.get('inactive', None)  
-            keyword = request.POST.get('keyword', None)  
-            filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
+            responsiblegroup = None
+            inactive = None
+            keyword = None
+            
+            if request.POST:
+                responsiblegroup = request.POST.get('responsiblegroup', None)  
+                inactive = request.POST.get('inactive', None)  
+                keyword = request.POST.get('keyword', None)  
+       
+            if request.GET:
+                responsiblegroup = request.GET.get('responsiblegroup', None)  
+                inactive = request.GET.get('inactive', None)  
+                keyword = request.GET.get('keyword', None)  
+            filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}                
 
             checks = utils.get_checks([1,2],filters)
             return HttpResponse(json.dumps(checks), content_type='application/json', status=200)

@@ -25,13 +25,15 @@ def get_checks(status_types, filters, *args, **kwargs):
         if filters['inactive'] == 'true' or filters['inactive'] is True:        
             active = False
 
-        if int(filters['responsiblegroup']) > 0:
-            filters_query &= Q(group_responsible=int(filters['responsiblegroup']))
+        if filters['responsiblegroup']:
+            if int(filters['responsiblegroup']) > 0:
+                filters_query &= Q(group_responsible=int(filters['responsiblegroup']))
         if active is True:
             filters_query &= Q(active=True)
-            
-        if len(filters['keyword']) > 2: 
-            filters_query &= Q(check_name__icontains=filters['keyword'])
+
+        if filters['keyword']:            
+            if len(filters['keyword']) > 2: 
+                filters_query &= Q(check_name__icontains=filters['keyword'])
 
         monitor = models.Monitor.objects.filter(filters_query)  
     else:
