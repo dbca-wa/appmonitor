@@ -103,13 +103,13 @@ class Monitor(models.Model):
     use_auth2_token = models.BooleanField(default=False)
 
     # web connect (string key word checks)
-    url = models.CharField(max_length=255, default='', null=True, blank=True)
+    url = models.CharField(max_length=2048, default='', null=True, blank=True)
     string_check = models.CharField(max_length=50, null=True, blank=True)
     json_key = models.CharField(max_length=400, null=True, blank=True)
     status_code = models.IntegerField(default=200, null=True, blank=True)
 
     # port
-    host = models.CharField(max_length=255, default='', null=True, blank=True)
+    host = models.CharField(max_length=2048, default='', null=True, blank=True)
     port = models.CharField(max_length=5, default=0, null=True, blank=True)
 
     # ssl ignore for host or url

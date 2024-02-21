@@ -154,8 +154,8 @@ var appmonitor = {
             $('#'+save_type+'-monitoring-url-div').show();  
             $('#'+save_type+'-monitoring-statuscode-div').show();
 
-            $('#'+save_type+'-monitoring-basicauth-div').hide();
-            $('#'+save_type+'-monitoring-basic-auth-user-pass').hide();
+            $('#'+save_type+'-monitoring-basicauth-div').show();
+            $('#'+save_type+'-monitoring-basic-auth-user-pass').show();
             
         } 
         if (value == 10) {         
