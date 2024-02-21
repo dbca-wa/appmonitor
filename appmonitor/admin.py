@@ -114,10 +114,17 @@ class AccessGroupAdmin(admin.ModelAdmin):
      list_display = ('id','access_type','group_name','active', 'created')
      list_filter = ('access_type','group_name')
 
+@admin.register(models.PythonPackageVulnerabilityVersion)
+class PythonPackageVulnerabilityVersionAdmin(admin.ModelAdmin):
+     list_display = ('id','python_package','package_version','updated','created')
+     search_fields = ('id','package_version','cve')
+     raw_id_fields = ('python_package',)
+
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
      list_display = ('id','package_version','advisory','cve','updated','created')
      search_fields = ('id','package_version__package_version','cve')
+     raw_id_fields = ('package_version',)
 
 class PythonPackageVulnerabilityVersionAdvisoryInformationInline(NestedStackedInline):
      list_display = ('id','package_version','advisory','cve','updated','created')
