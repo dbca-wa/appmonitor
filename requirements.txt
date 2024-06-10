@@ -26,3 +26,4 @@ git+https://github.com/jasonrollins/shareplum.git@55d860b#egg=shareplum
 psycopg2==2.9.9
 idna==3.7
 sqlparse==0.5.0
+requests==2.32.3

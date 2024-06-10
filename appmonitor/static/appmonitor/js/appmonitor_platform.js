@@ -179,7 +179,7 @@ var appmonitor_platform = {
                                 // htmlval+= "     <td>"+resp.platform_info_array[i].vulnerability_total+"</td>";
 
                                 if (resp.platform_info_array[i].vulnerability_total > 0) {
-                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:default;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
                                 } else {
                                     htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
 
