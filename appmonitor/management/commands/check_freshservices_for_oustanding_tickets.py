@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
                             print (t['subject'])   
                             nowtime = datetime.now()
-                            print (t)             
+                            # print (t)             
                             
                             # created_at = t['created_at'].replace("T"," ")
                             # created_at = created_at.replace("Z","")
