@@ -172,6 +172,16 @@ class MonitorGroup(models.Model):
     def __str__(self):
         return self.group.name       
 
+class MonitorAlert(models.Model):
+    monitor = models.ForeignKey(Monitor, null=True, blank=True, on_delete=models.CASCADE)
+    email = models.CharField(max_length=1024)
+    no_html_email = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email    
+
 class ManualCheck(models.Model):
     check_name = models.CharField(max_length=50)
     check_url = models.CharField(max_length=255, default='', null=True, blank=True)

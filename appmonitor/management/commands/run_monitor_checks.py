@@ -23,6 +23,7 @@ import psycopg2
 import time
 
 from appmonitor import models
+from appmonitor import email_templates
 
 class Command(BaseCommand):
     help = 'Run monitoring checks'
@@ -484,12 +485,45 @@ class Command(BaseCommand):
 
     def create_monitor_history(self,monitor,status,response, response_raw):
         latest_check_status = -1
+        latest_check = None
         if models.MonitorHistory.objects.filter(monitor=monitor).exists():
             latest_check = models.MonitorHistory.objects.filter(monitor=monitor).order_by('-id')[0]
             latest_check_status = latest_check.status
 
+        print ("CHECK STATUS"+monitor.check_name)
         if latest_check_status != status:
-           models.MonitorHistory.objects.create(monitor=monitor,status=status,response=response,response_raw=response_raw)
+            # Log status change
+            models.MonitorHistory.objects.create(monitor=monitor,status=status,response=response,response_raw=response_raw)
+  
+            # Send notification
+            monitor_alerts = models.MonitorAlert.objects.filter(monitor=monitor)
+            print ("SENDING MONITOR ALERT")
+            status_icon = "⚫️"
+            status_name = "UNKNOWN"
+
+            if status == 1:
+                status_icon = '🚨'
+                status_name = 'DOWN'
+            elif status == 2:
+                status_icon  = '⚠️'
+                status_name = 'WARN'
+            elif status == 3:
+                status_icon  = '✅'
+                status_name = 'UP'                
+
+      
+            for ma in monitor_alerts:
+                t = email_templates.MonitorSensorAlert()
+                t.subject = status_icon+" Sensor Alert "+monitor.check_name
+                to_addresses=[]  
+                print (ma)                                                
+                if ma.no_html_email is True:
+                    t.html_template = None
+                print ("Preparing email for "+ma.email)
+                to_addresses.append(ma.email)
+                t.send(to_addresses=to_addresses, context={"monitor": monitor, "status": status, "settings": settings, "status": status, 'status_icon': status_icon,'status_name' : status_name, 'latest_check' : latest_check})     
+
+
         else:
             print ("Status has not changed")   
             pass
