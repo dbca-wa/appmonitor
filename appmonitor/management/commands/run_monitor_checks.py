@@ -490,14 +490,13 @@ class Command(BaseCommand):
             latest_check = models.MonitorHistory.objects.filter(monitor=monitor).order_by('-id')[0]
             latest_check_status = latest_check.status
 
-        print ("CHECK STATUS"+monitor.check_name)
         if latest_check_status != status:
             # Log status change
             models.MonitorHistory.objects.create(monitor=monitor,status=status,response=response,response_raw=response_raw)
   
             # Send notification
             monitor_alerts = models.MonitorAlert.objects.filter(monitor=monitor)
-            print ("SENDING MONITOR ALERT")
+
             status_icon = "⚫️"
             status_name = "UNKNOWN"
 
