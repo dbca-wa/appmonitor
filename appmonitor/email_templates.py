@@ -14,6 +14,13 @@ class AppCheckList(WAGovUtilsTemplateEmailBase):
     html_template = "appmonitor/email/app_check_list.html"
     txt_template = "appmonitor/email/no_txt_support.txt"    
 
+
+class MonitorSensorAlert(WAGovUtilsTemplateEmailBase):
+    """Monitor Sensor Alert Changes"""
+    subject = "Monitor Sensor Alert Changes"
+    html_template = "appmonitor/email/monitor_sensor_alert.html"
+    txt_template = "appmonitor/email/monitor_sensor_alert.txt"   
+
 class TicketList(WAGovUtilsTemplateEmailBase):
     """Tickets Outstanding"""
     subject = "Tickets Outstanding"

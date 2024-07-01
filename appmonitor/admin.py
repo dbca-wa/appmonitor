@@ -10,6 +10,10 @@ from django.db.models import Q
 
 from appmonitor import models
 
+class MonitorAlertInline(admin.TabularInline):
+    model = models.MonitorAlert
+    extra = 0    
+
 class MonitorGroupInline(admin.TabularInline):
     model = models.MonitorGroup
     extra = 0
@@ -20,7 +24,7 @@ class Monitor(admin.ModelAdmin):
      list_display = ('id','check_name','mon_type','json_response','active')
      list_filter = ('active','mon_type')
      search_fields = ('id','check_name',)
-     inlines = [MonitorGroupInline]
+     inlines = [MonitorGroupInline, MonitorAlertInline]
 
 @admin.register(models.MonitorHistory)
 class MonitorHistory(admin.ModelAdmin):
