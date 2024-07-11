@@ -53,6 +53,7 @@ RUN virtualenv /app/venv
 RUN ls -al /app
 # RUN /bin/bash -c "source /app/venv/local/bin/activate"
 COPY requirements.txt ./
+COPY python-cron ./
 RUN whoami
 RUN /app/venv/bin/pip3 install --no-cache-dir -r requirements.txt 
   # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
