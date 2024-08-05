@@ -484,7 +484,7 @@ var appmonitor = {
                                 
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";     
-                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].response_type_icon+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -521,7 +521,7 @@ var appmonitor = {
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";   
-                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";                         
+                                htmlval+= "     <td>"+resp.monitors[i].response_type_icon+"</td>";                         
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -560,7 +560,7 @@ var appmonitor = {
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
-                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].response_type_icon+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -599,7 +599,7 @@ var appmonitor = {
                                 }
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
-                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
+                                htmlval+= "     <td>"+resp.monitors[i].response_type_icon+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
