@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from confy import env, database
 import os
+import decouple
 import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -189,3 +190,6 @@ SYSTEM_FROM_ADDRESS=env("SYSTEM_FROM_ADDRESS","no-reply@dbca.wa.gov.au")
 INSECURE_LIST=env("INSECURE_LIST", None)
 
 SESSION_COOKIE_AGE = 86400
+
+CSRF_TRUSTED_ORIGINS_STRING = decouple.config("CSRF_TRUSTED_ORIGINS", default='[]')
+CSRF_TRUSTED_ORIGINS = json.loads(str(CSRF_TRUSTED_ORIGINS_STRING))
