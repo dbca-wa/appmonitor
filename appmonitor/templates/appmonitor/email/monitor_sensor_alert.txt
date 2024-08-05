@@ -3,7 +3,7 @@ Sensor Alert Event
 Event Type : {{ status_name }}
 Sensor Name : {{ monitor.check_name }}
 System ID : {{ monitor.system_id }}
-Created: {{ latest_check.created }}
+Created: {{ created_string }}
 
 This is an automated system generated notification.
 System URL: {{ settings.APP_URL }}

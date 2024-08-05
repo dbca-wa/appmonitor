@@ -36,7 +36,9 @@ var appmonitor = {
             $('#new-monitoring-warn-div').hide();
             $('#new-monitoring-down-div').hide();
 
-            $('#new-monitoring-checkname').val("");         
+            $('#new-monitoring-checkname').val("");  
+            $('#new-monitoring-responsetype').val("");  
+            
             $('#new-monitoring-systemid').val("");
             $('#new-monitoring-montype').val(""); 
             $('#new-monitoring-responsiblegroup').val(""); 
@@ -202,6 +204,8 @@ var appmonitor = {
         // $('#'+save_type+'-monitoring-checkname').val("");
         
         // $('#'+save_type+'-monitoring-systemid').val("");
+        
+        
         $('#'+save_type+'-monitoring-operator-div').hide(); 
         $('#'+save_type+'-monitoring-url-div').hide();
         $('#'+save_type+'-monitoring-stringcheck-div').hide();
@@ -243,6 +247,8 @@ var appmonitor = {
         var csrf_token = $("#csrfmiddlewaretoken").val();
 
         var checkname = $('#'+messages_class+'-monitoring-checkname').val(); 
+        var response_type = $('#'+messages_class+'-monitoring-responsetype').val(); 
+        
         var montype = $('#'+messages_class+'-monitoring-montype').val(); 
         var systemid = $('#'+messages_class+'-monitoring-systemid').val(); 
         var responsiblegroup = $('#'+messages_class+'-monitoring-responsiblegroup').val(); 
@@ -277,6 +283,7 @@ var appmonitor = {
 
         var json_data = {   'monitor_id' : monitor_id,
                             'checkname' : checkname, 
+                            'response_type' : response_type,
                             'montype' : montype,
                             'systemid' : systemid,
                             'responsiblegroup':responsiblegroup, 
@@ -354,6 +361,8 @@ var appmonitor = {
                     $('#edit-monitoring-id').val(resp.monitor_info_array.id);
 
                     $('#'+messages_class+'-monitoring-checkname').val(resp.monitor_info_array.check_name); 
+                    
+                    $('#'+messages_class+'-monitoring-responsetype').val(resp.monitor_info_array.response_type_id); 
                     $('#'+messages_class+'-monitoring-montype').val(resp.monitor_info_array.mon_type); 
                     $('#'+messages_class+'-monitoring-systemid').val(resp.monitor_info_array.system_id); 
                     $('#'+messages_class+'-monitoring-responsiblegroup').val(resp.monitor_info_array.group_responsible_id); 
@@ -474,7 +483,8 @@ var appmonitor = {
                                 htmlval+= "     </td>";
                                 
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
-                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";     
+                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -510,7 +520,8 @@ var appmonitor = {
                                 }                                
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
-                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";   
+                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";                         
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -549,6 +560,7 @@ var appmonitor = {
                                 htmlval+= "     </td>";
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -587,6 +599,7 @@ var appmonitor = {
                                 }
                                 //htmlval+= "     <td>"+resp.monitors[i].id+"</td>";
                                 htmlval+= "     <td><a href='"+resp.monitors[i].it_system_register_url+"'>"+resp.monitors[i].system_id+"</a></td>";                            
+                                htmlval+= "     <td>"+resp.monitors[i].response_type+"</td>";
                                 htmlval+= "     <td>"+resp.monitors[i].name;
                                 if (resp.monitors[i].url != null) {
                                     if (resp.monitors[i].url.length > 0 ) {
@@ -615,11 +628,9 @@ var appmonitor = {
                             var btndata_one = JSON.parse(btndata_json);
                             var btndata = JSON.parse(btndata_one);                            
                             appmonitor.get_update_monitor_by_id(btndata['id']);
-                            // appmonitor_platform.edit_platform();
-                            
-                           
-                                     
+                            // appmonitor_platform.edit_platform();                                                                                            
                         });
+
                         $('#total-unknown').html(resp.monitor_status_total[0]);
                         $('#total-down').html(resp.monitor_status_total[1]);
                         $('#total-warn').html(resp.monitor_status_total[2]);

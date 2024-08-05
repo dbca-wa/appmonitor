@@ -94,9 +94,15 @@ class Monitor(models.Model):
              (1, 'postgres', ('Postgres')),  
     )
 
+    RESPONSE_TYPE = Choices(
+             (1, 'OC', ('On Call')),  
+             (2, 'BH', ('Business Hours')),               
+    )
+
     # name for every check type
     check_name = models.CharField(max_length=50)
     mon_type = models.IntegerField(choices=MON_TYPE, null=True, blank=True, default=MON_TYPE.webconnect)
+    response_type = models.IntegerField(choices=RESPONSE_TYPE, null=True, blank=True, default=RESPONSE_TYPE.OC)
     check_operator = models.IntegerField(choices=CHECK_OPERATOR, null=True, blank=True, default=CHECK_OPERATOR.postive)
     system_id = models.CharField(max_length=50, default='',null=True, blank=True)
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     

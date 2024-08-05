@@ -50,6 +50,7 @@ FROM builder_base_appmonitor as python_libs_appmonitor
 WORKDIR /app
 user oim 
 RUN virtualenv /app/venv
+ENV PATH=/app/venv/bin:$PATH
 RUN ls -al /app
 # RUN /bin/bash -c "source /app/venv/local/bin/activate"
 COPY requirements.txt ./

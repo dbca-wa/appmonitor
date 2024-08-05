@@ -520,7 +520,11 @@ class Command(BaseCommand):
                     t.html_template = None
                 print ("Preparing email for "+ma.email)
                 to_addresses.append(ma.email)
-                t.send(to_addresses=to_addresses, context={"monitor": monitor, "status": status, "settings": settings, "status": status, 'status_icon': status_icon,'status_name' : status_name, 'latest_check' : latest_check})     
+                created_string = ""
+                if latest_check.created:
+                    created_string = latest_check.created.astimezone().strftime('%d %b %Y %H:%M %p')
+
+                t.send(to_addresses=to_addresses, context={"monitor": monitor, "status": status, "settings": settings, "status": status, 'status_icon': status_icon,'status_name' : status_name, 'latest_check' : latest_check, 'created_string' : created_string})     
 
 
         else:

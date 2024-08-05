@@ -40,11 +40,17 @@
     <h3 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0">Automated Checks</h3>
     <p>Below is a list of automated checks.  If any of these systems are reporting issues then please follow the incident reporting instructions found within the dev azure wiki.</p>
 
+
+<table style="width:100%; margin-bottom: 3px;"  cellpadding="0" cellspacing="0">
+    <td><b>Response Type (RT)</b> <span style="background-color: #353cdc; color: #FFF;padding: 3px;">OC</span> = <span>On Call</span> <span style="background-color: #000; color: #FFF; padding: 3px;">BH</span> = <span>Business Hours</span></td>
+</table>
+
 <table style="width:100%"  cellpadding="0" cellspacing="0">
     <thead class='table-dark'>
         <tr>
             <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Status</th>   
             <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">SystemID</th>
+            <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">RT</th>
             <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Check Name</th>
             <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Check Type</th>
             <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">URL</th>
@@ -59,6 +65,7 @@
                     <tr>
                         <td style='text-align: center; font-weight: bold; color: #FFFFFF; background-color: #6c757d;border-color: #6c757d; border: 1px solid #6c757d;' >UNKOWWN</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><a href='{{ check.it_system_register_url }}' target="_system_register_url">{{ check.system_id }}</a></td>
+                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; text-align: center; {% if check.response_type == 'BH' %} background-color: #000000; color: #FFF;{% else %}background-color: #353cdc;color: #FFF;{% endif %}">{{ check.response_type }}</td>  
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.name }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.mon_type }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{% if check.url %}<a href='{{ check.url }}'> <img src='{% include "appmonitor/email/email_button_open_url.html"%}'></a>{% endif %}</td>
@@ -72,6 +79,7 @@
                     <tr>
                         <td style='text-align: center; margin: 0; padding: 6px 4px; font-weight: bold; color: #FFFFFF;background-color: #dc3545; border-color: #dc3545; ' >DOWN </td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><a href='{{ check.it_system_register_url }}' target="_system_register_url">{{ check.system_id }}</a></td>
+                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; text-align: center; {% if check.response_type == 'BH' %} background-color: #000000; color: #FFF;{% else %}background-color: #353cdc;color: #FFF;{% endif %}">{{ check.response_type }}</td>  
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.name }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.mon_type }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{% if check.url %}<a href='{{ check.url }}'> <img src='{% include "appmonitor/email/email_button_open_url.html"%}'></a>{% endif %}</td>
@@ -87,6 +95,7 @@
                     <tr>
                         <td style='text-align: center; margin: 0; padding: 6px 4px; font-weight: bold; color: #FFFFFF;background-color: #ffc107;border-color: #ffc107; ' >WARN</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><a href='{{ check.it_system_register_url }}' target="_system_register_url">{{ check.system_id }}</a></td>
+                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; text-align: center; {% if check.response_type == 'BH' %} background-color: #000000; color: #FFF;{% else %}background-color: #353cdc;color: #FFF;{% endif %}">{{ check.response_type }}</td>  
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.name }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.mon_type }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{% if check.url %}<a href='{{ check.url }}'> <img src='{% include "appmonitor/email/email_button_open_url.html"%}'></a>{% endif %}</td>
@@ -100,6 +109,7 @@
                     <tr>
                         <td  style='text-align: center;  collapse; margin: 0; padding: 6px 4px;font-weight: bold; color: #FFFFFF;background-color: #198754; border-color: #198754;' >UP </td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><a href='{{ check.it_system_register_url }}' target="_system_register_url">{{ check.system_id }}</a></td>
+                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; text-align: center; {% if check.response_type == 'BH' %} background-color: #000000; color: #FFF;{% else %}background-color: #353cdc;color: #FFF;{% endif %}">{{ check.response_type }}</td>  
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.name }}</span></td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.mon_type }}</td>
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{% if check.url %}<a href='{{ check.url }}'> <img src='{% include "appmonitor/email/email_button_open_url.html"%}'></a>{% endif %}</td>
@@ -107,9 +117,6 @@
                         <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ check.last_check_date }}</td>                         
                     </tr>
                 {% endif %}
-
-
-
             {% endfor %}
         {% else %}
             <tr>

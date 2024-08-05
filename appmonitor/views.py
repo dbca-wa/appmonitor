@@ -4,7 +4,8 @@ from django import shortcuts
 from django.views.generic import base
 from django.contrib import messages
 from datetime import datetime
-from django.utils.timezone import utc
+# from django.utils.timezone import utc
+from datetime import timezone as datetime_timezone
 
 # Typing
 from typing import Any
@@ -29,11 +30,12 @@ class HomePage(base.TemplateView):
         context: dict[str, Any] = {}
         context['request'] = request
         context['current_time'] = datetime.today
-        now = datetime.utcnow().replace(tzinfo=utc)
+        now = datetime.utcnow().replace(tzinfo=datetime_timezone.utc)
         responsible_group = models.ResponsibleGroup.objects.filter(active=True)
         context['responsible_group'] = responsible_group    
         context['mon_types'] = models.Monitor.MON_TYPE
         context['check_operators'] = models.Monitor.CHECK_OPERATOR
+        context['response_types_list'] = models.Monitor.RESPONSE_TYPE
         context['db_type'] = models.Monitor.DB_TYPE
         
         mjl = models.MonitorJobLog.objects.all().order_by('-id').first()

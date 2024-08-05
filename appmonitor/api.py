@@ -10,7 +10,6 @@ from django.utils.crypto import get_random_string
 from appmonitor import models
 from pytz import timezone
 from datetime import datetime
-from django.utils.timezone import utc
 from django.conf import settings
 
 
@@ -226,6 +225,7 @@ def monitoring_create(request, *args, **kwargs):
                 responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['responsiblegroup'])
                 models.Monitor.objects.create(
                                                 check_name = json_body['checkname'],
+                                                response_type = json_body['response_type'],
                                                 mon_type = json_body['montype'],
                                                 check_operator = check_operator,
                                                 system_id = json_body['systemid'],
@@ -291,6 +291,8 @@ def monitoring_update(request, *args, **kwargs):
                 responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['responsiblegroup'])                
                 monitor = models.Monitor.objects.get(id=json_body['monitor_id'])
                 monitor.check_name = json_body['checkname']
+
+                monitor.response_type = json_body['response_type']
                 monitor.mon_type = json_body['montype']
                 monitor.check_operator = check_operator
                 monitor.system_id = json_body['systemid']
