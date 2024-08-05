@@ -9,7 +9,8 @@ from django.utils.crypto import get_random_string
 from appmonitor import models
 from pytz import timezone
 from datetime import datetime
-from django.utils.timezone import utc
+from datetime import timezone as datetime_timezone
+# from django.utils.timezone import utc
 from django.conf import settings
 
 
@@ -40,7 +41,7 @@ def get_checks(status_types, filters, *args, **kwargs):
         monitor = models.Monitor.objects.filter(active=True)
     monitor_status_total = {0 : 0, 1 : 0, 2 : 0, 3:0}
     monitor_status = {"last_job_run": "", "time_differnce_last_job" : "","current_time": current_time.astimezone().strftime('%d %b %Y %H:%M %p')}
-    now = datetime.utcnow().replace(tzinfo=utc)
+    now = datetime.utcnow().replace(tzinfo=datetime_timezone.utc)
     if status_types is None:
         status_types = []
         for mh_status in models.MonitorHistory.STATUS:
@@ -78,8 +79,15 @@ def get_checks(status_types, filters, *args, **kwargs):
                 if m.system_id:
                     system_id_url = settings.IT_SYSTEM_REGISTER+'&q='+m.system_id
             if mh[0].status in status_types:
+
+                response_type_identifier = ""
+                if m.response_type:            
+                    if m.response_type == 1:
+                        response_type_identifier = "OC"
+                    if m.response_type == 2: 
+                        response_type_identifier = "BH"
                 
-                monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
+                monitors.append({'id': m.id, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
         else:
             
             if m.system_id is None:
@@ -87,8 +95,15 @@ def get_checks(status_types, filters, *args, **kwargs):
             else:
                 system_id = m.system_id
 
+            response_type_identifier = ""
+            if m.response_type:                
+                if m.response_type == 1:
+                    response_type_identifier = "OC"
+                if m.response_type == 2: 
+                    response_type_identifier = "BH"
+
             monitor_status_total[0] = monitor_status_total[0] + 1
-            monitors.append({'id': m.id, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+system_id, 'responsible_group': responsible_group_name})                            
+            monitors.append({'id': m.id, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+system_id, 'responsible_group': responsible_group_name})                            
     monitors_sorted = sorted(monitors, key=lambda d: d['last_check_date'], reverse=True) 
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
@@ -179,6 +194,14 @@ def get_monitor_info(mid, *args, **kwargs):
         row = {}
         row["id"] = mo.id
         row["check_name"] = mo.check_name
+        response_type = ""
+        if mo.response_type == 1:
+            response_type = "OC"
+        if mo.response_type == 2:
+            response_type = "BH"
+
+        row["response_type"] = response_type
+        row["response_type_id"] = mo.response_type
         row["mon_type"] = mo.mon_type   
         row['check_operator'] = mo.check_operator
         row['system_id'] = mo.system_id
