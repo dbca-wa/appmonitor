@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from confy import env, database
 import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -169,7 +170,8 @@ CRON_CLASSES = [
 
 ]
     
-
+CSRF_TRUSTED_ORIGINS_STRING = env("CSRF_TRUSTED_ORIGINS", [])
+CSRF_TRUSTED_ORIGINS = json.loads(str(CSRF_TRUSTED_ORIGINS_STRING))
 
 EMAIL_BACKEND = "wagov_utils.components.utils.email_backend.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST","smtp.lan.fyi")
