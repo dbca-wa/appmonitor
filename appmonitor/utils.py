@@ -81,13 +81,16 @@ def get_checks(status_types, filters, *args, **kwargs):
             if mh[0].status in status_types:
 
                 response_type_identifier = ""
-                if m.response_type:            
+                response_type_icon = "❓"
+                if m.response_type:                
                     if m.response_type == 1:
                         response_type_identifier = "OC"
+                        response_type_icon = "☎️"
                     if m.response_type == 2: 
                         response_type_identifier = "BH"
+                        response_type_icon = "🕘"
                 
-                monitors.append({'id': m.id, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
+                monitors.append({'id': m.id, 'response_type_icon' : response_type_icon, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(),'type': 'direct', 'name': m.check_name, 'status': mh[0].status,'last_check_date': created, 'active' : m.active, 'url': m.url, 'system_id': m.system_id, 'it_system_register_url': system_id_url, 'responsible_group': responsible_group_name})            
         else:
             
             if m.system_id is None:
@@ -96,14 +99,17 @@ def get_checks(status_types, filters, *args, **kwargs):
                 system_id = m.system_id
 
             response_type_identifier = ""
+            response_type_icon = "❓"
             if m.response_type:                
                 if m.response_type == 1:
                     response_type_identifier = "OC"
+                    response_type_icon = "☎️"
                 if m.response_type == 2: 
                     response_type_identifier = "BH"
+                    response_type_icon = "🕘"
 
             monitor_status_total[0] = monitor_status_total[0] + 1
-            monitors.append({'id': m.id, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+system_id, 'responsible_group': responsible_group_name})                            
+            monitors.append({'id': m.id, 'response_type_icon' : response_type_icon, 'response_type' : response_type_identifier, 'mon_type': m.get_mon_type_display(), 'type': 'direct', 'name': m.check_name, 'status': 0,'last_check_date': '0000-00-00', 'active' : m.active, 'url': m.url, 'system_id': system_id, 'it_system_register_url': settings.IT_SYSTEM_REGISTER+'&q='+system_id, 'responsible_group': responsible_group_name})                            
     monitors_sorted = sorted(monitors, key=lambda d: d['last_check_date'], reverse=True) 
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
