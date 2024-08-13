@@ -9,7 +9,7 @@ django-encrypted-model-fields==0.6.5
 ipaddress==1.0.23
 django-model-utils==4.3.1
 git+https://github.com/dbca-wa/webtemplate2.git#egg=webtemplate_dbca
-django-cron==0.6.0
+git+https://github.com/Tivix/django-cron.git#egg=django-cron
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 six==1.16.0
 django-nested-inline==0.4.6
