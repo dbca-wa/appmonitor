@@ -17,7 +17,16 @@ class CronJobNotificationEmailWeekDays(django_cron.CronJobBase):
     """Cron Job for the Catalogue Scanner."""
     RUN_ON_DAYS = [0, 1, 2, 3, 4, 5, 6]
     RUN_AT_TIMES = ['20:00']
-    schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+    dc = django_cron.Schedule()
+    dc_items = dc.__dict__
+    schedule = None
+    if 'run_weekly_on_days' in dc_items: 
+        print (dc_items)
+        schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)    
+    else:
+        schedule = django_cron.Schedule(run_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+        
+        
     code = "appmonitor.weekdays"
 
     def do(self) -> None:
@@ -34,7 +43,15 @@ class CronJobNotificationEmailWeekends(django_cron.CronJobBase):
     """Cron Job for the Catalogue Scanner."""
     RUN_ON_DAYS = [0, 1, 2, 3, 4, 5, 6]
     RUN_AT_TIMES = ['6:30']
-    schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+    dc = django_cron.Schedule()
+    dc_items = dc.__dict__
+    schedule = None
+    if 'run_weekly_on_days' in dc_items: 
+        print (dc_items)
+        schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)    
+    else:
+        schedule = django_cron.Schedule(run_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+    
     code = "appmonitor.weekends"
 
     def do(self) -> None:
@@ -49,8 +66,14 @@ class CronJobNotificationEmailWeekends(django_cron.CronJobBase):
 class CronJobDBArchive(django_cron.CronJobBase):
     """Cron Job for the Catalogue Scanner."""
     RUN_ON_DAYS = [0, 1, 2, 3, 4, 5, 6]
-    RUN_AT_TIMES = ['8:00']
-    schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
+    RUN_AT_TIMES = ['8:00']    
+    dc = django_cron.Schedule()
+    dc_items = dc.__dict__
+    schedule = None
+    if 'run_weekly_on_days' in dc_items:         
+        schedule = django_cron.Schedule(run_weekly_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)    
+    else:
+        schedule = django_cron.Schedule(run_on_days=RUN_ON_DAYS,run_at_times=RUN_AT_TIMES)
     code = "appmonitor.dbarchive"
 
     def do(self) -> None:
