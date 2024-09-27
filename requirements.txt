@@ -20,7 +20,7 @@ python-decouple==3.8
 cryptography==42.0.8
 pillow==10.3.0
 numpy==1.26.3
-setuptools==69.0.3
+setuptools==72.2.0
 wheel==0.42.0
 git+https://github.com/jasonrollins/shareplum.git@55d860b#egg=shareplum
 psycopg2==2.9.9
