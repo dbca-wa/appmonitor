@@ -327,7 +327,7 @@ class PythonPackage(models.Model):
 
         vulnerability_total = 0
         if PythonPackage.objects.filter(platform=self.platform).count() > 0:
-            pp_sum = PythonPackage.objects.filter(platform=self.platform).aggregate(Sum('vulnerability_total'))
+            pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
             vulnerability_total = pp_sum['vulnerability_total__sum']
             
 
