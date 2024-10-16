@@ -210,7 +210,7 @@ class Command(BaseCommand):
                 print (e)                
                 
         try:
-            response = requests.get(website, timeout=30, cookies=cookies, auth=auth_response)   
+            response = requests.get(website, timeout=monitor.timeout, cookies=cookies, auth=auth_response)   
             response_code = response.status_code 
             print (response.status_code)     
         except Exception as e:
@@ -256,7 +256,7 @@ class Command(BaseCommand):
                 print (e)                
                 
         try:
-            response = requests.get(website, timeout=30, cookies=cookies, auth=auth_response)   
+            response = requests.get(website, timeout=monitor.timeout, cookies=cookies, auth=auth_response)   
             response_code = response.status_code 
             print (response.status_code)     
         except Exception as e:
@@ -431,8 +431,10 @@ class Command(BaseCommand):
                 print (e)                
                 
         try:
-
-            response = requests.get(monitor.url, timeout=30, cookies=cookies, auth=auth_response)   
+           
+            response = requests.get(monitor.url, timeout=monitor.timeout, cookies=cookies, auth=auth_response)   
+            if response:
+                html_str = response.text                    
             response_code = response.status_code
             jsonresponse = json.loads(response.text)            
             exec_obj  = {'jsonvalue':jsonvalue,'jsonresponse':jsonresponse}
@@ -440,40 +442,42 @@ class Command(BaseCommand):
             jsonvalue = exec_obj['jsonvalue']
             
         except Exception as e:
-            print (e)
-            html_str = str(e)
+            print (str(e))
+            html_str = "\nError:"+str(e) + "\n\nResponse :\n" + html_str
+            
             response = None
             pass
-        
+
+      
 
         try:
             if monitor.check_operator == 1:
                 if int(jsonvalue) > int(monitor.up_value):
-                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                    self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
                 elif int(jsonvalue) > int(monitor.warn_value):
-                    self.create_monitor_history(monitor,2,'Warn', jsonresponse)
+                    self.create_monitor_history(monitor,2,'Warn', "Response Code: "+str(response_code)+"\n"+html_str)
                 else:
-                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+                    self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
 
             if monitor.check_operator == 2:
                 if int(jsonvalue) < int(monitor.up_value):
-                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                    self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
                 elif int(jsonvalue) < int(monitor.warn_value):
-                    self.create_monitor_history(monitor,2,'Warn', jsonresponse)
+                    self.create_monitor_history(monitor,2,'Warn', "Response Code: "+str(response_code)+"\n"+html_str)
                 else:
-                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+                    self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
 
             if monitor.check_operator == 3:
                 if int(jsonvalue) == int(monitor.up_value):
-                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                    self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
                 else:
-                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+                    self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
 
             if monitor.check_operator == 4:
                 if str(jsonvalue) == str(monitor.up_value):
-                    self.create_monitor_history(monitor,3,'Success ', jsonresponse)
+                    self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
                 else:
-                    self.create_monitor_history(monitor,1,'Down', jsonresponse)  
+                    self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
         except Exception as e:
             print (e)
             self.create_monitor_history(monitor,1,'Error', str(e)) 
