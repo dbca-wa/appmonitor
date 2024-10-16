@@ -30,12 +30,10 @@ RUN useradd -g 5000 -u 5000 oim -s /bin/bash -d /app
 RUN mkdir /app 
 RUN chown -R oim.oim /app 
 
-# kubernetes health checks script
-RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/health_check.sh -O /bin/health_check.sh
-RUN chmod 755 /bin/health_check.sh
- 
-RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin-python/scheduler/scheduler.py -O /bin/scheduler.py
-RUN chmod 755 /bin/scheduler.py
+# Default Scripts
+RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
+RUN chmod 755 /tmp/default_script_installer.sh
+RUN /tmp/default_script_installer.sh
 
 RUN apt-get install --no-install-recommends -y python3-pil
 
@@ -51,7 +49,8 @@ WORKDIR /app
 user oim 
 RUN virtualenv /app/venv
 ENV PATH=/app/venv/bin:$PATH
-RUN ls -al /app
+RUN git config --global --add safe.directory /app
+
 # RUN /bin/bash -c "source /app/venv/local/bin/activate"
 COPY requirements.txt ./
 COPY python-cron ./
