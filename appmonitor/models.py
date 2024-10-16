@@ -107,6 +107,7 @@ class Monitor(models.Model):
     system_id = models.CharField(max_length=50, default='',null=True, blank=True)
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
     use_auth2_token = models.BooleanField(default=False)
+    timeout = models.IntegerField(default=30)
 
     # web connect (string key word checks)
     url = models.CharField(max_length=2048, default='', null=True, blank=True)

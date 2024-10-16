@@ -29,12 +29,14 @@ var appmonitor = {
             $('#new-monitoring-dbpassword-div').hide();
             $('#new-monitoring-dbport-div').hide();
             $('#new-monitoring-dbquery-div').hide();
+            $('#new-monitoring-timeout-div').hide();
 
             $('#new-monitoring-basicauth-div').hide();
             $('#new-monitoring-basic-auth-user-pass').hide();
             $('#new-monitoring-up-div').hide();
             $('#new-monitoring-warn-div').hide();
             $('#new-monitoring-down-div').hide();
+            
 
             $('#new-monitoring-checkname').val("");  
             $('#new-monitoring-responsetype').val("");  
@@ -50,6 +52,7 @@ var appmonitor = {
             $('#new-monitoring-statuscode').val(""); 
             $('#new-monitoring-host').val(""); 
             $('#new-monitoring-port').val(""); 
+            $('#new-monitoring-timeout').val("30"); 
             $('#new-monitoring-ignoressl').prop( "checked", false );
 
             $('#new-monitoring-sharepointurl').val("");
@@ -109,6 +112,7 @@ var appmonitor = {
         if (value == 1) {            
             $('#'+save_type+'-monitoring-url-div').show();
             $('#'+save_type+'-monitoring-stringcheck-div').show();
+            $('#'+save_type+'-monitoring-timeout-div').show();
             $('#'+save_type+'-monitoring-ignoressl-div').hide();
 
             $('#'+save_type+'-monitoring-basicauth-div').show();
@@ -142,6 +146,7 @@ var appmonitor = {
             $('#'+save_type+'-monitoring-url-div').show();
             $('#'+save_type+'-monitoring-operator-div').show(); 
             $('#'+save_type+'-monitoring-jsonkey-div').show();
+            $('#'+save_type+'-monitoring-timeout-div').show();
 
             $('#'+save_type+'-monitoring-up-div').show();
             $('#'+save_type+'-monitoring-warn-div').show();
@@ -155,6 +160,7 @@ var appmonitor = {
         if (value == 9) {         
             $('#'+save_type+'-monitoring-url-div').show();  
             $('#'+save_type+'-monitoring-statuscode-div').show();
+            $('#'+save_type+'-monitoring-timeout-div').show();
 
             $('#'+save_type+'-monitoring-basicauth-div').show();
             $('#'+save_type+'-monitoring-basic-auth-user-pass').show();
@@ -163,8 +169,7 @@ var appmonitor = {
         if (value == 10) {         
             $('#'+save_type+'-monitoring-sharepointurl-div').show();
             $('#'+save_type+'-monitoring-sharepointusername-div').show();
-            $('#'+save_type+'-monitoring-sharepointpassword-div').show();   
-            
+            $('#'+save_type+'-monitoring-sharepointpassword-div').show();               
         }  
 
         if (value == 11) {         
@@ -211,6 +216,7 @@ var appmonitor = {
         $('#'+save_type+'-monitoring-stringcheck-div').hide();
         $('#'+save_type+'-monitoring-jsonkey-div').hide();
         $('#'+save_type+'-monitoring-statuscode-div').hide();
+        $('#'+save_type+'-monitoring-timeout-div').hide();
         $('#'+save_type+'-monitoring-host-div').hide();
         $('#'+save_type+'-monitoring-port-div').hide();
         $('#'+save_type+'-monitoring-ignoressl-div').hide();
@@ -259,6 +265,7 @@ var appmonitor = {
         var statuscode = $('#'+messages_class+'-monitoring-statuscode').val(); 
         var host = $('#'+messages_class+'-monitoring-host').val(); 
         var port = $('#'+messages_class+'-monitoring-port').val();
+        var timeout = $('#'+messages_class+'-monitoring-timeout').val();
         var ignoressl = $('#'+messages_class+'-monitoring-ignoressl').prop('checked');
         var sharepointurl = $('#'+messages_class+'-monitoring-sharepointurl').val();
         var sharepointusername = $('#'+messages_class+'-monitoring-sharepointusername').val();
@@ -294,6 +301,7 @@ var appmonitor = {
                             'statuscode' : statuscode,
                             'host' : host,
                             'port' : port,
+                            'timeout' : timeout,
                             'ignoressl' : ignoressl,
                             'sharepointurl' : sharepointurl,
                             'sharepointusername' : sharepointusername,
@@ -373,6 +381,7 @@ var appmonitor = {
                     $('#'+messages_class+'-monitoring-statuscode').val(resp.monitor_info_array.status_code); 
                     $('#'+messages_class+'-monitoring-host').val(resp.monitor_info_array.host); 
                     $('#'+messages_class+'-monitoring-port').val(resp.monitor_info_array.port); 
+                    $('#'+messages_class+'-monitoring-timeout').val(resp.monitor_info_array.timeout); 
                     if (resp.monitor_info_array.ignore_ssl_verification == true) { 
                         $('#'+messages_class+'-monitoring-ignoressl').prop('checked', true);
                     } else {

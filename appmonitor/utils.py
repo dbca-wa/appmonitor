@@ -226,6 +226,7 @@ def get_monitor_info(mid, *args, **kwargs):
         row["status_code"] = mo.status_code
         row["host"] = mo.host
         row["port"] = mo.port
+        row["timeout"] = mo.timeout
         row["ignore_ssl_verification"] = mo.ignore_ssl_verification
         
         row["use_basic_auth"] = mo.use_basic_auth

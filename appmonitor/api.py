@@ -157,7 +157,6 @@ def get_platform_info(request, *args, **kwargs):
             keyword = request.GET.get('keyword', '')  
             filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
 
-
             data = utils.get_platform_info(None,filters)        
             return HttpResponse(json.dumps(data), content_type='application/json', status=200)
         else:
@@ -236,6 +235,7 @@ def monitoring_create(request, *args, **kwargs):
                                                 status_code = status_code,
                                                 host = json_body['host'],
                                                 port = json_body['port'],
+                                                timeout = json_body['timeout'],
                                                 ignore_ssl_verification = json_body['ignoressl'],                                                                                                
                                                 use_basic_auth = json_body['basicauth'],
                                                 username = json_body['username'],
@@ -303,6 +303,7 @@ def monitoring_update(request, *args, **kwargs):
                 monitor.status_code = status_code
                 monitor.host = json_body['host']
                 monitor.port = json_body['port']
+                monitor.timeout = json_body['timeout']
                 monitor.ignore_ssl_verification = json_body['ignoressl']                                                                                                
                 monitor.use_basic_auth = json_body['basicauth']
                 monitor.username = json_body['username']
