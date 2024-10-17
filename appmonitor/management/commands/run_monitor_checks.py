@@ -480,7 +480,7 @@ class Command(BaseCommand):
                     self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
         except Exception as e:
             print (e)
-            self.create_monitor_history(monitor,1,'Error', str(e)) 
+            self.create_monitor_history(monitor,1,'Down', 'Error: '+ str(e) + "\n\n"+html_str) 
 
         a = dt_datetime.now()
         monitor.last_update =a
