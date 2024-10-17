@@ -440,17 +440,8 @@ class Command(BaseCommand):
             exec_obj  = {'jsonvalue':jsonvalue,'jsonresponse':jsonresponse}
             exec("jsonvalue = "+monitor.json_key, exec_obj)            
             jsonvalue = exec_obj['jsonvalue']
-            
-        except Exception as e:
-            print (str(e))
-            html_str = "\nError:"+str(e) + "\n\nResponse :\n" + html_str
-            
-            response = None
-            pass
 
-      
 
-        try:
             if monitor.check_operator == 1:
                 if int(jsonvalue) > int(monitor.up_value):
                     self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
@@ -478,10 +469,15 @@ class Command(BaseCommand):
                     self.create_monitor_history(monitor,3,'Success ', "Response Code: "+str(response_code)+"\n"+html_str)
                 else:
                     self.create_monitor_history(monitor,1,'Down', "Response Code: "+str(response_code)+"\n"+html_str)  
-        except Exception as e:
-            print (e)
-            self.create_monitor_history(monitor,1,'Down', 'Error: '+ str(e) + "\n\n"+html_str) 
 
+            
+        except Exception as e:
+            print (str(e))
+            html_str = "Response Code: "+str(response_code)+"\nError:"+str(e) + "\n\nResponse :\n" + html_str
+            
+            response = None
+            self.create_monitor_history(monitor,1,'Down', html_str) 
+                
         a = dt_datetime.now()
         monitor.last_update =a
         monitor.save()
