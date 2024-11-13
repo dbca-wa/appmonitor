@@ -303,8 +303,8 @@ class PythonPackage(models.Model):
     package_name = models.CharField(max_length=255, default='', null=True, blank=True)
     current_package_version = models.CharField(max_length=255, default='', null=True, blank=True)
     platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)
-    vulnerability_total = models.IntegerField(default=0)
-    active = models.BooleanField(default=True)
+    vulnerability_total = models.IntegerField(default=0,null=True)
+    active = models.BooleanField(default=True,null=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
