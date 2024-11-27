@@ -147,9 +147,9 @@ class PlatformView(base.TemplateView):
                 python_packages_obj = []
                 platform_obj = models.Platform.objects.get(id=platform_id)
                 if only_vulnerable == 'true':
-                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0)
+                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
                 else:
-                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id)                
+                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,active=True)                
 
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))
