@@ -10,14 +10,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         
         try:
-            platform_obj = models.Platform.objects.filter(stale_packages=True)
-           
+            platform_obj = models.Platform.objects.filter(stale_packages=True)           
+
             for p in platform_obj:
                 platform_json = p.json_response
-                                            
+                vulnerability_total_count = 0        
                 if platform_json is not None:
                     if 'platform_obj' in platform_json:
-           
+                        
                         if 'python_packages' in platform_json['platform_obj']:
            
                             python_packages = platform_json['platform_obj']['python_packages']
@@ -29,7 +29,9 @@ class Command(BaseCommand):
                                 package_version = package_split[1]
                                 python_package_obj_model = None
                                 try:
-                                    python_package_obj_model = models.PythonPackage.objects.get(platform=p, package_name=package_name)
+
+                                    python_package_obj_model = models.PythonPackage.objects.get(platform=p, package_name=package_name)                                    
+                                    vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
                                     python_package_obj_model.current_package_version = package_version
                                     python_package_obj_model.active =True
                                     python_package_obj_model.save()
@@ -50,7 +52,7 @@ class Command(BaseCommand):
                                 
                                 print (package_name)
                                 print (package_version)
-                models.Platform.objects.filter(id=p.id).update(stale_packages=False)           
+                models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count)           
                       
 
         except Exception as e:
