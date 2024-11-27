@@ -52,3 +52,10 @@ class OutstandingAdvisory(WAGovUtilsTemplateEmailBase):
     subject = "Outstanding Advisory"
     html_template = "appmonitor/email/advisory_outstanding.html"
     txt_template = "appmonitor/email/advisory_outstanding.txt"      
+
+
+class SystemError(WAGovUtilsTemplateEmailBase):
+    """New Advisory."""
+    subject = "New Advisory"
+    html_template = "appmonitor/email/system_error.html"
+    txt_template = "appmonitor/email/system_error.txt"       
