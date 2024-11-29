@@ -94,13 +94,15 @@ class Command(BaseCommand):
                     file_buffer = None
                     with open(excel_file, 'rb') as f:
                         file_buffer = f.read()                    
-                                    
+
+                    platforms = models.Platform.objects.filter(active=True, group_responsible=rg)
+
                     t = email_templates.OutstandingAdvisory()
                     t.subject = "Outstanding Advisory for "+rg.group_name
                     to_addresses=[]
                     for notification in models.ResponsibleGroupOutstandingAdvisoryEmail.objects.filter(responsible_group=rg):
                         print ("Preparing to "+notification.email)
                         to_addresses.append(notification.email)
-                    t.send(to_addresses=to_addresses, context={"settings": settings, 'rg': rg}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL},attachments=[('Outstanding Systems Advisory for {} on {}.xlsx'.format(str(rg.group_name),date_string_au), file_buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')])        
+                    t.send(to_addresses=to_addresses, context={"settings": settings, 'rg': rg, 'platforms':platforms}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL},attachments=[('Outstanding Systems Advisory for {} on {}.xlsx'.format(str(rg.group_name),date_string_au), file_buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')])        
             
 
