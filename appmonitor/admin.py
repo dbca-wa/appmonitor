@@ -144,7 +144,7 @@ class PythonPackageVulnerabilityVersionAdmin(admin.ModelAdmin):
 
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
-     list_display = ('id','package_version','advisory','cve','updated','created')
+     list_display = ('id','package_version','advisory','cve','baseSeverity','baseScore','updated','created')
      search_fields = ('id','package_version__package_version','cve')
      raw_id_fields = ('package_version',)
 

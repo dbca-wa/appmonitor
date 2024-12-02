@@ -61,6 +61,8 @@
                         <tr>
                             <th>CVE</th>   
                             <th>Advisory</th>
+                            <th>Score</th>
+                            <th>Severity</th>
                             <th>System Created Date</th>                        
                         </tr>
                     </thead>
@@ -72,8 +74,25 @@
                                         
                                         <td width=160 >{{ ppa.cve }}</td>
                                         <td >{{ ppa.advisory }}</td>
+                                        <td>{{ ppa.baseScore }}</td>
+                                        <td>
+                                            {% if ppa.baseSeverity == 'CRITICAL' %}
+                                                <span class='badge bg-danger'>{{ ppa.baseSeverity }} </span>
+                                            {% elif ppa.baseSeverity == 'HIGH' %}                                        
+                                                <span class='badge bg-warning'>{{ ppa.baseSeverity }} </span>  
+                                            {% elif ppa.baseSeverity == 'MEDIUM' %}                                        
+                                                <span class='badge bg-primary'>{{ ppa.baseSeverity }} </span>                                              
+                                            {% elif ppa.baseSeverity == 'LOW' %}     
+                                                <span class='badge bg-success'>{{ ppa.baseSeverity }} </span>       
+                                            {% else %}                                            
+                                                <span class='badge bg-secondary'>N/A</span>                                     
+                                            {% endif %}
+
+                                        </td>
                                         <td >{{ ppa.created }}</td>
-                                    </tr>                                
+                                    </tr>                             
+                                    
+                                    
                                 {% endfor %}
                             {% else %}
                                 <tr>

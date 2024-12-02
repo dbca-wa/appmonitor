@@ -410,6 +410,8 @@ class PythonPackageVulnerabilityVersionAdvisoryInformation(models.Model):
     package_version = models.ForeignKey(PythonPackageVulnerabilityVersion, null=True, blank=True, on_delete=models.SET_NULL)
     advisory = models.TextField(default='', null=True, blank=True)
     cve = models.CharField(max_length=255, default='', null=True, blank=True) 
+    baseSeverity = models.CharField(max_length=40, default='', null=True, blank=True)
+    baseScore = models.FloatField(default='0', null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
