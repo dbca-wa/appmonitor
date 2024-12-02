@@ -313,6 +313,8 @@ class PythonPackageAdvisoryView(base.TemplateView):
 
                         row['advisory'] = av.advisory
                         row['cve'] = av.cve
+                        row["baseScore"] = av.baseScore 
+                        row["baseSeverity"] = av.baseSeverity
                         row['package_version'] = av.package_version.package_version
                         row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
 
