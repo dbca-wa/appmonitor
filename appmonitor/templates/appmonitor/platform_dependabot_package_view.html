@@ -98,7 +98,7 @@
                             {% if platform_dependabot_array|length > 0 %}
                                 {% for pdb in platform_dependabot_array %}
                                     <tr>
-                                        <td >{{ pdb.number }}</td>
+                                        <td ><A href='https://github.com/dbca-wa/{{ platform_obj.git_repo_name }}/security/dependabot/{{ pdb.number }}'>{{ pdb.number }}</a></td>
                                         <td >{{ pdb.package_name }}</td>
                                         
                                         <td >{{ pdb.state }}</td>
