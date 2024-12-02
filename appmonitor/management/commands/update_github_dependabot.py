@@ -13,7 +13,7 @@ class Command(BaseCommand):
         print ("Updating Dependabot Alerts")
 
         ghsa_id_hashses = []
-        platforms = models.Platform.objects.filter(id=1)
+        platforms = models.Platform.objects.filter(active=True)
         for p in platforms:
 
             if len(p.git_repo_name) > 0:
