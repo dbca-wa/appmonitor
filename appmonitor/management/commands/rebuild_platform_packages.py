@@ -17,11 +17,10 @@ class Command(BaseCommand):
                 vulnerability_total_count = 0        
                 if platform_json is not None:
                     if 'platform_obj' in platform_json:
-                        
-                        if 'python_packages' in platform_json['platform_obj']:
-           
+                        models.PythonPackage.objects.filter(platform=p).update(active=False)
+                        if 'python_packages' in platform_json['platform_obj']:           
                             python_packages = platform_json['platform_obj']['python_packages']
-                            models.PythonPackage.objects.filter(platform=p).update(active=False)
+                            
                             for pp in python_packages:
                                 print (pp)
                                 package_split = pp.split('==')
@@ -48,12 +47,30 @@ class Command(BaseCommand):
                                 except Exception as e:
                                     print (e)
                                     ppvh= models.PythonPackageVersionHistory.objects.create(python_package=python_package_obj_model, package_version=package_version)
-                                    
-                                
+                                                                
                                 print (package_name)
                                 print (package_version)
-                models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count)           
-                      
+
+                if 'debian_packages' in platform_json['platform_obj']:           
+                    debian_packages = platform_json['platform_obj']['debian_packages']
+                    for dp in debian_packages:                           
+                        package_name = dp['package_name']
+                        package_version = dp['package_version']
+                        python_package_obj_model = None 
+                        # print (package_name)                       
+                        try:                      
+                            python_package_obj_model = models.DebianPackage.objects.get(platform=p, package_name=package_name)                                    
+                            vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
+                            python_package_obj_model.current_package_version = package_version
+                            python_package_obj_model.active =True
+                            python_package_obj_model.save()
+        
+                        except Exception as e:
+                            print ("EXCEPTION1:")
+                            print (e)
+                            python_package_obj_model = models.DebianPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
+                     
+                models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count)        
 
         except Exception as e:
             print ("EXCEPTION2:")

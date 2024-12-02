@@ -29,8 +29,13 @@ urlpatterns = [
     
     
     path("platform/status/", views.PlatformStatus.as_view(), name="platform_status"),
-    re_path(r'^platform/view/(?P<pk>[0-9]+)/$', views.PlatformView.as_view(), name='platform_view'),      
-    re_path(r'^platform/view/(?P<pk>[0-9]+)/packages/(?P<package_pk>[0-9]+)/versions/$', views.PlatformPackageView.as_view(), name='platform_view'),  
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/$', views.PlatformView.as_view(), name='platform_view'),
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/dependabot$', views.PlatformDependaBotPackageView.as_view(), name='platform_dependabot_view'),      
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/packages/(?P<package_pk>[0-9]+)/versions/$', views.PlatformPackageView.as_view(), name='platform_view'), 
+    re_path(r'^platform/view/(?P<pk>[0-9]+)/(?P<ecosystem>[a-z|-]+)$', views.PlatformView.as_view(), name='platform_python_packages_view'),
+    # re_path(r'^platform/view/(?P<pk>[0-9]+)/debian-packages$', views.PlatformView.as_view(), name='platform_debian_packages_view'),
+    # re_path(r'^platform/view/(?P<pk>[0-9]+)/node-packages$', views.PlatformView.as_view(), name='platform_node_packages_view'),
+ 
 
     path("packages/status/", views.PackagesStatus.as_view(), name="packages_status"),    
     re_path(r'^package/(?P<pk>[0-9]+)/version/(?P<version_pk>[0-9]+)/advisory/$', views.PythonPackageAdvisoryView.as_view(), name='python_package_advisory'),  

@@ -179,11 +179,25 @@ var appmonitor_platform = {
                                 // htmlval+= "     <td>"+resp.platform_info_array[i].vulnerability_total+"</td>";
 
                                 if (resp.platform_info_array[i].vulnerability_total > 0) {
-                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                    htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
                                 } else {
                                     htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
 
                                 }
+
+                                
+                                if (resp.platform_info_array[i].git_repo_name.length > 0) {
+                                    if (resp.platform_info_array[i].dependabot_vulnerability_total > 0) {
+                                        htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
+                                    } else {
+                                        htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
+
+                                    }
+                                } else {
+
+                                   htmlval+= " <td>&nbsp;</td>";
+                                }
+
 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
@@ -193,7 +207,7 @@ var appmonitor_platform = {
                                 if (appmonitor_platform.var.edit_platform_access == 'True') {
                                     htmlval+= "     <button class='btn btn-primary btn-sm platform-edit-btn' id='platform-edit-btn-"+resp.platform_info_array[i].id+"' data-json='"+button_json+"' >Edit</button>";
                                 }
-                                htmlval+= "     <a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/'>View</a>";
+                                htmlval+= "     <a class='btn btn-primary btn-sm' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages'>View</a>";
 
                                 htmlval+= "     </td>";
                                 htmlval+= "</tr>";

@@ -117,7 +117,8 @@ class Command(BaseCommand):
                                                 vul_version = True
                                         if gvs["to_operator"] == '<=':
                                             if gvs["to_version"] == r:
-                                                vul_version = False 
+                                                vul_version = False
+                                                
                         except Exception as e:
                             error_row.append(pp+" with error "+str(e))
                             print (e)      

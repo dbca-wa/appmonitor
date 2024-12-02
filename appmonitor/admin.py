@@ -83,6 +83,18 @@ class PythonPackageAdmin(admin.ModelAdmin):
      list_display = ('id','package_name','current_package_version','active','updated','created')
      search_fields = ('id','package_name','current_package_version')
 
+class DebianPackageInline(admin.TabularInline):
+     list_display = ('id','package_name','vulnerability_total','active','updated','created')
+     readonly_fields=('package_name','current_package_version','vulnerability_total','active','updated','created')
+     model = models.DebianPackage
+     extra = 0
+
+     def has_add_permission(self,request,obj):
+          return False
+
+     def has_delete_permission(self, request, obj=None):
+          return False
+
 
 class PythonPackageInline(admin.TabularInline):
      list_display = ('id','package_name','vulnerability_total','active','updated','created')
@@ -101,13 +113,19 @@ class PlatformAdvisoryEmailInline(admin.TabularInline):
      model = models.PlatformAdvisoryEmail
      extra = 0    
 
+class PlatformDependaBotAdvisory(admin.TabularInline):
+     list_display = ('id','ghsa_id','package_name','ecosystem','severity','cve_id','updated','created')
+     model = models.PlatformDependaBotAdvisory
+     readonly_fields=('number','state','ghsa_id','package_name','ecosystem','severity','cve_id','updated','created')
+     extra = 0   
+
 @admin.register(models.Platform)
 class Platform(admin.ModelAdmin):
      list_display = ('id','system_name','operating_system_name','operating_system_version','python_version','django_version','updated','created')
      search_fields = ('id','system_name')
      readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
      #exclude = ('json_response',)
-     inlines = [PlatformAdvisoryEmailInline,PythonPackageInline]
+     inlines = [PlatformAdvisoryEmailInline,PlatformDependaBotAdvisory,PythonPackageInline, DebianPackageInline]
 
 @admin.register(models.PythonPackageVersionHistory)
 class PythonPackageVersionHistory(admin.ModelAdmin):
