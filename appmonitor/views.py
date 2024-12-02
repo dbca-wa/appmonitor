@@ -136,9 +136,8 @@ class PlatformView(base.TemplateView):
         # Construct Context
         context: dict[str, Any] = {}
         platform_id = self.kwargs['pk']
+        ecosystem = self.kwargs['ecosystem']
         platform_obj = None
-
-
 
         if request.user.is_authenticated:
             only_vulnerable = 'false'
@@ -146,10 +145,17 @@ class PlatformView(base.TemplateView):
                 only_vulnerable = request.GET.get('only_vulnerable','false')
                 python_packages_obj = []
                 platform_obj = models.Platform.objects.get(id=platform_id)
-                if only_vulnerable == 'true':
-                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
-                else:
-                    python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,active=True)                
+                if ecosystem == 'python-packages':
+                    if only_vulnerable == 'true':
+                        python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
+                    else:
+                        python_packages_obj = models.PythonPackage.objects.filter(platform_id=platform_obj.id,active=True)                
+                elif ecosystem == 'debian-packages':
+                    if only_vulnerable == 'true':
+                        python_packages_obj = models.DebianPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
+                    else:
+                        python_packages_obj = models.DebianPackage.objects.filter(platform_id=platform_obj.id,active=True)                              
+
 
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))
@@ -159,10 +165,66 @@ class PlatformView(base.TemplateView):
             context['python_packages_obj'] = python_packages_obj
             context['request'] = request
             context['only_vulnerable'] = only_vulnerable
+            context['ecosystem'] = ecosystem
         
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)            
-    
+
+class PlatformDependaBotPackageView(base.TemplateView):
+    """VIew Platform System Information"""
+
+    # Template name
+    template_name = "appmonitor/platform_dependabot_package_view.html"
+
+    def get(self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> http.HttpResponse:
+        # Construct Context
+        context: dict[str, Any] = {}
+        platform_id = self.kwargs['pk']
+        state = request.GET.get('state','open')
+        
+        platform_obj = None
+        python_packages_versions_obj = None
+        platform_dependabot_obj = None
+
+        if request.user.is_authenticated:
+            try:      
+                python_packages_versions_array = []
+                platform_dependabot_array=[]
+                platform_obj = models.Platform.objects.get(id=platform_id)
+                platform_dependabot_obj_open_count = models.PlatformDependaBotAdvisory.objects.filter(platform=platform_obj,state='open').count()
+                platform_dependabot_obj_fixed_count = models.PlatformDependaBotAdvisory.objects.filter(platform=platform_obj,state='fixed').count()
+                platform_dependabot_obj = models.PlatformDependaBotAdvisory.objects.filter(platform=platform_obj,state=state)
+                           
+                for pdb in platform_dependabot_obj:
+                    row = {}
+                    row['number'] = pdb.number
+                    row['state'] = pdb.state
+                    row['package_name'] = pdb.package_name
+                    row['ecosystem'] = pdb.ecosystem
+                    row['severity'] = pdb.severity
+                    row['cve_id'] = pdb.cve_id
+                    row['created'] = pdb.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                    row['updated'] = pdb.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                    platform_dependabot_array.append(row)
+
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, str(e))
+                print (e)
+
+            context['platform_obj'] = platform_obj
+            context['platform_dependabot_array'] = platform_dependabot_array
+            context['platform_dependabot_obj_open_count'] = platform_dependabot_obj_open_count
+            context['platform_dependabot_obj_fixed_count'] = platform_dependabot_obj_fixed_count
+            context['state'] = state
+        #     context['python_package_obj'] = python_package_obj
+        #     context['python_packages_versions_array'] = python_packages_versions_array
+        #     context['python_packages_versions_obj'] = python_packages_versions_obj
+            context['request'] = request
+        
+        # Render Template and Return
+        return shortcuts.render(request, self.template_name, context)  
+
+
 class PlatformPackageView(base.TemplateView):
     """VIew Platform System Information"""
 

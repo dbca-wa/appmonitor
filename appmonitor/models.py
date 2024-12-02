@@ -261,8 +261,10 @@ class Platform(models.Model):
     operating_system_version = models.CharField(max_length=255, default='', null=True, blank=True)
     python_version = models.CharField(max_length=255, default='', null=True, blank=True)
     django_version = models.CharField(max_length=255, default='', null=True, blank=True)    
+    git_repo_name = models.CharField(max_length=512, default='', null=True, blank=True)  
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
     vulnerability_total = models.IntegerField(default=0)
+    dependabot_vulnerability_total = models.IntegerField(default=0)
     json_response =  models.JSONField(null=True, blank=True)    
     stale_packages = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
@@ -297,6 +299,35 @@ class PlatformAdvisoryEmail(models.Model):
 
     def __str__(self):
         return self.email 
+
+class PlatformDependaBotAdvisory(models.Model):
+    
+    platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)  
+    number = models.IntegerField(null=True, blank=True) 
+    state = models.CharField(max_length=20, default='', null=True, blank=True)
+    ghsa_id = models.CharField(max_length=255, default='', null=True, blank=True)
+    package_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    ecosystem = models.CharField(max_length=255, default='', null=True, blank=True)
+    severity = models.CharField(max_length=20, default='', null=True, blank=True)
+    cve_id = models.CharField(max_length=50, default='', null=True, blank=True)    
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_name
+
+class DebianPackage(models.Model):
+    
+    platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)
+    package_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    current_package_version = models.CharField(max_length=255, default='', null=True, blank=True)    
+    vulnerability_total = models.IntegerField(default=0,null=True)
+    active = models.BooleanField(default=True,null=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_name
 
 class PythonPackage(models.Model):
     
