@@ -42,11 +42,33 @@ class Command(BaseCommand):
                     
                     total_count = total_count + 1
                     if "metrics" in jsonresp["containers"]["cna"]:
+
+                        for k in jsonresp["containers"]["cna"]["metrics"]:
+                            baseSeverity = ""
+                            baseScore = 0
+                            print (list(k.keys())[0])
+                            if "baseSeverity" in k[list(k.keys())[0]]:
+                                baseSeverity = k[list(k.keys())[0]]["baseSeverity"]
+                                baseScore = k[list(k.keys())[0]]["baseScore"]                                
+                                # baseSeverity = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseSeverity"]
+                                # baseScore = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseScore"]
+
+                                print (baseSeverity)
+                                print (baseScore)
+
+                                p.baseSeverity = baseSeverity
+                                p.baseScore = float(baseScore)
+                                p.save()
+                                print ("Saving")
+
                         # print (jsonresp["containers"]["cna"]["metrics"].keys())
                         # print (jsonresp["containers"]["cna"]["metrics"].keys()[0])
                         print (list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0])
-                        baseSeverity = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseSeverity"]
-                        baseScore = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseScore"]
+                        baseSeverity = "N/A"
+                        baseScore = "0.0"
+                        if "baseSeverity" in  jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]:
+                            baseSeverity = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseSeverity"]
+                            baseScore = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseScore"]
                         
                         print (baseSeverity)
                         print (baseScore)
