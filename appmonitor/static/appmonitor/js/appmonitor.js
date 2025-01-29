@@ -12,6 +12,7 @@ var appmonitor = {
 
             $('#new-monitoring-operator-div').hide(); 
             $('#new-monitoring-url-div').hide();
+            
             $('#new-monitoring-stringcheck-div').hide();
             $('#new-monitoring-jsonkey-div').hide();
             $('#new-monitoring-statuscode-div').hide();
@@ -47,6 +48,7 @@ var appmonitor = {
 
             $('#new-monitoring-operator').val(""); 
             $('#new-monitoring-url').val(""); 
+            $('#new-monitoring-helpdoc-div').val("");
             $('#new-monitoring-stringcheck').val(""); 
             $('#new-monitoring-jsonkey').val(""); 
             $('#new-monitoring-statuscode').val(""); 
@@ -260,6 +262,7 @@ var appmonitor = {
         var responsiblegroup = $('#'+messages_class+'-monitoring-responsiblegroup').val(); 
         var operator = $('#'+messages_class+'-monitoring-operator').val(); 
         var url = $('#'+messages_class+'-monitoring-url').val(); 
+        var helpdoc = $('#'+messages_class+'-monitoring-helpdoc').val(); 
         var stringcheck = $('#'+messages_class+'-monitoring-stringcheck').val(); 
         var jsonkey = $('#'+messages_class+'-monitoring-jsonkey').val(); 
         var statuscode = $('#'+messages_class+'-monitoring-statuscode').val(); 
@@ -319,6 +322,7 @@ var appmonitor = {
                             'up' : up,
                             'warn' : warn,
                             'down' : down,
+                            'helpdoc': helpdoc,
                             'active' : active
                         }
 
@@ -376,6 +380,7 @@ var appmonitor = {
                     $('#'+messages_class+'-monitoring-responsiblegroup').val(resp.monitor_info_array.group_responsible_id); 
                     $('#'+messages_class+'-monitoring-operator').val(resp.monitor_info_array.check_operator); 
                     $('#'+messages_class+'-monitoring-url').val(resp.monitor_info_array.url); 
+                    $('#'+messages_class+'-monitoring-helpdoc').val(resp.monitor_info_array.helpdoc);                     
                     $('#'+messages_class+'-monitoring-stringcheck').val(resp.monitor_info_array.string_check); 
                     $('#'+messages_class+'-monitoring-jsonkey').val(resp.monitor_info_array.json_key); 
                     $('#'+messages_class+'-monitoring-statuscode').val(resp.monitor_info_array.status_code); 
@@ -506,7 +511,12 @@ var appmonitor = {
                                 
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
-                                if (appmonitor.var.edit_monitor_access == 'True') {
+                                if (appmonitor.var.edit_monitor_access == 'True') {   
+                                    if (resp.monitors[i].help_doc) {
+                                        if (resp.monitors[i].help_doc.length > 0) {
+                                            htmlval+= "     <a class='btn btn-primary btn-sm' id='monitor-help-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' title='Help Documentation'  alt='Help Documentation' href='"+resp.monitors[i].help_doc+"' ><i class='bi bi-question-circle-fill'></i></a>";                                                                                                         
+                                        }
+                                    }
                                     htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
@@ -544,6 +554,11 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
+                                    if (resp.monitors[i].help_doc) {
+                                        if (resp.monitors[i].help_doc.length > 0) {
+                                            htmlval+= "     <a class='btn btn-primary btn-sm' id='monitor-help-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' title='Help Documentation'  alt='Help Documentation' href='"+resp.monitors[i].help_doc+"' ><i class='bi bi-question-circle-fill'></i></a>";                                                                                                         
+                                        }
+                                    }                                                                        
                                     htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "         <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
@@ -583,6 +598,11 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
+                                    if (resp.monitors[i].help_doc) {
+                                        if (resp.monitors[i].help_doc.length > 0) {
+                                            htmlval+= "     <a class='btn btn-primary btn-sm' id='monitor-help-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' title='Help Documentation'  alt='Help Documentation' href='"+resp.monitors[i].help_doc+"' ><i class='bi bi-question-circle-fill'></i></a>";                                                                                                         
+                                        }
+                                    }                                    
                                     htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }                                
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
@@ -622,6 +642,11 @@ var appmonitor = {
                                 htmlval+= "     <td>"+resp.monitors[i].last_check_date+"</td>";
                                 htmlval+= "     <td>";
                                 if (appmonitor.var.edit_monitor_access == 'True') {
+                                    if (resp.monitors[i].help_doc) {
+                                        if (resp.monitors[i].help_doc.length > 0) {
+                                            htmlval+= "     <a class='btn btn-primary btn-sm' id='monitor-help-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' title='Help Documentation'  alt='Help Documentation' href='"+resp.monitors[i].help_doc+"' ><i class='bi bi-question-circle-fill'></i></a>";                                                                                                         
+                                        }
+                                    }                                    
                                     htmlval+= "     <button class='btn btn-primary btn-sm monitor-edit-btn' id='monitor-edit-btn-"+resp.monitors[i].id+"' data-json='"+JSON.stringify(button_json)+"' >Edit</button>";
                                 }
                                 htmlval+= "     <a class='btn btn-primary btn-sm' href='/monitor/history/"+resp.monitors[i].id+"/'>History</a>";
