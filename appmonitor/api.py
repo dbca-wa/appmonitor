@@ -122,8 +122,7 @@ def platform_update(request, *args, **kwargs):
             access_type = utils.user_group_permissions(request)
             if access_type['edit_platform_access'] is True:            
                 json_body = json.loads(request.body.decode())
-                print (json_body)
-
+                
                 responsiblegroup = models.ResponsibleGroup.objects.get(id=json_body['platform_responsiblegroup'])
                 platform = models.Platform.objects.get(id=json_body['platform_id'])
                 platform.system_name =json_body['platform_systemname']
@@ -230,6 +229,7 @@ def monitoring_create(request, *args, **kwargs):
                                                 system_id = json_body['systemid'],
                                                 group_responsible =  responsiblegroup,                                                
                                                 url = json_body['url'],
+                                                help_doc = json_body['helpdoc'],
                                                 string_check = json_body['stringcheck'],
                                                 json_key = json_body['jsonkey'],
                                                 status_code = status_code,
@@ -298,6 +298,7 @@ def monitoring_update(request, *args, **kwargs):
                 monitor.system_id = json_body['systemid']
                 monitor.group_responsible =  responsiblegroup                                              
                 monitor.url = json_body['url']
+                monitor.help_doc = json_body['helpdoc']
                 monitor.string_check = json_body['stringcheck']
                 monitor.json_key = json_body['jsonkey']
                 monitor.status_code = status_code

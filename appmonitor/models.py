@@ -149,6 +149,8 @@ class Monitor(models.Model):
     warn_value = models.CharField(null=True,blank=True, max_length=200)
     down_value = models.CharField(null=True,blank=True, max_length=200)
 
+    # Help Documentation
+    help_doc = models.CharField(null=True,blank=True, max_length=2048)
     # Status
     active = models.BooleanField(default=True)
 
