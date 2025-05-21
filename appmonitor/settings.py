@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "appmonitor",
     "django_cron",
     "nested_inline",
-    "appmonitor_client" "django_extensions",
+    "appmonitor_client",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
