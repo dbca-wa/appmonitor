@@ -18,79 +18,79 @@ import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = env('DEBUG', False)
-FROM_EMAIL = env('FROM_EMAIL', 'no-reply@dbca.wa.gov.au')
+DEBUG = env("DEBUG", False)
+FROM_EMAIL = env("FROM_EMAIL", "no-reply@dbca.wa.gov.au")
 # SECURITY WARNING: don't run with debug turned on in production!
 if DEBUG:
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = env('ALLOWED_HOSTS', [])
+    ALLOWED_HOSTS = env("ALLOWED_HOSTS", [])
 
-FIELD_ENCRYPTION_KEY = env('FIELD_ENCRYPTION_KEY', '')
+FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY", "")
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'webtemplate_dbca',
-    'appmonitor',
-    'django_cron',
-    'nested_inline',
-    'appmonitor_client'
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "webtemplate_dbca",
+    "appmonitor",
+    "django_cron",
+    "nested_inline",
+    "appmonitor_client" "django_extensions",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'dbca_utils.middleware.SSOLoginMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "dbca_utils.middleware.SSOLoginMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
-ROOT_URLCONF = 'appmonitor.urls'
+ROOT_URLCONF = "appmonitor.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
                 "appmonitor.context_processors.variables",
             ],
         },
     },
 ]
-TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'appmonitor', 'templates'))
-WSGI_APPLICATION = 'appmonitor.wsgi.application'
+TEMPLATES[0]["DIRS"].append(os.path.join(BASE_DIR, "appmonitor", "templates"))
+WSGI_APPLICATION = "appmonitor.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db/db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db/db.sqlite3",
     }
 }
 
@@ -100,16 +100,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -117,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Australia/Perth'
+TIME_ZONE = "Australia/Perth"
 
 USE_I18N = True
 
@@ -131,65 +131,64 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'appmonitor', 'cache'),
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": os.path.join(BASE_DIR, "appmonitor", "cache"),
     }
 }
 
-DEV_APP_BUILD_URL = env("DEV_APP_BUILD_URL",None)
+DEV_APP_BUILD_URL = env("DEV_APP_BUILD_URL", None)
 GIT_COMMIT_HASH = os.popen(f"cd {BASE_DIR}; git log -1 --format=%H").read()
 GIT_COMMIT_DATE = os.popen(f"cd {BASE_DIR}; git log -1 --format=%cd").read()
 VERSION_NO = "2.00"
-IT_SYSTEM_REGISTER = env("IT_SYSTEM_REGISTER",None)
+IT_SYSTEM_REGISTER = env("IT_SYSTEM_REGISTER", None)
 
-DB_DIRECTORY_TO_ARCHIVE = env("DB_DIRECTORY_TO_ARCHIVE", str(BASE_DIR)+'/db')
-DB_ARCHIVE_DIR = env("DB_ARCHIVE_DIR",'db_archive')
-DAYS_TO_ARCHIVE = env("DAYS_TO_ARCHIVE",30)
+DB_DIRECTORY_TO_ARCHIVE = env("DB_DIRECTORY_TO_ARCHIVE", str(BASE_DIR) + "/db")
+DB_ARCHIVE_DIR = env("DB_ARCHIVE_DIR", "db_archive")
+DAYS_TO_ARCHIVE = env("DAYS_TO_ARCHIVE", 30)
 
 # AUTH2 Token
-AUTH2_USERNAME = env("AUTH2_USERNAME",None)
-AUTH2_PASSWORD = env("AUTH2_PASSWORD",None)
-AUTH2_TOKEN_URL = env("AUTH2_TOKEN_URL",None)
+AUTH2_USERNAME = env("AUTH2_USERNAME", None)
+AUTH2_PASSWORD = env("AUTH2_PASSWORD", None)
+AUTH2_TOKEN_URL = env("AUTH2_TOKEN_URL", None)
 
-EMAIL_INSTANCE = env('EMAIL_INSTANCE','PROD')
-NOTIFICATION_EMAIL=env('NOTIFICATION_EMAIL')
+EMAIL_INSTANCE = env("EMAIL_INSTANCE", "PROD")
+NOTIFICATION_EMAIL = env("NOTIFICATION_EMAIL")
 
 # Cron
 CRON_CLASSES = [
-    'appmonitor.cron.CronJobNotificationEmailWeekDays',
-    'appmonitor.cron.CronJobNotificationEmailWeekends',
-    'appmonitor_client.cron.CronJobAppMonitorClient',
-    'appmonitor.cron.CronJobDBArchive',
-
+    "appmonitor.cron.CronJobNotificationEmailWeekDays",
+    "appmonitor.cron.CronJobNotificationEmailWeekends",
+    "appmonitor_client.cron.CronJobAppMonitorClient",
+    "appmonitor.cron.CronJobDBArchive",
 ]
-    
+
 EMAIL_BACKEND = "wagov_utils.components.utils.email_backend.EmailBackend"
-EMAIL_HOST = env("EMAIL_HOST","smtp.lan.fyi")
-EMAIL_PORT = env("EMAIL_PORT",25)
+EMAIL_HOST = env("EMAIL_HOST", "smtp.lan.fyi")
+EMAIL_PORT = env("EMAIL_PORT", 25)
 DEFAULT_FROM_EMAIL = "no-reply@dbca.wa.gov.au"
 EMAIL_INSTANCE = env("EMAIL_INSTANCE", "DEV")
 NON_PROD_EMAIL = env("NON_PROD_EMAIL", "")
-PRODUCTION_EMAIL= env("PRODUCTION_EMAIL", "False")
+PRODUCTION_EMAIL = env("PRODUCTION_EMAIL", "False")
 EMAIL_DELIVERY = env("EMAIL_DELIVERY", "on")
-IT_CHECKS_REPLY_TO_EMAIL=env("IT_CHECKS_REPLY_TO_EMAIL", "no-reply@dbca.wa.gov.au")
-DEFAULT_FROM_EMAIL=env("DEFAULT_FROM_EMAIL", "no-reply@dbca.wa.gov.au")
-APP_URL=env("APP_URL", "http://localhost:8080/")
-FRESHSERVICES_API_KEY = env("FRESHSERVICES_API_KEY","")
-SYSTEM_FROM_ADDRESS=env("SYSTEM_FROM_ADDRESS","no-reply@dbca.wa.gov.au")
-INSECURE_LIST=env("INSECURE_LIST", None)
+IT_CHECKS_REPLY_TO_EMAIL = env("IT_CHECKS_REPLY_TO_EMAIL", "no-reply@dbca.wa.gov.au")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "no-reply@dbca.wa.gov.au")
+APP_URL = env("APP_URL", "http://localhost:8080/")
+FRESHSERVICES_API_KEY = env("FRESHSERVICES_API_KEY", "")
+SYSTEM_FROM_ADDRESS = env("SYSTEM_FROM_ADDRESS", "no-reply@dbca.wa.gov.au")
+INSECURE_LIST = env("INSECURE_LIST", None)
 
 SESSION_COOKIE_AGE = 86400
 
-CSRF_TRUSTED_ORIGINS_STRING = decouple.config("CSRF_TRUSTED_ORIGINS", default='[]')
+CSRF_TRUSTED_ORIGINS_STRING = decouple.config("CSRF_TRUSTED_ORIGINS", default="[]")
 CSRF_TRUSTED_ORIGINS = json.loads(str(CSRF_TRUSTED_ORIGINS_STRING))
-GIT_API_TOKEN=env("GIT_API_TOKEN", None)
-DATA_UPLOAD_MAX_NUMBER_FIELDS=5000
+GIT_API_TOKEN = env("GIT_API_TOKEN", None)
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
