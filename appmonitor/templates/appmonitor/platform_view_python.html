@@ -4,9 +4,9 @@
     </div>
     <div class='col-6 text-end'>
         {% if only_vulnerable == 'true' %}
-        <a href='/platform/view/{{ platform_obj.id }}/' class='btn btn-primary'>Show All</a>
+        <a href='/platform/view/{{ platform_obj.id }}/python-packages' class='btn btn-primary'>Show All</a>
         {% else %}
-            <a href='/platform/view/{{ platform_obj.id }}/?only_vulnerable=true' class='btn btn-primary'>Show Only Vulnerable</a>
+            <a href='/platform/view/{{ platform_obj.id }}/python-packages?only_vulnerable=true' class='btn btn-primary'>Show Only Vulnerable</a>
         {% endif %}
     </div>
 </div>
@@ -17,7 +17,7 @@
             <th>Package Version</th>
             <th>PyPi</th>
             <th>Vulnerable</th>
-            <th>DependaBot</th>
+            <th>Severity</th>
             <th>Active</th>
             <th>Updated</th>
             <th>Created</th>
@@ -57,6 +57,24 @@
                                                                         
                             {% endif %}
 
+                        </td>
+                        <td>
+                            {% if ppo.severity_rollup %}
+                            {% if ppo.severity_rollup == 'LOW' %}
+                            <span class="badge bg-success">{{ ppo.severity_rollup }} </span>
+
+                            {% endif %}
+                            {% if ppo.severity_rollup == 'MEDIUM' %}
+                                <span class="badge bg-primary">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                         
+                            {% if ppo.severity_rollup == 'HIGH' %}
+                                <span class="badge bg-warning">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                       
+                            {% if ppo.severity_rollup == 'CRITICAL' %}
+                                <span class="badge bg-danger">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                                                                                      
+
+                            {% endif %}
                         </td>
                         <td>
                             {% if ppo.active is True %}

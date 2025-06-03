@@ -14,7 +14,8 @@ class Command(BaseCommand):
 
             for p in platform_obj:
                 platform_json = p.json_response
-                vulnerability_total_count = 0        
+                vulnerability_total_count = 0   
+                platform_current_severity = ""     
                 if platform_json is not None:
                     if 'platform_obj' in platform_json:
                         models.PythonPackage.objects.filter(platform=p).update(active=False)
@@ -31,10 +32,29 @@ class Command(BaseCommand):
 
                                     python_package_obj_model = models.PythonPackage.objects.get(platform=p, package_name=package_name)                                    
                                     vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
+                                    # platform_current_severity = python_package_obj_model.severity_rollup                                   
                                     python_package_obj_model.current_package_version = package_version
                                     python_package_obj_model.active =True
                                     python_package_obj_model.save()
-                
+
+                                    if python_package_obj_model.severity_rollup == 'LOW':         
+                                        if platform_current_severity == "MEDIUM" or platform_current_severity == "HIGH" or platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup                                                   
+                                    if python_package_obj_model.severity_rollup == 'MEDIUM':
+                                        if platform_current_severity == "HIGH" or platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup
+                                    if python_package_obj_model.severity_rollup == 'HIGH':
+                                        if platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup
+                                    if python_package_obj_model.severity_rollup == 'CRITICAL':                            
+                                        platform_current_severity = python_package_obj_model.severity_rollup                   
+
 
                                 except Exception as e:
                                     print ("EXCEPTION1:")
@@ -70,7 +90,7 @@ class Command(BaseCommand):
                             print (e)
                             python_package_obj_model = models.DebianPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
                      
-                models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count)        
+                models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count, platform_current_severity=platform_current_severity)        
 
         except Exception as e:
             print ("EXCEPTION2:")
