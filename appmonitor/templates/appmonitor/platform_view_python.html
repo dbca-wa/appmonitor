@@ -17,7 +17,7 @@
             <th>Package Version</th>
             <th>PyPi</th>
             <th>Vulnerable</th>
-            <th>DependaBot</th>
+            <th>Severity</th>
             <th>Active</th>
             <th>Updated</th>
             <th>Created</th>
@@ -57,6 +57,24 @@
                                                                         
                             {% endif %}
 
+                        </td>
+                        <td>
+                            {% if ppo.severity_rollup %}
+                            {% if ppo.severity_rollup == 'LOW' %}
+                            <span class="badge bg-success">{{ ppo.severity_rollup }} </span>
+
+                            {% endif %}
+                            {% if ppo.severity_rollup == 'MEDIUM' %}
+                                <span class="badge bg-primary">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                         
+                            {% if ppo.severity_rollup == 'HIGH' %}
+                                <span class="badge bg-warning">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                       
+                            {% if ppo.severity_rollup == 'CRITICAL' %}
+                                <span class="badge bg-danger">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                                                                                      
+
+                            {% endif %}
                         </td>
                         <td>
                             {% if ppo.active is True %}
