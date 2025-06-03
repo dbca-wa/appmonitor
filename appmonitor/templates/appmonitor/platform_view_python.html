@@ -4,9 +4,9 @@
     </div>
     <div class='col-6 text-end'>
         {% if only_vulnerable == 'true' %}
-        <a href='/platform/view/{{ platform_obj.id }}/' class='btn btn-primary'>Show All</a>
+        <a href='/platform/view/{{ platform_obj.id }}/python-packages' class='btn btn-primary'>Show All</a>
         {% else %}
-            <a href='/platform/view/{{ platform_obj.id }}/?only_vulnerable=true' class='btn btn-primary'>Show Only Vulnerable</a>
+            <a href='/platform/view/{{ platform_obj.id }}/python-packages?only_vulnerable=true' class='btn btn-primary'>Show Only Vulnerable</a>
         {% endif %}
     </div>
 </div>

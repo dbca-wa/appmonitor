@@ -154,7 +154,7 @@ def get_platform_info(pid, filters=None, *args, **kwargs):
             row['vulnerability_total'] = pi.vulnerability_total
             row['dependabot_vulnerability_total'] = pi.dependabot_vulnerability_total
             row['git_repo_name'] = pi.git_repo_name
-
+            row['platform_current_severity'] = pi.platform_current_severity
             group_responsible_id = None
             group_responsible_name = None
             if pi.group_responsible:

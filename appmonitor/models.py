@@ -266,6 +266,7 @@ class Platform(models.Model):
     git_repo_name = models.CharField(max_length=512, default='', null=True, blank=True)  
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
     vulnerability_total = models.IntegerField(default=0)
+    platform_current_severity = models.CharField(max_length=20, default='', null=True, blank=True)
     dependabot_vulnerability_total = models.IntegerField(default=0)
     json_response =  models.JSONField(null=True, blank=True)    
     stale_packages = models.BooleanField(default=True)
@@ -337,6 +338,7 @@ class PythonPackage(models.Model):
     current_package_version = models.CharField(max_length=255, default='', null=True, blank=True)
     platform = models.ForeignKey(Platform, null=True, blank=True, on_delete=models.SET_NULL)
     vulnerability_total = models.IntegerField(default=0,null=True)
+    severity_rollup = models.CharField(max_length=40, default='', null=True, blank=True)
     active = models.BooleanField(default=True,null=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -348,15 +350,36 @@ class PythonPackage(models.Model):
         self.updated = datetime.now()
         print ("Updating Vulnerability Count")
         python_package_vunerability_version_advisory_information_obj = 0
+        current_severity = ""
         if PythonPackageVulnerability.objects.filter(package_name=self.package_name).count() > 0:
             python_package_vunerability_obj = PythonPackageVulnerability.objects.get(package_name=self.package_name)            
             if python_package_vunerability_obj:
                 python_package_vunerability_version_obj = PythonPackageVulnerabilityVersion.objects.filter(python_package=python_package_vunerability_obj,package_version=self.current_package_version)
 
                 if python_package_vunerability_version_obj.count() > 0:
-                    python_package_vunerability_version_advisory_information_obj = PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0]).count()
-
-
+                    ppvai_obj = PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0])
+                    python_package_vunerability_version_advisory_information_obj = ppvai_obj.count()
+                    
+                    for ppvai in ppvai_obj:                                                                        
+                        if ppvai.baseSeverity == 'LOW':         
+                            if current_severity == "MEDIUM" or current_severity == "HIGH" or current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity                                                   
+                        if ppvai.baseSeverity == 'MEDIUM':
+                            if current_severity == "HIGH" or current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity
+                        if ppvai.baseSeverity == 'HIGH':
+                            if current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity
+                        if ppvai.baseSeverity == 'CRITICAL':                            
+                            current_severity = ppvai.baseSeverity                                                                        
+                    
+        self.severity_rollup = current_severity
         self.vulnerability_total = python_package_vunerability_version_advisory_information_obj
 
         vulnerability_total = 0

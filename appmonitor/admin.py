@@ -80,7 +80,7 @@ class Tickets(admin.ModelAdmin):
 
 @admin.register(models.PythonPackage)
 class PythonPackageAdmin(admin.ModelAdmin):
-     list_display = ('id','package_name','current_package_version','active','updated','created')
+     list_display = ('id','package_name','current_package_version','vulnerability_total','active','updated','created')
      search_fields = ('id','package_name','current_package_version')
 
 class DebianPackageInline(admin.TabularInline):
@@ -98,7 +98,7 @@ class DebianPackageInline(admin.TabularInline):
 
 class PythonPackageInline(admin.TabularInline):
      list_display = ('id','package_name','vulnerability_total','active','updated','created')
-     readonly_fields=('package_name','current_package_version','vulnerability_total','active','updated','created')
+     readonly_fields=('severity_rollup','package_name','current_package_version','vulnerability_total','active','updated','created')
      model = models.PythonPackage
      extra = 0
 
@@ -121,9 +121,9 @@ class PlatformDependaBotAdvisory(admin.TabularInline):
 
 @admin.register(models.Platform)
 class Platform(admin.ModelAdmin):
-     list_display = ('id','system_name','operating_system_name','operating_system_version','python_version','django_version','updated','created')
+     list_display = ('id','system_name','operating_system_name','operating_system_version','python_version','django_version','platform_current_severity','updated','created')
      search_fields = ('id','system_name')
-     readonly_fields=('operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
+     readonly_fields=('platform_current_severity','operating_system_name','operating_system_version','python_version','django_version','json_response','updated','created')
      #exclude = ('json_response',)
      inlines = [PlatformAdvisoryEmailInline,PlatformDependaBotAdvisory,PythonPackageInline, DebianPackageInline]
 
@@ -145,7 +145,7 @@ class PythonPackageVulnerabilityVersionAdmin(admin.ModelAdmin):
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
      list_display = ('id','package_version','advisory','cve','baseSeverity','baseScore','updated','created')
-     search_fields = ('id','package_version__package_version','cve')
+     search_fields = ('id','package_version__package_version','cve','baseSeverity')
      raw_id_fields = ('package_version',)
 
 class PythonPackageVulnerabilityVersionAdvisoryInformationInline(NestedStackedInline):
