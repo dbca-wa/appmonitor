@@ -111,8 +111,11 @@
                                             <span class='badge bg-warning'>{{ pdb.severity }} </span>  
                                             {% elif pdb.severity == 'medium' %}                                        
                                             <span class='badge bg-primary'>{{ pdb.severity }} </span>                                              
+                                            {% elif pdb.severity == 'low' %}                                        
+                                            <span class='badge bg-dark'>{{ pdb.severity }} </span>                                              
+                                                                                        
                                             {% else %}                                            
-                                                <span class='badge bg-success'>{{ pdb.severity }} </span>                                     
+                                                <span class='badge bg-secondary'>{{ pdb.severity }} </span>                                     
                                             {% endif %}
                                         </td>
                                         <td >{{ pdb.cve_id }}</td>                                        
