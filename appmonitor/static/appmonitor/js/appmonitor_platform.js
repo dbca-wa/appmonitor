@@ -169,7 +169,7 @@ var appmonitor_platform = {
                 if (resp != null) {
                     if (resp.platform_info_array.length > 0) {
                         for (let i = 0; i < resp.platform_info_array.length; i++) {
-                                var severity_color = 'btn-secondary'
+                                var severity_color = 'btn-dark'
                                 button_json = '{"id": "'+resp.platform_info_array[i].id+'"}'
                                 htmlval+= "<tr>";                                                                                                      
                                 htmlval+= "     <td>"+resp.platform_info_array[i].system_name+"</td>";
@@ -177,11 +177,11 @@ var appmonitor_platform = {
                                 htmlval+= "     <td>"+resp.platform_info_array[i].operating_system_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].python_version+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].django_version+"</td>";
+                                
                                 // htmlval+= "     <td>"+resp.platform_info_array[i].vulnerability_total+"</td>";
                                 if (resp.platform_info_array[i].platform_current_severity == "LOW" ) {
-                                    severity_color = "btn-success"
-
-                                }
+                                    severity_color = "btn-dark"
+                                }                            
                                 if (resp.platform_info_array[i].platform_current_severity == "MEDIUM" ) {
                                     severity_color = "btn-primary"
                                 }                                
@@ -194,7 +194,7 @@ var appmonitor_platform = {
                                 if (resp.platform_info_array[i].vulnerability_total > 0) {
                                     htmlval+= "     <td><a type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
                                 } else {
-                                    htmlval+= "     <td><a type='button' class='btn btn-dark' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                    htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
 
                                 }
 
@@ -203,7 +203,7 @@ var appmonitor_platform = {
                                     if (resp.platform_info_array[i].dependabot_vulnerability_total > 0) {
                                         htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
                                     } else {
-                                        htmlval+= "     <td><a type='button' class='btn btn-dark' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
+                                        htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
 
                                     }
                                 } else {
