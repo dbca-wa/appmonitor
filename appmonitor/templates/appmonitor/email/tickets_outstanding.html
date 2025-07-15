@@ -26,33 +26,26 @@
             <tr>
                 <td style='font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;' ><A href='https://dbca.freshservice.com/a/tickets/{{ tk.id }}'>{{ tk.id }}</A></td>
                 <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.subject }}</td>
-                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ tk.system_id }}</td>
                 <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">
-                    {% if tk.status == 2 %}    
-                        Open
-                    {% elif tk.status == 12 %}
-                        Work in Progress
-                    {% elif tk.status == 3 %}
-                        Pending
-                    {% elif tk.status == 4 %}
-                        Resolved
-                    {% elif tk.status == 5 %}
-                        Closed    
-                    {% elif tk.status == 8 %}
-                        Waiting on Customer
-                    {% elif tk.status == 9 %}
-                        Waiting on Third Party
-                    {% elif tk.status == 13 %}
-                        Customer Replied
-                    {% elif tk.status == 15 %}
-                        Pending Testing
-                    {% elif tk.status == 16 %}
-                        Pending Deployment
-                    {% elif tk.status == 17 %}
-                        With Apps Team                       
-                    {% else %}
-                        Unknown ID ({{ tk.status}})
-                    {% endif %}                                                   
+                    
+                   
+                    {% for ts in ticket_systems %}                 
+                        {% if tk.lf_system_id == ts.freskdesk_system_id %}
+                          {{ ts.system_name }}
+                        {% endif %}
+                    {% endfor %}
+                    ({{ tk.lf_system_id }})
+                
+                </td>
+                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">
+                    {% for ts in ticket_status %}
+                 
+                        {% if tk.status == ts.freskdesk_status_id %}
+                          {{ ts.status_name }}
+                        {% endif %}
+                    {% endfor %}
+                    ({{ tk.status }})
+                      
                 </td>
                 <td style="font-weight: bold; text-align: center; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if tk.age < 2%}background-color: #b9b9b9; color: #ffffff;{% elif tk.age < 7%}background-color: #00cb10; color: #ffffff;{% elif tk.age < 14%}background-color: #deeb05; color: #ffffff;{% elif tk.age < 30%}background-color: #eb8f05; color: #ffffff;{% else %}background-color: #eb0000; color: #ffffff;{% endif %}">{{ tk.age }}</td>
                 <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if tk.age_updated < 2%}background-color: #b9b9b9; color: #ffffff;{% elif tk.age_updated < 7%}background-color: #00cb10; color: #ffffff;{% elif tk.age_updated < 14%}background-color: #deeb05; color: #ffffff;{% elif tk.age_updated < 30%}background-color: #eb8f05; color: #ffffff;{% else %}background-color: #eb0000; color: #ffffff;{% endif %}">{{ tk.ticket_updated_datetime }}</td>
