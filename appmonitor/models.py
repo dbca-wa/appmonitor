@@ -254,6 +254,24 @@ class Tickets(models.Model):
     def __str__(self):
         return self.ticket_reference_no
 
+class TicketSystem(models.Model):
+    system_name = models.CharField(max_length=255, default='', null=True, blank=True)
+    system_id = models.CharField(max_length=50, default='', null=True, blank=True)   
+    freskdesk_system_id = models.IntegerField(default=0, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.system_name
+
+class TicketStatus(models.Model):
+    status_name = models.CharField(max_length=255, default='', null=True, blank=True)    
+    freskdesk_status_id = models.IntegerField(default=0, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.status_name
 
 class Platform(models.Model):
 

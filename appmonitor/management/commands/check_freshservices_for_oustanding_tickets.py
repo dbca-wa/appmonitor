@@ -18,7 +18,9 @@ class Command(BaseCommand):
             ticket_filters = models.TicketFilter.objects.filter(active=True)
             FRESHSERVICES_API_KEY = settings.FRESHSERVICES_API_KEY
             auth_request = requests.auth.HTTPBasicAuth(FRESHSERVICES_API_KEY, "X")
-            
+            ticket_systems = models.TicketSystem.objects.filter(active=True)
+            ticket_status = models.TicketStatus.objects.filter(active=True)
+
             for tf in ticket_filters:         
                 tickets_total = 0 
                 tickets = []  
@@ -35,6 +37,7 @@ class Command(BaseCommand):
                             ticket_row['id']  = t['id']
                             ticket_row['subject'] = t['subject']
                             ticket_row['system_id'] = t['custom_fields']['system_id']
+                            ticket_row['lf_system_id'] = t['custom_fields']['lf_system_id']
                             ticket_row['status'] = t['status']
 
                             print (t['subject'])   
@@ -66,6 +69,6 @@ class Command(BaseCommand):
                 for notification in models.TicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
                     print ("Preparing to "+notification.email)
                     to_addresses.append(notification.email)
-                t.send(to_addresses=to_addresses, context={"tickets": tickets_pending, "tickets_total": tickets_total, "settings": settings, "tickets_array": tickets_array})        
+                t.send(to_addresses=to_addresses, context={"tickets": tickets_pending, "tickets_total": tickets_total, "settings": settings, "tickets_array": tickets_array, "ticket_systems" : ticket_systems, "ticket_status": ticket_status, "test": {19: "test1", 17: "test2", 18: "test3"}})        
         
 

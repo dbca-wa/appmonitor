@@ -78,6 +78,14 @@ class TicketFilter(admin.ModelAdmin):
 class Tickets(admin.ModelAdmin):
      list_display = ('id','ticket_reference_no','last_update_str','created')
 
+@admin.register(models.TicketStatus)
+class TicketStatus(admin.ModelAdmin):
+     list_display = ('id','status_name','freskdesk_status_id','active','created')
+
+@admin.register(models.TicketSystem)
+class TicketSystem(admin.ModelAdmin):
+     list_display = ('id','system_name','freskdesk_system_id','active','created')
+
 @admin.register(models.PythonPackage)
 class PythonPackageAdmin(admin.ModelAdmin):
      list_display = ('id','package_name','current_package_version','vulnerability_total','active','updated','created')
