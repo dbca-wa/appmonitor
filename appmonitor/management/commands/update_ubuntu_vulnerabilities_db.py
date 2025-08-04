@@ -36,10 +36,10 @@ class Command(BaseCommand):
             # insecure_full_file = requests.get(INSECURE_UBUNTU_LIST_FULL)
             print (f"Downloading full insecure Ubuntu vulnerabilities database from {INSECURE_UBUNTU_LIST_FULL}...")
             
-            # http = urllib3.PoolManager()            
-            # with open(ziplocation, 'wb') as out:
-            #     r = http.request('GET', INSECURE_UBUNTU_LIST_FULL, preload_content=False)
-            #     shutil.copyfileobj(r, out)
+            http = urllib3.PoolManager()            
+            with open(ziplocation, 'wb') as out:
+                r = http.request('GET', INSECURE_UBUNTU_LIST_FULL, preload_content=False)
+                shutil.copyfileobj(r, out)
 
             print ("Download complete. Extracting files...")
             # with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
