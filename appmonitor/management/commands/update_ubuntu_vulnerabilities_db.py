@@ -33,26 +33,35 @@ class Command(BaseCommand):
             
             ziplocation = "/tmp/ubuntu_security_notices.zip"
             extract_to_path = "/tmp/ubuntu_security_notices/"
-            insecure_full_file = requests.get(INSECURE_UBUNTU_LIST_FULL)
-            f = open(ziplocation, 'wb')
-            for chunk in insecure_full_file.iter_content(chunk_size=512 * 1024): 
-                if chunk: # filter out keep-alive new chunks
-                    f.write(chunk)
-            f.close()
+            # insecure_full_file = requests.get(INSECURE_UBUNTU_LIST_FULL)
+            print (f"Downloading full insecure Ubuntu vulnerabilities database from {INSECURE_UBUNTU_LIST_FULL}...")
+            chunk_size = 8192
+            with requests.get(INSECURE_UBUNTU_LIST_FULL, stream=True) as r:
+                r.raise_for_status()  # Raise an exception for bad status codes
+                with open(ziplocation, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=chunk_size):
+                        if chunk:  # Filter out keep-alive new chunks
+                            f.write(chunk)
 
+            # f = open(ziplocation, 'wb')
+            # for chunk in insecure_full_file.iter_content(chunk_size=512 * 1024): 
+            #     if chunk: # filter out keep-alive new chunks
+            #         f.write(chunk)
+            # f.close()
+            print ("Download complete. Extracting files...")
             with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
                 # Extract all contents to the specified directory
                 zip_ref.extractall(extract_to_path)
-                shutil.rmtree(insecure_db_dir, ignore_errors=True)
-                os.makedirs(insecure_db_dir, exist_ok=True)
-                
+            shutil.rmtree(insecure_db_dir, ignore_errors=True)
+            os.makedirs(insecure_db_dir, exist_ok=True)
+            print ("Extraction complete. Moving files to the database directory...")
             for i in os.listdir("/tmp/ubuntu_security_notices/ubuntu-security-notices-main/osv/cve/"):
                 print("/tmp/ubuntu_security_notices/ubuntu-security-notices-main/osv/cve/", i)
                 shutil.move(os.path.join("/tmp/ubuntu_security_notices/ubuntu-security-notices-main/osv/cve/", i), insecure_db_dir)
             shutil.rmtree("/tmp/ubuntu_security_notices/")
-
+            print ("Files moved successfully. Full insecure Ubuntu vulnerabilities database update complete.")
         else:
-
+            print ("Downloading insecure Ubuntu vulnerabilities database for current year...")
             insecure_list_json_string = requests.get(INSECURE_UBUNTU_LIST+"/"+current_year)
             if insecure_list_json_string.status_code == 200:
                 json_list = insecure_list_json_string.json()
