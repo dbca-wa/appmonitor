@@ -31,7 +31,7 @@ RUN mkdir /app
 RUN chown -R oim.oim /app 
 
 # Apply memory limits for the oim user.
-echo "oim             hard    memlock         1992294" >> /etc/security/limits.conf
+RUN echo "oim             hard    memlock         1992294" >> /etc/security/limits.conf
 
 # Default Scripts
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
