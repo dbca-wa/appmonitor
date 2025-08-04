@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.conf import settings
 from datetime import datetime
 import requests
+import urllib3
 import os
 import zipfile
 import shutil
@@ -19,7 +20,6 @@ class Command(BaseCommand):
         print ("Running Ubuntu Insecure DB Update.")
         current_date_time = datetime.now()
         current_year = current_date_time.strftime("%Y")
-        print (current_year)
         action = options['a__action']
         insecure_db_dir = str(settings.BASE_DIR) + '/db/ubuntu_insecure/'
         INSECURE_UBUNTU_LIST_FULL='https://github.com/canonical/ubuntu-security-notices/archive/refs/heads/main.zip'
@@ -35,23 +35,39 @@ class Command(BaseCommand):
             extract_to_path = "/tmp/ubuntu_security_notices/"
             # insecure_full_file = requests.get(INSECURE_UBUNTU_LIST_FULL)
             print (f"Downloading full insecure Ubuntu vulnerabilities database from {INSECURE_UBUNTU_LIST_FULL}...")
-            chunk_size = 8192
-            with requests.get(INSECURE_UBUNTU_LIST_FULL, stream=True) as r:
-                r.raise_for_status()  # Raise an exception for bad status codes
-                with open(ziplocation, "wb") as f:
-                    for chunk in r.iter_content(chunk_size=chunk_size):
-                        if chunk:  # Filter out keep-alive new chunks
-                            f.write(chunk)
+            
+            http = urllib3.PoolManager()            
+            with open(ziplocation, 'wb') as out:
+                r = http.request('GET', INSECURE_UBUNTU_LIST_FULL, preload_content=False)
+                shutil.copyfileobj(r, out)
 
-            # f = open(ziplocation, 'wb')
-            # for chunk in insecure_full_file.iter_content(chunk_size=512 * 1024): 
-            #     if chunk: # filter out keep-alive new chunks
-            #         f.write(chunk)
-            # f.close()
             print ("Download complete. Extracting files...")
-            with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
-                # Extract all contents to the specified directory
-                zip_ref.extractall(extract_to_path)
+            # with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
+            #     # Extract all contents to the specified directory
+            #     zip_ref.extractall(extract_to_path)
+
+            with zipfile.ZipFile(ziplocation, 'r') as zf:
+                for member in zf.infolist():
+                    # Skip directories
+                    if member.is_dir():
+                        continue
+
+                    # Construct the full path for the extracted file
+                    target_path = extract_to_path+f"/{member.filename}"
+
+                    # Ensure parent directories exist
+                    import os
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+
+                    with zf.open(member) as source_file:
+                        with open(target_path, 'wb') as dest_file:
+                            while True:
+                                chunk = source_file.read(65536)
+                                if not chunk:
+                                    break
+                                dest_file.write(chunk)
+
+
             shutil.rmtree(insecure_db_dir, ignore_errors=True)
             os.makedirs(insecure_db_dir, exist_ok=True)
             print ("Extraction complete. Moving files to the database directory...")
@@ -61,7 +77,7 @@ class Command(BaseCommand):
             shutil.rmtree("/tmp/ubuntu_security_notices/")
             print ("Files moved successfully. Full insecure Ubuntu vulnerabilities database update complete.")
         else:
-            print ("Downloading insecure Ubuntu vulnerabilities database for current year...")
+            print ("Checking insecure Ubuntu vulnerabilities database for current year...")
             insecure_list_json_string = requests.get(INSECURE_UBUNTU_LIST+"/"+current_year)
             if insecure_list_json_string.status_code == 200:
                 json_list = insecure_list_json_string.json()
