@@ -30,6 +30,9 @@ RUN useradd -g 5000 -u 5000 oim -s /bin/bash -d /app
 RUN mkdir /app 
 RUN chown -R oim.oim /app 
 
+# Apply memory limits for the oim user.
+echo "oim             hard    memlock         1992294" >> /etc/security/limits.conf
+
 # Default Scripts
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
 RUN chmod 755 /tmp/default_script_installer.sh
@@ -77,7 +80,7 @@ COPY --chown=oim:oim appmonitor appmonitor
 COPY --chown=oim:oim manage.py ./
 # RUN chmod 777 /app/appmonitor/cache/
 RUN /app/venv/bin/python manage.py collectstatic --noinput
-echo "oim             hard    memlock         1992294" >> /etc/security/limits.conf
+
 
 
 EXPOSE 8080
