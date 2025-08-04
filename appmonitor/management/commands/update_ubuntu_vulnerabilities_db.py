@@ -20,7 +20,6 @@ class Command(BaseCommand):
         print ("Running Ubuntu Insecure DB Update.")
         current_date_time = datetime.now()
         current_year = current_date_time.strftime("%Y")
-        print (current_year)
         action = options['a__action']
         insecure_db_dir = str(settings.BASE_DIR) + '/db/ubuntu_insecure/'
         INSECURE_UBUNTU_LIST_FULL='https://github.com/canonical/ubuntu-security-notices/archive/refs/heads/main.zip'
@@ -37,15 +36,38 @@ class Command(BaseCommand):
             # insecure_full_file = requests.get(INSECURE_UBUNTU_LIST_FULL)
             print (f"Downloading full insecure Ubuntu vulnerabilities database from {INSECURE_UBUNTU_LIST_FULL}...")
             
-            http = urllib3.PoolManager()            
-            with open(ziplocation, 'wb') as out:
-                r = http.request('GET', INSECURE_UBUNTU_LIST_FULL, preload_content=False)
-                shutil.copyfileobj(r, out)
+            # http = urllib3.PoolManager()            
+            # with open(ziplocation, 'wb') as out:
+            #     r = http.request('GET', INSECURE_UBUNTU_LIST_FULL, preload_content=False)
+            #     shutil.copyfileobj(r, out)
 
             print ("Download complete. Extracting files...")
-            with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
-                # Extract all contents to the specified directory
-                zip_ref.extractall(extract_to_path)
+            # with zipfile.ZipFile(ziplocation, 'r') as zip_ref:
+            #     # Extract all contents to the specified directory
+            #     zip_ref.extractall(extract_to_path)
+
+            with zipfile.ZipFile(ziplocation, 'r') as zf:
+                for member in zf.infolist():
+                    # Skip directories
+                    if member.is_dir():
+                        continue
+
+                    # Construct the full path for the extracted file
+                    target_path = extract_to_path+f"/{member.filename}"
+
+                    # Ensure parent directories exist
+                    import os
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+
+                    with zf.open(member) as source_file:
+                        with open(target_path, 'wb') as dest_file:
+                            while True:
+                                chunk = source_file.read(65536)
+                                if not chunk:
+                                    break
+                                dest_file.write(chunk)
+
+
             shutil.rmtree(insecure_db_dir, ignore_errors=True)
             os.makedirs(insecure_db_dir, exist_ok=True)
             print ("Extraction complete. Moving files to the database directory...")

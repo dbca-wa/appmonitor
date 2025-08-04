@@ -77,8 +77,7 @@ COPY --chown=oim:oim appmonitor appmonitor
 COPY --chown=oim:oim manage.py ./
 # RUN chmod 777 /app/appmonitor/cache/
 RUN /app/venv/bin/python manage.py collectstatic --noinput
-
-
+echo "oim             hard    memlock         1992294" >> /etc/security/limits.conf
 
 
 EXPOSE 8080
