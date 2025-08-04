@@ -17,6 +17,7 @@
             <th>Package Version</th>
             <th>Debian</th>
             <th>Vulnerable</th>
+            <th>Severity</th>
             <th>DependaBot</th>
             <th>Active</th>
             <th>Updated</th>
@@ -29,7 +30,7 @@
             {% if python_packages_obj|length > 0 %}
                 {% for ppo in python_packages_obj %}
                     <tr>
-                        <td >{{ ppo.package_name }}</td>
+                        <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/debian/'>{{ ppo.package_name }}</a></td>
                         <td >{{ ppo.current_package_version }}</td>
                         <td ><a href='https://launchpad.net/ubuntu/+source/{{ ppo.package_name }}'>LaunchPad</a></td>
                         <td >
@@ -58,6 +59,24 @@
                             {% endif %}
 
                         </td>
+                        <td>
+                            {% if ppo.severity_rollup %}
+                            {% if ppo.severity_rollup == 'LOW' %}
+                            <span class="badge bg-dark">{{ ppo.severity_rollup }} </span>
+
+                            {% endif %}
+                            {% if ppo.severity_rollup == 'MEDIUM' %}
+                                <span class="badge bg-primary">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                         
+                            {% if ppo.severity_rollup == 'HIGH' %}
+                                <span class="badge bg-warning">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                       
+                            {% if ppo.severity_rollup == 'CRITICAL' %}
+                                <span class="badge bg-danger">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                                                                                      
+
+                            {% endif %}
+                        </td>                        
                         <td>
                             {% if ppo.active is True %}
                                 <i class="bi bi-check-circle-fill" style='color: #06e806;'></i>

@@ -22,11 +22,17 @@
 
 05 11 * * * /app/venv/bin/python3 /app/manage.py get_python_package_list >> /app/logs/get_python_package_list.log 2>&1
 
-05 12 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
+05 13 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
+05 07 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 
 10 9 * * 1 /app/venv/bin/python3 /app/manage.py vulnerable_system_packages_notification >> /app/logs/vulnerable_system_packages_notification.log 2>&1
 
 # CVE metrics
 01 10 * * * /app/venv/bin/python3 /app/manage.py update_cve_mitre_metrics >> /app/logs/update_cve_mitre_metrics.log 2>&1
 
-
+# Ubuntu Vulnerabilities DB Update
+15 7 * * 1 python manage.py update_ubuntu_vulnerabilities_db -a full >> /app/logs/update_ubuntu_vulnerabilities_db.log 2>&1
+15 7 * * 4 python manage.py update_ubuntu_vulnerabilities_db -a full >> /app/logs/update_ubuntu_vulnerabilities_db.log 2>&1
+*/4 * * * * python manage.py update_ubuntu_vulnerabilities_db >> /app/logs/update_ubuntu_vulnerabilities_db.log 2>&1
+05 13 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
+05 08 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1

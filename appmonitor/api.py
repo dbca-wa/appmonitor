@@ -156,7 +156,7 @@ def get_platform_info(request, *args, **kwargs):
             keyword = request.GET.get('keyword', '')  
             filters = {"responsiblegroup": responsiblegroup, "inactive": inactive, "keyword" : keyword}
 
-            data = utils.get_platform_info(None,filters)        
+            data = utils.get_platform_info(None,filters, request)        
             return HttpResponse(json.dumps(data), content_type='application/json', status=200)
         else:
             return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403)      
@@ -173,7 +173,7 @@ def get_platform_info_by_id(request, *args, **kwargs):
                 pid = kwargs['pk']
                 #pid = request.GET.get('pid',None)
                 if pid:
-                    data = utils.get_platform_info(pid)
+                    data = utils.get_platform_info(pid, None, request)
                 else:
                     return HttpResponse(json.dumps({'status': 404, 'message': "No PID data"}), content_type='application/json', status=403)  
                 return HttpResponse(json.dumps(data), content_type='application/json', status=200)

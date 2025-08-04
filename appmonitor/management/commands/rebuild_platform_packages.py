@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Remove old logs.'
 
     def handle(self, *args, **options):
-        
+        print ("Rebuilding Platform Packages...")
         try:
             platform_obj = models.Platform.objects.filter(stale_packages=True)           
 
@@ -57,7 +57,7 @@ class Command(BaseCommand):
 
 
                                 except Exception as e:
-                                    print ("EXCEPTION1:")
+                                    print ("EXCEPTION Python Packages:")
                                     print (e)
                                     python_package_obj_model = models.PythonPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
                                 
@@ -71,24 +71,49 @@ class Command(BaseCommand):
                                 print (package_name)
                                 print (package_version)
 
-                    if 'debian_packages' in platform_json['platform_obj']:           
-                        debian_packages = platform_json['platform_obj']['debian_packages']
-                        for dp in debian_packages:                           
-                            package_name = dp['package_name']
-                            package_version = dp['package_version']
-                            python_package_obj_model = None 
-                            # print (package_name)                       
-                            try:                      
-                                python_package_obj_model = models.DebianPackage.objects.get(platform=p, package_name=package_name)                                    
-                                vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
-                                python_package_obj_model.current_package_version = package_version
-                                python_package_obj_model.active =True
-                                python_package_obj_model.save()
-            
-                            except Exception as e:
-                                print ("EXCEPTION1:")
-                                print (e)
-                                python_package_obj_model = models.DebianPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
+                        if 'debian_packages' in platform_json['platform_obj']:           
+                            debian_packages = platform_json['platform_obj']['debian_packages']
+                            for dp in debian_packages:                           
+                                package_name = dp['package_name']
+                                package_version = dp['package_version']
+                                python_package_obj_model = None 
+                                # print (package_name)                       
+                                try:                      
+                                    python_package_obj_model = models.DebianPackage.objects.get(platform=p, package_name=package_name)                                    
+                                    vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
+                                    python_package_obj_model.current_package_version = package_version
+                                    python_package_obj_model.active =True
+                                    python_package_obj_model.save()
+
+                                    if python_package_obj_model.severity_rollup == 'LOW':         
+                                        if platform_current_severity == "MEDIUM" or platform_current_severity == "HIGH" or platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup                                                   
+                                    if python_package_obj_model.severity_rollup == 'MEDIUM':
+                                        if platform_current_severity == "HIGH" or platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup
+                                    if python_package_obj_model.severity_rollup == 'HIGH':
+                                        if platform_current_severity == "CRITICAL":
+                                            pass
+                                        else:
+                                            platform_current_severity = python_package_obj_model.severity_rollup
+                                    if python_package_obj_model.severity_rollup == 'CRITICAL':                            
+                                        platform_current_severity = python_package_obj_model.severity_rollup                                            
+                
+                                except Exception as e:
+                                    print ("EXCEPTION Debian Packages:")
+                                    print (e)
+                                    python_package_obj_model = models.DebianPackage.objects.create(package_name=package_name,current_package_version=package_version, platform=p, active=True)
+
+                                # create version history of package that links to the system.
+                                try: 
+                                    ppvh = models.DebianPackageVersionHistory.objects.get(debian_package=python_package_obj_model, package_version=package_version)
+                                except Exception as e:
+                                    print (e)
+                                    ppvh= models.DebianPackageVersionHistory.objects.create(debian_package=python_package_obj_model, package_version=package_version)                                    
                         
                     models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count, platform_current_severity=platform_current_severity)        
 

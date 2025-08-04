@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'appmonitor',
     'django_cron',
     'nested_inline',
-    'appmonitor_client'
+    'appmonitor_client',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -186,7 +187,8 @@ APP_URL=env("APP_URL", "http://localhost:8080/")
 FRESHSERVICES_API_KEY = env("FRESHSERVICES_API_KEY","")
 SYSTEM_FROM_ADDRESS=env("SYSTEM_FROM_ADDRESS","no-reply@dbca.wa.gov.au")
 INSECURE_LIST=env("INSECURE_LIST", None)
-
+INSECURE_UBUNTU_LIST=env("INSECURE_UBUNTU_LIST", None)
+INSECURE_UBUNTU_LIST_FULL=env("INSECURE_UBUNTU_LIST_FULL", None)
 SESSION_COOKIE_AGE = 86400
 
 CSRF_TRUSTED_ORIGINS_STRING = decouple.config("CSRF_TRUSTED_ORIGINS", default='[]')
