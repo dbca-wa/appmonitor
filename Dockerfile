@@ -30,6 +30,8 @@ RUN useradd -g 5000 -u 5000 oim -s /bin/bash -d /app
 RUN mkdir /app 
 RUN chown -R oim.oim /app 
 
+# Apply memory limits for the oim user.
+RUN echo "oim             hard    as         1992294" >> /etc/security/limits.conf
 
 # Default Scripts
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
