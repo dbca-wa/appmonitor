@@ -50,6 +50,24 @@ class ResponsibleGroupOutstandingAdvisoryEmail(models.Model):
     def __str__(self):
         return self.email     
 
+class ResponsibleGroupAccessUser(models.Model):
+    responsible_group = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.email 
+
+class ResponsibleGroupAccessGroup(models.Model):
+    responsible_group = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def __str__(self):
+        return self.group.name if self.group else 'No Group' 
+
 class AccessGroup(models.Model):
     
     ACCESS_TYPE = Choices(
@@ -343,12 +361,158 @@ class DebianPackage(models.Model):
     package_name = models.CharField(max_length=255, default='', null=True, blank=True)
     current_package_version = models.CharField(max_length=255, default='', null=True, blank=True)    
     vulnerability_total = models.IntegerField(default=0,null=True)
+    severity_rollup = models.CharField(max_length=40, default='', null=True, blank=True)
     active = models.BooleanField(default=True,null=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.package_name
+    
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        print ("Updating Vulnerability Count")
+        print ("Updating Vulnerability Count")
+        print ("Updating Vulnerability Count")
+        print ("Updating Vulnerability Count")
+
+        debian_package_vunerability_version_advisory_information_obj = 0
+        current_severity = ""
+        
+        if DebianPackageVulnerability.objects.filter(package_name=self.package_name).count() > 0:
+            print ("Updating Vulnerability Count"+self.package_name)
+            debian_package_vunerability_obj = DebianPackageVulnerability.objects.get(package_name=self.package_name)            
+            if debian_package_vunerability_obj:
+                debian_package_vunerability_version_obj = DebianPackageVulnerabilityVersion.objects.filter(debian_package=debian_package_vunerability_obj,package_version=self.current_package_version)
+
+                if debian_package_vunerability_version_obj.count() > 0:
+                    ppvai_obj = DebianPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=debian_package_vunerability_version_obj[0])
+                    debian_package_vunerability_version_advisory_information_obj = ppvai_obj.count()
+                    
+                    for ppvai in ppvai_obj:                                                                        
+                        if ppvai.baseSeverity == 'LOW':         
+                            if current_severity == "MEDIUM" or current_severity == "HIGH" or current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity                                                   
+                        if ppvai.baseSeverity == 'MEDIUM':
+                            if current_severity == "HIGH" or current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity
+                        if ppvai.baseSeverity == 'HIGH':
+                            if current_severity == "CRITICAL":
+                                pass
+                            else:
+                                current_severity = ppvai.baseSeverity
+                        if ppvai.baseSeverity == 'CRITICAL':                            
+                            current_severity = ppvai.baseSeverity                                                                        
+                    
+        self.severity_rollup = current_severity
+        self.vulnerability_total = debian_package_vunerability_version_advisory_information_obj
+        print ("Updating Vulnerability Count"+str(self.vulnerability_total))
+        print ("Updating Vulnerability Count"+str(self.severity_rollup))
+        vulnerability_total_python = 0
+        if PythonPackage.objects.filter(platform=self.platform).count() > 0:
+            pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
+            if pp_sum['vulnerability_total__sum'] is not None:
+                vulnerability_total_python = pp_sum['vulnerability_total__sum']
+        vulnerability_total_debian = 0
+        if DebianPackage.objects.filter(platform=self.platform).count() > 0:
+            pp_sum = DebianPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
+            if pp_sum['vulnerability_total__sum'] is not None:
+                vulnerability_total_debian = pp_sum['vulnerability_total__sum']                
+            
+        vulnerability_total = vulnerability_total_python + vulnerability_total_debian
+        platform = Platform.objects.get(id=self.platform.id)
+        platform.vulnerability_total = vulnerability_total
+        platform.save()        
+
+        super(DebianPackage,self).save(*args,**kwargs)
+
+class DebianPackageVersionHistory(models.Model):
+    
+    debian_package = models.ForeignKey(DebianPackage, null=True, blank=True, on_delete=models.SET_NULL)     
+    package_version = models.CharField(max_length=255, default='', null=True, blank=True)    
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_version   
+
+class DebianPackageVulnerability(models.Model):
+    package_name = models.CharField(max_length=255, default='', null=True, blank=True,unique=True)
+    vulnerability_json =  models.JSONField(null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(DebianPackageVulnerability,self).save(*args,**kwargs)
+
+    def __str__(self):
+
+        if self.package_name:
+            return self.package_name       
+        else:
+            return "No Package Name"
+
+class DebianPackageVulnerabilityVersion(models.Model):
+    debian_package = models.ForeignKey(DebianPackageVulnerability, null=True, blank=True, on_delete=models.SET_NULL)
+    package_version = models.CharField(max_length=255, default='', null=True, blank=True) 
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        if self.debian_package:
+            if self.debian_package.package_name:
+                return self.debian_package.package_name + ':' + self.package_version
+            else:
+                return 'No Package Name' + ':' + self.package_version
+        return 'No Debian Package'
+        #return self.debian_package.package_name+':'+self.package_version
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(DebianPackageVulnerabilityVersion,self).save(*args,**kwargs)
+
+class DebianPackageVulnerabilityVersionAdvisoryInformation(models.Model):
+    package_version = models.ForeignKey(DebianPackageVulnerabilityVersion, null=True, blank=True, on_delete=models.SET_NULL)
+    advisory = models.TextField(default='', null=True, blank=True)
+    cve = models.CharField(max_length=255, default='', null=True, blank=True) 
+    baseSeverity = models.CharField(max_length=40, default='', null=True, blank=True)
+    baseScore = models.FloatField(default='0', null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.package_version.package_version
+
+    def save(self, *args, **kwargs):
+        self.updated = datetime.now()
+        super(DebianPackageVulnerabilityVersionAdvisoryInformation,self).save(*args,**kwargs)
+
+        if self.package_version:
+            if self.package_version.debian_package:
+                python_package_obj = DebianPackage.objects.filter(package_name=self.package_version.debian_package.package_name,current_package_version=self.package_version.package_version)
+
+                for pp in python_package_obj:            
+                    pp.save()
+
+                    # from appmonitor import email_templates
+                    # t = email_templates.NewAdvisory()
+                    # t.subject = "Python Advisory for package {}:{}".format(self.package_version.debian_package.package_name, self.package_version.package_version)
+                    # to_addresses=[]
+
+                    # for notification in PlatformAdvisoryEmail.objects.filter(platform=pp.platform):
+                    #     print ("Preparing to "+notification.email)
+                    #     to_addresses.append(notification.email)
+                    # t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
+
+                    # if pp.platform.group_responsible:
+                    #     for notification in ResponsibleGroupAdvisoryEmail.objects.filter(id=pp.platform.group_responsible.id,active=True):
+                    #         print ("Preparing to "+notification.email)
+                    #         to_addresses.append(notification.email)
+                    #     t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
 
 class PythonPackage(models.Model):
     
@@ -400,13 +564,20 @@ class PythonPackage(models.Model):
         self.severity_rollup = current_severity
         self.vulnerability_total = python_package_vunerability_version_advisory_information_obj
 
-        vulnerability_total = 0
+        vulnerability_total_python = 0
         if PythonPackage.objects.filter(platform=self.platform).count() > 0:
             pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
             if pp_sum['vulnerability_total__sum'] is not None:
-                vulnerability_total = pp_sum['vulnerability_total__sum']
-            
+                vulnerability_total_python = pp_sum['vulnerability_total__sum']
 
+                
+        vulnerability_total_debian = 0
+        if DebianPackage.objects.filter(platform=self.platform).count() > 0:
+            pp_sum = DebianPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
+            if pp_sum['vulnerability_total__sum'] is not None:
+                vulnerability_total_debian = pp_sum['vulnerability_total__sum']                
+            
+        vulnerability_total = vulnerability_total_python + vulnerability_total_debian
         platform = Platform.objects.get(id=self.platform.id)
         platform.vulnerability_total = vulnerability_total
         platform.save()
@@ -475,16 +646,16 @@ class PythonPackageVulnerabilityVersionAdvisoryInformation(models.Model):
             t.subject = "Python Advisory for package {}:{}".format(self.package_version.python_package.package_name, self.package_version.package_version)
             to_addresses=[]
 
-            for notification in PlatformAdvisoryEmail.objects.filter(platform=pp.platform):
-                print ("Preparing to "+notification.email)
-                to_addresses.append(notification.email)
-            t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
+            # for notification in PlatformAdvisoryEmail.objects.filter(platform=pp.platform):
+            #     print ("Preparing to "+notification.email)
+            #     to_addresses.append(notification.email)
+            # t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
 
-            if pp.platform.group_responsible:
-                for notification in ResponsibleGroupAdvisoryEmail.objects.filter(id=pp.platform.group_responsible.id,active=True):
-                    print ("Preparing to "+notification.email)
-                    to_addresses.append(notification.email)
-                t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
+            # if pp.platform.group_responsible:
+            #     for notification in ResponsibleGroupAdvisoryEmail.objects.filter(id=pp.platform.group_responsible.id,active=True):
+            #         print ("Preparing to "+notification.email)
+            #         to_addresses.append(notification.email)
+            #     t.send(to_addresses=to_addresses, context={"advisory" : self,"settings": settings, 'pp': pp}, headers={"Reply-To": settings.IT_CHECKS_REPLY_TO_EMAIL})    
 
 
             

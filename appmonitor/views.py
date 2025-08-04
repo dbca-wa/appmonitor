@@ -236,38 +236,73 @@ class PlatformPackageView(base.TemplateView):
         context: dict[str, Any] = {}
         platform_id = self.kwargs['pk']
         python_package_id = self.kwargs['package_pk']
+        ecosystem = self.kwargs['ecosystem']
         platform_obj = None
         python_packages_versions_obj = None
+        python_package_obj={}
         if request.user.is_authenticated:
             try:      
                 python_packages_versions_array = []
                 platform_obj = models.Platform.objects.get(id=platform_id)
-                python_package_obj = models.PythonPackage.objects.get(platform_id=platform_obj.id, id=python_package_id)
-                python_packages_versions_obj = models.PythonPackageVersionHistory.objects.filter(python_package=python_package_id)
+                if ecosystem == 'python':
+                    python_package_obj = models.PythonPackage.objects.get(platform_id=platform_obj.id, id=python_package_id)
+                    python_packages_versions_obj = models.PythonPackageVersionHistory.objects.filter(python_package=python_package_id)
 
-                python_package_vunerability_obj_id = None
-                python_package_vunerability_obj = None
-                if models.PythonPackageVulnerability.objects.filter(package_name=python_package_obj.package_name).count() > 0:
-                    python_package_vunerability_obj = models.PythonPackageVulnerability.objects.get(package_name=python_package_obj.package_name)
-                    python_package_vunerability_obj_id = python_package_vunerability_obj.id
-                
+                    python_package_vunerability_obj_id = None
+                    python_package_vunerability_obj = None
+                    if models.PythonPackageVulnerability.objects.filter(package_name=python_package_obj.package_name).count() > 0:
+                        python_package_vunerability_obj = models.PythonPackageVulnerability.objects.get(package_name=python_package_obj.package_name)
+                        python_package_vunerability_obj_id = python_package_vunerability_obj.id                
+                elif ecosystem == 'debian':
+                    python_package_obj = models.DebianPackage.objects.get(platform_id=platform_obj.id, id=python_package_id)
+                    python_packages_versions_obj = models.DebianPackageVersionHistory.objects.filter(debian_package=python_package_id)
+
+                    python_package_vunerability_obj_id = None
+                    python_package_vunerability_obj = None
+                    if models.DebianPackageVulnerability.objects.filter(package_name=python_package_obj.package_name).count() > 0:
+                        python_package_vunerability_obj = models.DebianPackageVulnerability.objects.get(package_name=python_package_obj.package_name)
+                        python_package_vunerability_obj_id = python_package_vunerability_obj.id         
+
+                elif ecosystem == 'node':
+                    # work required to compile node packages data
+                    pass
+                    
                 for ppv in python_packages_versions_obj:
                     row = {}
-                    row['python_package'] = ppv.python_package
+                    
                     row['package_version'] = ppv.package_version
                     row['created'] = ppv.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
                     row['ppv_id'] = python_package_vunerability_obj_id
                     row['ppvv_id'] = None
 
-                    python_package_vunerability_version_advisory_information_obj = 0
-                    if python_package_vunerability_obj:
-                        python_package_vunerability_version_obj = models.PythonPackageVulnerabilityVersion.objects.filter(python_package=python_package_vunerability_obj,package_version=ppv.package_version)
-                                    
-                        if python_package_vunerability_version_obj.count() > 0:
-                            python_package_vunerability_version_advisory_information_obj = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0]).count()
+                    if ecosystem == 'python':
+                        row['package_name'] = ppv.python_package
+                        python_package_vunerability_version_advisory_information_obj = 0
+                        if python_package_vunerability_obj:
+                            python_package_vunerability_version_obj = models.PythonPackageVulnerabilityVersion.objects.filter(python_package=python_package_vunerability_obj,package_version=ppv.package_version)
+                                        
+                            if python_package_vunerability_version_obj.count() > 0:
+                                python_package_vunerability_version_advisory_information_obj = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj[0]).count()
 
-                            row['ppvv_id'] = python_package_vunerability_version_obj[0].id
-                    row['vulnerability_total'] = python_package_vunerability_version_advisory_information_obj
+                                row['ppvv_id'] = python_package_vunerability_version_obj[0].id
+                        row['vulnerability_total'] = python_package_vunerability_version_advisory_information_obj
+                    elif ecosystem == 'debian':
+                        
+                        row['package_name'] = ppv.debian_package
+                        debian_package_vunerability_version_advisory_information_obj = 0
+                        if python_package_vunerability_obj:
+                            debian_package_vunerability_version_obj = models.DebianPackageVulnerabilityVersion.objects.filter(debian_package=python_package_vunerability_obj,package_version=ppv.package_version)
+                                        
+                            if debian_package_vunerability_version_obj.count() > 0:
+                                debian_package_vunerability_version_advisory_information_obj = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=debian_package_vunerability_version_obj[0]).count()
+
+                                row['ppvv_id'] = debian_package_vunerability_version_obj[0].id
+                        
+                        row['vulnerability_total'] = debian_package_vunerability_version_advisory_information_obj
+                    elif ecosystem == 'node':
+                        # work required to compile node packages data
+                        row['vulnerability_total'] = 0
+                        row['ppvv_id'] = None
                     
                     python_packages_versions_array.append(row)
             except Exception as e:
@@ -278,12 +313,13 @@ class PlatformPackageView(base.TemplateView):
             context['python_package_obj'] = python_package_obj
             context['python_packages_versions_array'] = python_packages_versions_array
             context['python_packages_versions_obj'] = python_packages_versions_obj
+            context['ecosystem'] = ecosystem
             context['request'] = request
         
         # Render Template and Return
         return shortcuts.render(request, self.template_name, context)            
 
-class PythonPackageAdvisoryView(base.TemplateView):
+class PackageAdvisoryView(base.TemplateView):
     """VIew Platform System Information"""
 
     # Template name
@@ -293,32 +329,56 @@ class PythonPackageAdvisoryView(base.TemplateView):
         # Construct Context
         context: dict[str, Any] = {}
         package_id = self.kwargs['pk']
-        python_package_version_id = self.kwargs['version_pk']
+        package_version_id = self.kwargs['version_pk']
+        ecosystem = self.kwargs['ecosystem']
+        python_package_vunerability_obj = None
+        python_package_vunerability_version_obj = None
         # platform_obj = None
         # python_packages_versions_obj = None
         if request.user.is_authenticated:
             try:      
                 python_packages_versions_array = []                
-                python_package_advisory = []
+                package_advisory = []
                 vunerability_total = 0
-                if models.PythonPackageVulnerability.objects.filter(id=package_id).count() > 0:
-                    python_package_vunerability_obj = models.PythonPackageVulnerability.objects.get(id=package_id)
 
-                    python_package_vunerability_version_obj = models.PythonPackageVulnerabilityVersion.objects.get(python_package=python_package_vunerability_obj,id=python_package_version_id)
-                    python_package_vunerability_version_advisory_information_obj = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj)
-                    
-                    vunerability_total = python_package_vunerability_version_advisory_information_obj.count()
-                    for av in python_package_vunerability_version_advisory_information_obj:
-                        row = {}
+                if ecosystem == 'python':
+                    if models.PythonPackageVulnerability.objects.filter(id=package_id).count() > 0:
+                        python_package_vunerability_obj = models.PythonPackageVulnerability.objects.get(id=package_id)
 
-                        row['advisory'] = av.advisory
-                        row['cve'] = av.cve
-                        row["baseScore"] = av.baseScore 
-                        row["baseSeverity"] = av.baseSeverity
-                        row['package_version'] = av.package_version.package_version
-                        row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                        python_package_vunerability_version_obj = models.PythonPackageVulnerabilityVersion.objects.get(python_package=python_package_vunerability_obj,id=package_version_id)
+                        python_package_vunerability_version_advisory_information_obj = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=python_package_vunerability_version_obj)
+                        
+                        vunerability_total = python_package_vunerability_version_advisory_information_obj.count()
+                        for av in python_package_vunerability_version_advisory_information_obj:
+                            row = {}
 
-                        python_package_advisory.append(row)
+                            row['advisory'] = av.advisory
+                            row['cve'] = av.cve
+                            row["baseScore"] = av.baseScore 
+                            row["baseSeverity"] = av.baseSeverity
+                            row['package_version'] = av.package_version.package_version
+                            row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+
+                            package_advisory.append(row)
+                elif ecosystem == 'debian':
+                    if models.DebianPackageVulnerability.objects.filter(id=package_id).count() > 0:
+                        debian_package_vunerability_obj = models.DebianPackageVulnerability.objects.get(id=package_id)
+
+                        debian_package_vunerability_version_obj = models.DebianPackageVulnerabilityVersion.objects.get(debian_package=debian_package_vunerability_obj,id=package_version_id)
+                        debian_package_vunerability_version_advisory_information_obj = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=debian_package_vunerability_version_obj)
+                        
+                        vunerability_total = debian_package_vunerability_version_advisory_information_obj.count()
+                        for av in debian_package_vunerability_version_advisory_information_obj:
+                            row = {}
+
+                            row['advisory'] = av.advisory
+                            row['cve'] = av.cve
+                            row["baseScore"] = av.baseScore 
+                            row["baseSeverity"] = av.baseSeverity
+                            row['package_version'] = av.package_version.package_version
+                            row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+
+                            package_advisory.append(row)                    
 
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))
@@ -326,7 +386,7 @@ class PythonPackageAdvisoryView(base.TemplateView):
 
             context['python_package_vunerability_obj'] = python_package_vunerability_obj
             context['python_package_vunerability_version_obj'] = python_package_vunerability_version_obj
-            context['python_package_advisory'] = python_package_advisory
+            context['python_package_advisory'] = package_advisory
             context['request'] = request
             context['vunerability_total'] = vunerability_total
         

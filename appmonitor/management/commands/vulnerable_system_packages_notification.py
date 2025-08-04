@@ -21,18 +21,35 @@ class Command(BaseCommand):
                 print (rg)
                 date_string = datetime.datetime.now().astimezone().strftime('%Y-%m-%d')
                 date_string_au = datetime.datetime.now().astimezone().strftime('%d-%m-%Y')
-
+                platform_packages_info_array = []
                 platform_packages_info_obj = models.PythonPackage.objects.filter(active=True,vulnerability_total__gt=0,platform__group_responsible=rg)
                 if platform_packages_info_obj.count() > 0:
-                    platform_packages_info_array = []
+                    
                     for ppi in platform_packages_info_obj:
                         row = []
                         row.append(ppi.id)
                         row.append(ppi.platform.system_name)
+                        row.append("python")
                         row.append(ppi.package_name)
                         row.append(ppi.current_package_version)
                         row.append(ppi.vulnerability_total)
                         row.append(ppi.platform.group_responsible.group_name)
+                        row.append(ppi.severity_rollup)
+                        platform_packages_info_array.append(row)
+
+                platform_packages_info_obj = models.DebianPackage.objects.filter(active=True,vulnerability_total__gt=0,platform__group_responsible=rg)
+                if platform_packages_info_obj.count() > 0:
+                    
+                    for ppi in platform_packages_info_obj:
+                        row = []
+                        row.append(ppi.id)
+                        row.append(ppi.platform.system_name)
+                        row.append("debian")
+                        row.append(ppi.package_name)
+                        row.append(ppi.current_package_version)
+                        row.append(ppi.vulnerability_total)
+                        row.append(ppi.platform.group_responsible.group_name)
+                        row.append(ppi.severity_rollup)
                         platform_packages_info_array.append(row)
 
 
@@ -62,25 +79,31 @@ class Command(BaseCommand):
                     worksheet.set_column(0, 0, 12)
                     worksheet.write(row, col + 1, "SYSTEM NAME",format)
                     worksheet.set_column(1, 1, 30)
-                    worksheet.write(row, col + 2, "PACKAGE NAME",format)
+                    worksheet.write(row, col + 2, "ECOSYSTEM",format)
                     worksheet.set_column(2, 2, 30)
-                    worksheet.write(row, col + 3, "PACKAGE VERSION",format)
-                    worksheet.set_column(3, 3, 20)
-                    worksheet.write(row, col + 4, "VULNERABILITY TOTAL",format)
+                    worksheet.write(row, col + 3, "PACKAGE NAME",format)
+                    worksheet.set_column(3, 3, 30)
+                    worksheet.write(row, col + 4, "PACKAGE VERSION",format)
                     worksheet.set_column(4, 4, 20)
-                    worksheet.write(row, col + 5, "GROUP RESPONSIBLE",format)
-                    worksheet.set_column(5, 5, 60)
+                    worksheet.write(row, col + 5, "VULNERABILITY TOTAL",format)
+                    worksheet.set_column(5, 5, 20)
+                    worksheet.write(row, col + 6, "SEVERITY ROLLUP",format)
+                    worksheet.set_column(6, 6, 20)
+                    worksheet.write(row, col + 7, "GROUP RESPONSIBLE",format)
+                    worksheet.set_column(7, 7, 60)
                     #worksheet.set_column(row, col + 5, 100)
                     row += 1
                     
                     # Iterate over the data and write it out row by row.
-                    for id, system_name, package_name, current_package_version, vulnerability_total, group_responsible in (platform_packages_info_tuple):
+                    for id, system_name, ecosystem, package_name, current_package_version, vulnerability_total, group_responsible, severity_rollup in (platform_packages_info_tuple):
                         worksheet.write(row, col, id)
                         worksheet.write(row, col + 1, system_name)
-                        worksheet.write(row, col + 2, package_name)
-                        worksheet.write(row, col + 3, current_package_version)
-                        worksheet.write(row, col + 4, vulnerability_total)
-                        worksheet.write(row, col + 5, group_responsible)
+                        worksheet.write(row, col + 2, ecosystem)
+                        worksheet.write(row, col + 3, package_name)
+                        worksheet.write(row, col + 4, current_package_version)
+                        worksheet.write(row, col + 5, vulnerability_total)
+                        worksheet.write(row, col + 6, severity_rollup)
+                        worksheet.write(row, col + 7, group_responsible)
                         
                         # worksheet.write(row, col + 5, package_name)
 

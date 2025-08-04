@@ -45,10 +45,22 @@ class ResponsibleGroupOutstandingAdvisoryEmailInline(admin.TabularInline):
      model = models.ResponsibleGroupOutstandingAdvisoryEmail
      extra = 0 
 
+class ResponsibleGroupAccessUserInline(admin.TabularInline):
+     list_display = ('id','email','active','created')     
+     model = models.ResponsibleGroupAccessUser
+     extra = 0 
+
+class ResponsibleGroupAccessGroupInline(admin.TabularInline):
+     list_display = ('id','group','active','created')
+     raw_id_fields = ('group',)
+     model = models.ResponsibleGroupAccessGroup
+     extra = 0 
+
+
 @admin.register(models.ResponsibleGroup)
 class ResponsibleGroup(admin.ModelAdmin):
      list_display = ('id','group_name','active')
-     inlines = [ResponsibleGroupAdvisoryEmailInline,ResponsibleGroupOutstandingAdvisoryEmailInline]
+     inlines = [ResponsibleGroupAdvisoryEmailInline,ResponsibleGroupOutstandingAdvisoryEmailInline, ResponsibleGroupAccessGroupInline, ResponsibleGroupAccessUserInline]
 
 @admin.register(models.ManualCheck)
 class ManualCheck(admin.ModelAdmin):
@@ -88,11 +100,18 @@ class TicketSystem(admin.ModelAdmin):
 
 @admin.register(models.PythonPackage)
 class PythonPackageAdmin(admin.ModelAdmin):
-     list_display = ('id','package_name','current_package_version','vulnerability_total','active','updated','created')
+     list_display = ('id','package_name','current_package_version','vulnerability_total','severity_rollup','active','updated','created')
      search_fields = ('id','package_name','current_package_version')
 
+
+@admin.register(models.DebianPackage)
+class DebianackageAdmin(admin.ModelAdmin):
+     list_display = ('id','package_name','vulnerability_total','severity_rollup','active','updated','created')
+     search_fields = ('id','package_name','current_package_version')
+
+
 class DebianPackageInline(admin.TabularInline):
-     list_display = ('id','package_name','vulnerability_total','active','updated','created')
+     list_display = ('id','package_name','vulnerability_total','active','vulnerability_total','severity_rollup','updated','created')
      readonly_fields=('package_name','current_package_version','vulnerability_total','active','updated','created')
      model = models.DebianPackage
      extra = 0
@@ -105,7 +124,7 @@ class DebianPackageInline(admin.TabularInline):
 
 
 class PythonPackageInline(admin.TabularInline):
-     list_display = ('id','package_name','vulnerability_total','active','updated','created')
+     list_display = ('id','package_name','vulnerability_total','severity_rollup','active','updated','created')
      readonly_fields=('severity_rollup','package_name','current_package_version','vulnerability_total','active','updated','created')
      model = models.PythonPackage
      extra = 0
@@ -180,6 +199,43 @@ class PythonPackageVulnerabilityVersionInline(NestedStackedInline):
 
      def has_delete_permission(self, request, obj=None):
           return False
+
+@admin.register(models.DebianPackageVulnerabilityVersionAdvisoryInformation)
+class DebianPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
+     #list_display = ('id','package_version','advisory','cve','baseSeverity','baseScore','updated','created')
+     list_display = ('id','package_version','advisory','cve','baseSeverity','baseScore','updated','created')
+     search_fields = ('id','package_version__package_version','cve','baseSeverity')
+     raw_id_fields = ('package_version',)
+
+class DebianPackageVulnerabilityVersionAdvisoryInformationInline(NestedStackedInline):
+     list_display = ('id','package_version','advisory','cve','updated','created')
+     readonly_fields=('package_version','advisory','cve','updated','created')
+     model = models.DebianPackageVulnerabilityVersionAdvisoryInformation
+     extra = 1
+     
+     def has_add_permission(self,request,obj):
+          return False
+
+     def has_delete_permission(self, request, obj=None):
+          return False
+
+class DebianPackageVulnerabilityVersionInline(NestedStackedInline):
+     list_display = ('id','debian_package','package_version','updated','created')
+     readonly_fields=('debian_package','package_version','updated','created')
+     model = models.DebianPackageVulnerabilityVersion
+     extra = 1
+     inlines = [DebianPackageVulnerabilityVersionAdvisoryInformationInline,]
+
+     def has_add_permission(self,request,obj):
+          return False
+
+     def has_delete_permission(self, request, obj=None):
+          return False     
+
+@admin.register(models.DebianPackageVersionHistory)
+class DebianPackageVersionHistory(admin.ModelAdmin):
+     list_display = ('id','debian_package','package_version','created')
+     
      
 @admin.register(models.PythonPackageVulnerability)
 class PythonPackageVulnerability(NestedModelAdmin):
@@ -193,3 +249,16 @@ class PythonPackageVulnerability(NestedModelAdmin):
 
      def has_delete_permission(self, request, obj=None):
           return False
+
+@admin.register(models.DebianPackageVulnerability)
+class DebianPackageVulnerability(NestedModelAdmin):
+     save_as = True
+     list_display = ('id','package_name','vulnerability_json','updated','created')
+     inlines = [DebianPackageVulnerabilityVersionInline,]
+     readonly_fields=('package_name','vulnerability_json','updated','created')
+
+     # def has_change_permission(self,request, obj=None):
+     #      return False
+
+     def has_delete_permission(self, request, obj=None):
+          return False          

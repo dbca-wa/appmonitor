@@ -74,13 +74,13 @@
 
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'python-packages' %}active{% endif %}" aria-current="page" href="/platform/view/{{ platform_obj.id }}/python-packages">Python Packages</a>
+                      <a class="nav-link {% if ecosystem == 'python-packages' %}active{% endif %}" aria-current="page" href="/platform/view/{{ platform_obj.id }}/python-packages?only_vulnerable={{ only_vulnerable }}">Python Packages</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'debian-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/debian-packages">Debian Packages</a>
+                      <a class="nav-link {% if ecosystem == 'debian-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/debian-packages?only_vulnerable={{ only_vulnerable }}">Debian Packages</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'node-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/node-packages">Node Packages</a>
+                      <a class="nav-link {% if ecosystem == 'node-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/node-packages?only_vulnerable={{ only_vulnerable }}">Node Packages</a>
                     </li>                    
                   </ul>
                   <br>
