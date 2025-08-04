@@ -54,13 +54,14 @@ class Command(BaseCommand):
                         if "baseSeverity" in  jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]:
                             baseSeverity = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseSeverity"]
                             baseScore = jsonresp["containers"]["cna"]["metrics"][0][list(jsonresp["containers"]["cna"]["metrics"][0].keys())[0]]["baseScore"]
-                    if baseSeverity == "":                        
-                        if "metrics" in jsonresp["containers"]["adp"][0]:
-                            for m in jsonresp["containers"]["adp"][0]["metrics"]:
-                                for k in m:
-                                    if "baseSeverity" in m[k]:
-                                        baseSeverity = m[k]["baseSeverity"]
-                                        baseScore = m[k]["baseScore"]
+                    if baseSeverity == "":             
+                        if "adp" in jsonresp["containers"]:
+                            if "metrics" in jsonresp["containers"]["adp"][0]:
+                                for m in jsonresp["containers"]["adp"][0]["metrics"]:
+                                    for k in m:
+                                        if "baseSeverity" in m[k]:
+                                            baseSeverity = m[k]["baseSeverity"]
+                                            baseScore = m[k]["baseScore"]
                                         
 
 
