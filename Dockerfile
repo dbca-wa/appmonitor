@@ -39,6 +39,11 @@ RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/
 RUN chmod 755 /tmp/default_script_installer.sh
 RUN /tmp/default_script_installer.sh
 
+# Security Fixes
+RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/refs/heads/main/wagov_utils/bin/security_fix_2404.sh -O /tmp/security_fix_2404.sh
+RUN chmod 755 /tmp/security_fix_2404.sh
+RUN /tmp/security_fix_2404.sh
+
 RUN apt-get install --no-install-recommends -y python3-pil
 
 ENV TZ=Australia/Perth
