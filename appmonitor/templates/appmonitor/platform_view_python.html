@@ -29,7 +29,7 @@
             {% if python_packages_obj|length > 0 %}
                 {% for ppo in python_packages_obj %}
                     <tr>
-                        <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/'>{{ ppo.package_name }}</a></td>
+                        <td ><a href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/python/'>{{ ppo.package_name }}</a></td>
                         <td >{{ ppo.current_package_version }}</td>
                         <td ><a href='https://pypi.org/project/{{ ppo.package_name }}/#history'>PyPi</a></td>
                         <td >

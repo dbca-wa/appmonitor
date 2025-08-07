@@ -88,12 +88,12 @@
                                 {% for ppv in python_packages_versions_array %}
                                     <tr>
                                         
-                                        <td >{{ ppv.python_package }}</td>
+                                        <td >{{ ppv.package_name }}</td>
                                         <td >{{ ppv.package_version }}</td>
                                         <td >
                                             {% if ppv.vulnerability_total > 0 %}
 
-                                            <a type="button" class="btn btn-danger" href="/package/{{ ppv.ppv_id }}/version/{{ ppv.ppvv_id }}/advisory/">
+                                            <a type="button" class="btn btn-danger" href="/package/{{ ppv.ppv_id }}/version/{{ ppv.ppvv_id }}/advisory/{{ ecosystem}}">
                                             {{ ppv.vulnerability_total }}
                                             </a>    
                                             {% else %}

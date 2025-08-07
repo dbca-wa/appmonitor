@@ -114,8 +114,16 @@ def get_checks(status_types, filters, *args, **kwargs):
     return {'status': 200, 'monitor_status': monitor_status, 'monitor_status_total' : monitor_status_total, 'monitors': monitors_sorted, 'message': "Data Retreived"}
 
 
-def get_platform_info(pid, filters=None, *args, **kwargs):    
+def get_platform_info(pid, filters=None, request=None, *args, **kwargs):    
     
+    groups = request.user.groups.all()
+    print ("GROUPS")
+    print (groups)
+    group_hash = {}
+    for g in groups:
+        group_hash[g.id] = g.name
+
+    print (group_hash)
     if pid is None:
         
         filters_query = Q()
@@ -131,11 +139,13 @@ def get_platform_info(pid, filters=None, *args, **kwargs):
 
             if int(filters['responsiblegroup']) > 0:
                 filters_query &= Q(group_responsible=int(filters['responsiblegroup']))
+
             if active is True:
                 filters_query &= Q(active=True)
                 
             if len(filters['keyword']) > 2: 
                 filters_query &= Q(system_name__icontains=filters['keyword'])
+
             platform_info_obj = models.Platform.objects.filter(filters_query)
              
         else:
@@ -144,31 +154,33 @@ def get_platform_info(pid, filters=None, *args, **kwargs):
         
         platform_info_array = []
         for pi in platform_info_obj:
-            row = {}
-            row["id"] = pi.id
-            row["system_name"] = pi.system_name
-            row["operating_system_name"] = pi.operating_system_name
-            row["operating_system_version"] = pi.operating_system_version
-            row["python_version"] = pi.python_version
-            row["django_version"] = pi.django_version
-            row['vulnerability_total'] = pi.vulnerability_total
-            row['dependabot_vulnerability_total'] = pi.dependabot_vulnerability_total
-            row['git_repo_name'] = pi.git_repo_name
-            row['platform_current_severity'] = pi.platform_current_severity
-            group_responsible_id = None
-            group_responsible_name = None
-            if pi.group_responsible:
-                group_responsible_id = pi.group_responsible.id
-                group_responsible_name = pi.group_responsible.group_name
-            row["group_responsible_id"] = group_responsible_id
-            row["group_responsible_group_name"] = group_responsible_name
-            row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
-            row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
-            last_sync_dt = 'No Sync'
-            if pi.last_sync_dt:
-                last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
-            row["last_sync_dt"] = last_sync_dt
-            platform_info_array.append(row)
+            if models.ResponsibleGroupAccessUser.objects.filter(email=request.user.email, responsible_group=pi.group_responsible).exists() or models.ResponsibleGroupAccessGroup.objects.filter(group__in=groups, responsible_group=pi.group_responsible).exists():
+                row = {}
+                row["id"] = pi.id
+                row["system_name"] = pi.system_name
+                row["operating_system_name"] = pi.operating_system_name
+                row["operating_system_version"] = pi.operating_system_version
+                row["python_version"] = pi.python_version
+                row["django_version"] = pi.django_version
+                row['vulnerability_total'] = pi.vulnerability_total
+                row['dependabot_vulnerability_total'] = pi.dependabot_vulnerability_total
+                row['git_repo_name'] = pi.git_repo_name
+                row['platform_current_severity'] = pi.platform_current_severity
+                group_responsible_id = None
+                group_responsible_name = None
+                if pi.group_responsible:
+                    group_responsible_id = pi.group_responsible.id
+                    group_responsible_name = pi.group_responsible.group_name
+                
+                row["group_responsible_id"] = group_responsible_id
+                row["group_responsible_group_name"] = group_responsible_name
+                row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                last_sync_dt = 'No Sync'
+                if pi.last_sync_dt:
+                    last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                row["last_sync_dt"] = last_sync_dt
+                platform_info_array.append(row)
         return {"status": 200, "platform_info_array": platform_info_array}
     else:
         pi = platform_info_obj = models.Platform.objects.get(id=pid)
