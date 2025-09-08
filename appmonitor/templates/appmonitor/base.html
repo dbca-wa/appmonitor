@@ -62,7 +62,20 @@ MENU 2
 {% block menu_items2_right %}
 
  {% if request.user.is_authenticated %}
-
+    <li>
+        <a>
+        Welcome
+        <strong>
+            {% if request.user.first_name %}
+                {{ request.user.get_short_name }}
+            {% elif request.user.last_name %}
+                {{ request.user.last_name }}
+            {% else %}
+                {{ request.user.email }}
+            {% endif %}
+        </strong>
+        </a>
+    </li>
  {% else %}
 
     <a href="/ssologin" class="btn btn-primary btn-sm">Login</a>
