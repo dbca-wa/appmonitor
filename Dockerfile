@@ -31,13 +31,19 @@ RUN mkdir /app
 RUN chown -R oim.oim /app 
 
 # Apply memory limits for the oim user.
-RUN echo "oim             hard    as         1992294" >> /etc/security/limits.conf
-RUN echo "ulimit -m 1992294" >> /etc/bash.bashrc
+# RUN echo "oim             hard    as         1992294" >> /etc/security/limits.conf
+RUN echo "ulimit -m 2048000" >> /etc/bash.bashrc
+RUN echo "ulimit -v 2048000" >> /etc/bash.bashrc
 
 # Default Scripts
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
 RUN chmod 755 /tmp/default_script_installer.sh
 RUN /tmp/default_script_installer.sh
+
+# Security Fixes
+RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/refs/heads/main/wagov_utils/bin/security_fix_2404.sh -O /tmp/security_fix_2404.sh
+RUN chmod 755 /tmp/security_fix_2404.sh
+RUN /tmp/security_fix_2404.sh
 
 RUN apt-get install --no-install-recommends -y python3-pil
 
