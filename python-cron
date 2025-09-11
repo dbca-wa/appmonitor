@@ -37,3 +37,5 @@
 05 13 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 05 08 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 
+# Log Rotate
+1 0 * * *  /bin/log_rotate.sh  >> /app/logs/log_rotate.log 2>&1
