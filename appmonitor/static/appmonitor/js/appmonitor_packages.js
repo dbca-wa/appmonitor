@@ -66,8 +66,8 @@ var appmonitor_packages = {
                                     htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:default;'>"+resp.platform_packages_info_array[i].vulnerability_total+"</a></td>";
                                 } else {
                                     htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_packages_info_array[i].vulnerability_total+"</a></td>";
-
                                 }
+                     
 
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].group_responsible_group_name+"</td>";
                                 
