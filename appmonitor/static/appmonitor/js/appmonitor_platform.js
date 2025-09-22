@@ -190,31 +190,44 @@ var appmonitor_platform = {
                                 }  
                                 if (resp.platform_info_array[i].platform_current_severity == "CRITICAL" ) {
                                     severity_color = "btn-danger"
-                                }                                                                                                 
+                                }    
+                                htmlval+= "     <td>";
+                                
                                 if (resp.platform_info_array[i].vulnerability_total > 0) {
-                                    htmlval+= "     <td><a type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                    htmlval+= "     <a title='Python' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a>";
                                 } else {
-                                    htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a></td>";
+                                    htmlval+= "     <a title='Python' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a>";
 
                                 }
+                                if (resp.platform_info_array[i].vulnerability_total_debian > 0) {
+                                    htmlval+= "     <a title='Ubuntu' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/debian-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_debian+"</a>";
+                                } else {
+                                    htmlval+= "     <a title='Ubuntu' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total_debian+"</a>";
 
+                                }     
+                                if (resp.platform_info_array[i].vulnerability_total_npm > 0) {
+                                    htmlval+= "     <a title='NPM/Node' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/node-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
+                                } else {
+                                    htmlval+= "     <a title='NPM/Node' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
+
+                                }                                                                                             
                                 
                                 if (resp.platform_info_array[i].git_repo_name.length > 0) {
                                     if (resp.platform_info_array[i].dependabot_vulnerability_total > 0) {
-                                        htmlval+= "     <td><a type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
+                                        htmlval+= "     <a title='DependaBot' type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a>";
                                     } else {
-                                        htmlval+= "     <td><a type='button' class='btn btn-success' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a></td>";
+                                        htmlval+= "     <a title='DependaBot' type='button' class='btn btn-success' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a>";
 
                                     }
                                 } else {
 
-                                   htmlval+= " <td>&nbsp;</td>";
+                                   htmlval+= " &nbsp;";
                                 }
-
+                                htmlval+= "     </td>";
 
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
-                                htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
+                                // htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
 
                                 htmlval+= "     <td>";
                                 if (appmonitor_platform.var.edit_platform_access == 'True') {

@@ -36,7 +36,7 @@ class Command(BaseCommand):
                             ticket_row = {}
                             ticket_row['id']  = t['id']
                             ticket_row['subject'] = t['subject']
-                            ticket_row['system_id'] = t['custom_fields']['system_id']
+                            # ticket_row['system_id'] = t['custom_fields']['system_id']
                             ticket_row['lf_system_id'] = t['custom_fields']['lf_system_id']
                             ticket_row['status'] = t['status']
 

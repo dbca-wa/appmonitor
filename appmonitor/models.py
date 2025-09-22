@@ -302,6 +302,8 @@ class Platform(models.Model):
     git_repo_name = models.CharField(max_length=512, default='', null=True, blank=True)  
     group_responsible = models.ForeignKey(ResponsibleGroup, null=True, blank=True, on_delete=models.SET_NULL)     
     vulnerability_total = models.IntegerField(default=0)
+    vulnerability_total_debian = models.IntegerField(default=0,null=True)
+    vulnerability_total_npm = models.IntegerField(default=0,null=True)    
     platform_current_severity = models.CharField(max_length=20, default='', null=True, blank=True)
     dependabot_vulnerability_total = models.IntegerField(default=0)
     json_response =  models.JSONField(null=True, blank=True)    
@@ -412,20 +414,21 @@ class DebianPackage(models.Model):
         self.vulnerability_total = debian_package_vunerability_version_advisory_information_obj
         print ("Updating Vulnerability Count"+str(self.vulnerability_total))
         print ("Updating Vulnerability Count"+str(self.severity_rollup))
-        vulnerability_total_python = 0
-        if PythonPackage.objects.filter(platform=self.platform).count() > 0:
-            pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
-            if pp_sum['vulnerability_total__sum'] is not None:
-                vulnerability_total_python = pp_sum['vulnerability_total__sum']
+        # vulnerability_total_python = 0
+        # if PythonPackage.objects.filter(platform=self.platform).count() > 0:
+        #     pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
+        #     if pp_sum['vulnerability_total__sum'] is not None:
+        #         vulnerability_total_python = pp_sum['vulnerability_total__sum']
         vulnerability_total_debian = 0
         if DebianPackage.objects.filter(platform=self.platform).count() > 0:
             pp_sum = DebianPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
             if pp_sum['vulnerability_total__sum'] is not None:
                 vulnerability_total_debian = pp_sum['vulnerability_total__sum']                
             
-        vulnerability_total = vulnerability_total_python + vulnerability_total_debian
+        # vulnerability_total = vulnerability_total_python + vulnerability_total_debian
         platform = Platform.objects.get(id=self.platform.id)
-        platform.vulnerability_total = vulnerability_total
+        # platform.vulnerability_total = vulnerability_total
+        platform.vulnerability_total_debian = vulnerability_total_debian
         platform.save()        
 
         super(DebianPackage,self).save(*args,**kwargs)
@@ -569,17 +572,16 @@ class PythonPackage(models.Model):
             pp_sum = PythonPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
             if pp_sum['vulnerability_total__sum'] is not None:
                 vulnerability_total_python = pp_sum['vulnerability_total__sum']
-
                 
-        vulnerability_total_debian = 0
-        if DebianPackage.objects.filter(platform=self.platform).count() > 0:
-            pp_sum = DebianPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
-            if pp_sum['vulnerability_total__sum'] is not None:
-                vulnerability_total_debian = pp_sum['vulnerability_total__sum']                
-            
-        vulnerability_total = vulnerability_total_python + vulnerability_total_debian
+        # vulnerability_total_debian = 0
+        # if DebianPackage.objects.filter(platform=self.platform).count() > 0:
+        #     pp_sum = DebianPackage.objects.filter(platform=self.platform, active=True).aggregate(Sum('vulnerability_total'))
+        #     if pp_sum['vulnerability_total__sum'] is not None:
+        #         vulnerability_total_debian = pp_sum['vulnerability_total__sum']                           
+        # vulnerability_total = vulnerability_total_python + vulnerability_total_debian
+        
         platform = Platform.objects.get(id=self.platform.id)
-        platform.vulnerability_total = vulnerability_total
+        platform.vulnerability_total = vulnerability_total_python
         platform.save()
 
         #vulnerability_total        

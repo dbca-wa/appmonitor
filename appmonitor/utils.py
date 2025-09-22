@@ -163,6 +163,8 @@ def get_platform_info(pid, filters=None, request=None, *args, **kwargs):
                 row["python_version"] = pi.python_version
                 row["django_version"] = pi.django_version
                 row['vulnerability_total'] = pi.vulnerability_total
+                row['vulnerability_total_debian'] = pi.vulnerability_total_debian
+                row['vulnerability_total_npm'] = pi.vulnerability_total_npm
                 row['dependabot_vulnerability_total'] = pi.dependabot_vulnerability_total
                 row['git_repo_name'] = pi.git_repo_name
                 row['platform_current_severity'] = pi.platform_current_severity
