@@ -15,6 +15,8 @@ class Command(BaseCommand):
             for p in platform_obj:
                 platform_json = p.json_response
                 vulnerability_total_count = 0   
+                vulnerability_total_debian_count = 0
+                vulnerability_total_npm_count = 0
                 platform_current_severity = ""     
                 if platform_json is not None:
                     if 'platform_obj' in platform_json:
@@ -82,7 +84,7 @@ class Command(BaseCommand):
                                 # print (package_name)                       
                                 try:                      
                                     python_package_obj_model = models.DebianPackage.objects.get(platform=p, package_name=package_name)                                    
-                                    vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
+                                    vulnerability_total_debian_count = vulnerability_total_debian_count + python_package_obj_model.vulnerability_total
                                     python_package_obj_model.current_package_version = package_version
                                     python_package_obj_model.active =True
                                     python_package_obj_model.save()
@@ -128,7 +130,7 @@ class Command(BaseCommand):
                                 # print (package_name)                       
                                 try:                      
                                     python_package_obj_model = models.NpmPackage.objects.get(platform=p, package_name=package_name, source_file=source_file)                                    
-                                    vulnerability_total_count = vulnerability_total_count + python_package_obj_model.vulnerability_total
+                                    vulnerability_total_npm_count = vulnerability_total_npm_count + python_package_obj_model.vulnerability_total
                                     python_package_obj_model.current_package_version = package_version
                                     python_package_obj_model.active =True
                                     python_package_obj_model.save()
@@ -165,7 +167,7 @@ class Command(BaseCommand):
 
 
 
-                    models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count, platform_current_severity=platform_current_severity)        
+                    models.Platform.objects.filter(id=p.id).update(stale_packages=False,vulnerability_total=vulnerability_total_count,vulnerability_total_debian=vulnerability_total_debian_count, vulnerability_total_npm=vulnerability_total_npm_count, platform_current_severity=platform_current_severity)        
 
         except Exception as e:
             print ("EXCEPTION2:")
