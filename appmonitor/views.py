@@ -154,7 +154,12 @@ class PlatformView(base.TemplateView):
                     if only_vulnerable == 'true':
                         python_packages_obj = models.DebianPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
                     else:
-                        python_packages_obj = models.DebianPackage.objects.filter(platform_id=platform_obj.id,active=True)                              
+                        python_packages_obj = models.DebianPackage.objects.filter(platform_id=platform_obj.id,active=True)   
+                elif ecosystem == 'node-packages':
+                    if only_vulnerable == 'true':
+                        python_packages_obj = models.NpmPackage.objects.filter(platform_id=platform_obj.id,vulnerability_total__gt=0, active=True)
+                    else:
+                        python_packages_obj = models.NpmPackage.objects.filter(platform_id=platform_obj.id,active=True)                                                      
 
 
             except Exception as e:
@@ -264,6 +269,15 @@ class PlatformPackageView(base.TemplateView):
                         python_package_vunerability_obj_id = python_package_vunerability_obj.id         
 
                 elif ecosystem == 'node':
+                    python_package_obj = models.NpmPackage.objects.get(platform_id=platform_obj.id, id=python_package_id)
+                    python_packages_versions_obj = models.NpmPackageVersionHistory.objects.filter(npm_package=python_package_id)
+
+                    python_package_vunerability_obj_id = None
+                    npm_package_vunerability_obj = None
+                    
+                    if models.NpmPackageVulnerability.objects.filter(package_name=python_package_obj.package_name).count() > 0:                        
+                        npm_package_vunerability_obj = models.NpmPackageVulnerability.objects.get(package_name=python_package_obj.package_name)
+                        python_package_vunerability_obj_id = npm_package_vunerability_obj.id                                                    
                     # work required to compile node packages data
                     pass
                     
@@ -300,9 +314,24 @@ class PlatformPackageView(base.TemplateView):
                         
                         row['vulnerability_total'] = debian_package_vunerability_version_advisory_information_obj
                     elif ecosystem == 'node':
+
+                        row['package_name'] = ppv.npm_package
+                        npm_package_vunerability_version_advisory_information_obj = 0
+                        if npm_package_vunerability_obj:
+                            print ("NN1")
+                            npm_package_vunerability_version_obj = models.NpmPackageVulnerabilityVersion.objects.filter(npm_package=npm_package_vunerability_obj,package_version=ppv.package_version)
+                                        
+                            if npm_package_vunerability_version_obj.count() > 0:
+                                print ("NN2")
+                                npm_package_vunerability_version_advisory_information_obj = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=npm_package_vunerability_version_obj[0]).count()
+                                row['ppvv_id'] = npm_package_vunerability_version_obj[0].id
+                                print ("NN3")                                
+                        
+                        row['vulnerability_total'] = npm_package_vunerability_version_advisory_information_obj
+
                         # work required to compile node packages data
-                        row['vulnerability_total'] = 0
-                        row['ppvv_id'] = None
+                        # row['vulnerability_total'] = 0
+                        # row['ppvv_id'] = None
                     
                     python_packages_versions_array.append(row)
             except Exception as e:

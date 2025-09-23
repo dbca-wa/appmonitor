@@ -1,0 +1,122 @@
+<div class='row p-1'>
+    <div class='col-6'>
+        <h5>NPMJS Packages</h5>
+    </div>
+    <div class='col-6 text-end'>
+        {% if only_vulnerable == 'true' %}
+        <a href='/platform/view/{{ platform_obj.id }}/node-packages' class='btn btn-primary'>Show All</a>
+        {% else %}
+            <a href='/platform/view/{{ platform_obj.id }}/node-packages?only_vulnerable=true' class='btn btn-primary'>Show Only Vulnerable</a>
+        {% endif %}
+    </div>
+</div>
+<table id="packagelist-table" class="table" style="width:100%">
+    <thead class='table-dark'>
+        <tr>
+            <th>Package Name</th>   
+            <th>Package Version</th>
+            <th>NPMJS</th>
+            <th>Vulnerable</th>
+            <th>Severity</th>
+            <th>DependaBot</th>
+            <th>Active</th>
+            <th>Updated</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    
+    <tbody id='platformlist-tbody'>
+        <tr>
+            {% if python_packages_obj|length > 0 %}
+                {% for ppo in python_packages_obj %}
+                    <tr>
+                        <td ><a title="{{ ppo.source_file }}" href='/platform/view/{{ platform_obj.id }}/packages/{{ ppo.id }}/versions/node/'>{{ ppo.package_name }}</a></td>
+                        <td >{{ ppo.current_package_version }}</td>
+                        <td ><a href='https://www.npmjs.com/package/{{ ppo.package_name }}?activeTab=versions'>NPMJS</a></td>
+                        <td >
+                            {% if ppo.vulnerability_total > 0 %}
+
+                            <a type="button" class="btn btn-danger" style='cursor: default ;' alt="Click the Package Name First">
+                            {{ ppo.vulnerability_total }}
+                            </a>    
+                            {% else %}
+                            <a type="button" class="btn btn-success" style='cursor: default ;' > 
+                                {{ ppo.vulnerability_total }}
+                            </a>                                            
+                            {% endif %}
+                            
+                            {% if ppo.git_repo_name|length > 0 %}
+                            {% if ppo.dependabot_vulnerability_total %}
+                                <a href='/platform/view/1/dependabot' class="btn btn-danger" style='cursor: default ;' alt="Click to view DependaBot">
+                                    {{ ppo.dependabot_vulnerability_total }}
+                                </a>    
+                            {% else %}
+                            <a href='/platform/view/1/dependabot' class="btn btn-danger" style='cursor: default ;' alt="Click to view DependaBot">
+                                {{ ppo.dependabot_vulnerability_total }}
+                            </a>    
+                            {% endif %}
+                                                                        
+                            {% endif %}
+
+                        </td>
+                        <td>
+                            {% if ppo.severity_rollup %}
+                            {% if ppo.severity_rollup == 'LOW' %}
+                            <span class="badge bg-dark">{{ ppo.severity_rollup }} </span>
+
+                            {% endif %}
+                            {% if ppo.severity_rollup == 'MEDIUM' %}
+                                <span class="badge bg-primary">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                         
+                            {% if ppo.severity_rollup == 'HIGH' %}
+                                <span class="badge bg-warning">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                       
+                            {% if ppo.severity_rollup == 'CRITICAL' %}
+                                <span class="badge bg-danger">{{ ppo.severity_rollup }} </span>
+                            {% endif %}                                                                                      
+
+                            {% endif %}
+                        </td>                        
+                        <td>
+                            {% if ppo.active is True %}
+                                <i class="bi bi-check-circle-fill" style='color: #06e806;'></i>
+                            {% else %}
+                                <i class="bi bi-x-circle-fill" style='color: red;'></i>
+                            {% endif %}
+                        </td>
+                        <td >{{ ppo.updated }}</td>
+                        <td >{{ ppo.created }}</td>
+                    </tr>                                
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" class='text-center'>No Results</td>
+                </tr>
+            {% endif %}
+    
+        </tr>
+    </tbody>
+</table>
+
+<style>
+    .status-box-white {
+        color: #FFF;
+        padding: 3px;   
+        font-weight: bold;
+        border-radius: 4px;             
+        width: 70px;
+        text-align: center;                  
+        height: 30px;
+    }
+    .status-box-black {
+        color: #000;
+        padding: 3px;   
+        font-weight: bold;
+        border-radius: 4px;                                 
+        width: 70px;
+        text-align: center;
+        height: 30px;
+    }
+
+
+</style>

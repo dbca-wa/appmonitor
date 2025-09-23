@@ -105,10 +105,14 @@ class PythonPackageAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.DebianPackage)
-class DebianackageAdmin(admin.ModelAdmin):
+class DebianpackageAdmin(admin.ModelAdmin):
      list_display = ('id','package_name','vulnerability_total','severity_rollup','active','updated','created')
      search_fields = ('id','package_name','current_package_version')
 
+@admin.register(models.NpmPackage)
+class NpmpackageAdmin(admin.ModelAdmin):
+     list_display = ('id','package_name','vulnerability_total','severity_rollup','source_file','active','updated','created')
+     search_fields = ('id','package_name','current_package_version')     
 
 class DebianPackageInline(admin.TabularInline):
      list_display = ('id','package_name','vulnerability_total','active','vulnerability_total','severity_rollup','updated','created')
@@ -168,6 +172,12 @@ class PythonPackageVulnerabilityVersionAdmin(admin.ModelAdmin):
      list_display = ('id','python_package','package_version','updated','created')
      search_fields = ('id','package_version','cve')
      raw_id_fields = ('python_package',)
+
+@admin.register(models.NpmPackageVulnerabilityVersion)
+class NpmPackageVulnerabilityVersionAdmin(admin.ModelAdmin):
+     list_display = ('id','npm_package','package_version','updated','created')
+     search_fields = ('id','package_version','cve')
+     raw_id_fields = ('npm_package',)     
 
 @admin.register(models.PythonPackageVulnerabilityVersionAdvisoryInformation)
 class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
@@ -235,7 +245,10 @@ class DebianPackageVulnerabilityVersionInline(NestedStackedInline):
 @admin.register(models.DebianPackageVersionHistory)
 class DebianPackageVersionHistory(admin.ModelAdmin):
      list_display = ('id','debian_package','package_version','created')
-     
+
+@admin.register(models.NpmPackageVersionHistory)
+class NpmPackageVersionHistory(admin.ModelAdmin):
+     list_display = ('id','npm_package','package_version','created')     
      
 @admin.register(models.PythonPackageVulnerability)
 class PythonPackageVulnerability(NestedModelAdmin):

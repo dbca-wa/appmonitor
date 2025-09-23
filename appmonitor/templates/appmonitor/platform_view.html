@@ -89,6 +89,8 @@
                     {% include "appmonitor/platform_view_python.html" %}
                   {% elif ecosystem == 'debian-packages' %}
                     {% include "appmonitor/platform_view_debian.html" %}
+                  {% elif ecosystem == 'node-packages' %}
+                    {% include "appmonitor/platform_view_node.html" %}                    
                   {% endif %}
 
                 {% comment %} <div class='row p-1'>
