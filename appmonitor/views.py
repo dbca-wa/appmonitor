@@ -407,7 +407,26 @@ class PackageAdvisoryView(base.TemplateView):
                             row['package_version'] = av.package_version.package_version
                             row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
 
-                            package_advisory.append(row)                    
+                            package_advisory.append(row)        
+                elif ecosystem == 'node':
+                    if models.NpmPackageVulnerability.objects.filter(id=package_id).count() > 0:
+                        npm_package_vunerability_obj = models.NpmPackageVulnerability.objects.get(id=package_id)
+
+                        npm_package_vunerability_version_obj = models.NpmPackageVulnerabilityVersion.objects.get(npm_package=npm_package_vunerability_obj,id=package_version_id)
+                        npm_package_vunerability_version_advisory_information_obj = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.filter(package_version=npm_package_vunerability_version_obj)
+                        
+                        vunerability_total = npm_package_vunerability_version_advisory_information_obj.count()
+                        for av in npm_package_vunerability_version_advisory_information_obj:
+                            row = {}
+
+                            row['advisory'] = av.advisory
+                            row['cve'] = av.cve
+                            row["baseScore"] = av.baseScore 
+                            row["baseSeverity"] = av.baseSeverity
+                            row['package_version'] = av.package_version.package_version
+                            row['created'] = av.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+
+                            package_advisory.append(row)                                            
 
             except Exception as e:
                 messages.add_message(request, messages.ERROR, str(e))

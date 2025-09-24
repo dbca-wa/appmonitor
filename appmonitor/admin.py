@@ -185,6 +185,12 @@ class PythonPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin
      search_fields = ('id','package_version__package_version','cve','baseSeverity')
      raw_id_fields = ('package_version',)
 
+@admin.register(models.NpmPackageVulnerabilityVersionAdvisoryInformation)
+class NpmPackageVulnerabilityVersionAdvisoryInformationAdmin(admin.ModelAdmin):
+     list_display = ('id','package_version','advisory','cve','baseSeverity','baseScore','updated','created')
+     search_fields = ('id','package_version__package_version','cve','baseSeverity')
+     raw_id_fields = ('package_version',)
+
 class PythonPackageVulnerabilityVersionAdvisoryInformationInline(NestedStackedInline):
      list_display = ('id','package_version','advisory','cve','updated','created')
      readonly_fields=('package_version','advisory','cve','updated','created')
@@ -249,6 +255,7 @@ class DebianPackageVersionHistory(admin.ModelAdmin):
 @admin.register(models.NpmPackageVersionHistory)
 class NpmPackageVersionHistory(admin.ModelAdmin):
      list_display = ('id','npm_package','package_version','created')     
+     search_fields = ('id','npm_package__package_name','package_version')
      
 @admin.register(models.PythonPackageVulnerability)
 class PythonPackageVulnerability(NestedModelAdmin):
