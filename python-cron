@@ -37,5 +37,10 @@
 05 13 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 05 08 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_ubuntu_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 
+# NPM Vulnerabilities DB Update
+10 7 * * * python manage.py update_npm_vulnerabilities_db >> /app/logs/update_npm_vulnerabilities_db.log 2>&1
+30 7 * * * python manage.py update_npm_package_versions >> /app/logs/update_npm_package_versions.log 2>&1
+30 8 * * * python manage.py check_for_vulnerable_npm_packages >> /app/logs/check_for_vulnerable_npm_packages.log 2>&1
+
 # Log Rotate
 1 0 * * *  /bin/log_rotate.sh  >> /app/logs/log_rotate.log 2>&1
