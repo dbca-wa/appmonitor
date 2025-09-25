@@ -42,5 +42,10 @@
 30 7 * * * python manage.py update_npm_package_versions >> /app/logs/update_npm_package_versions.log 2>&1
 30 8 * * * python manage.py check_for_vulnerable_npm_packages >> /app/logs/check_for_vulnerable_npm_packages.log 2>&1
 
+# Rebuild Vulnerability Totals
+1 9 * * * python manage.py rebuild_vuln_totals >> /app/logs/rebuild_vuln_totals.log 2>&1
+55 12 * * * python manage.py rebuild_vuln_totals >> /app/logs/rebuild_vuln_totals.log 2>&1
+30 04 * * * python manage.py rebuild_vuln_totals >> /app/logs/rebuild_vuln_totals.log 2>&1
+
 # Log Rotate
 1 0 * * *  /bin/log_rotate.sh  >> /app/logs/log_rotate.log 2>&1
