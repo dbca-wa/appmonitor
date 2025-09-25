@@ -29,8 +29,15 @@ class Command(BaseCommand):
                     pp_sum = models.DebianPackage.objects.filter(platform=p, active=True).aggregate(Sum('vulnerability_total'))
                     if pp_sum['vulnerability_total__sum'] is not None:
                         vulnerability_total_debian = pp_sum['vulnerability_total__sum']                           
-                vulnerability_total = vulnerability_total_python + vulnerability_total_debian
+                
 
+                vulnerability_total_npm = 0
+                if models.NpmPackage.objects.filter(platform=p).count() > 0:
+                    pp_sum = models.NpmPackage.objects.filter(platform=p, active=True).aggregate(Sum('vulnerability_total'))
+                    if pp_sum['vulnerability_total__sum'] is not None:
+                        vulnerability_total_npm = pp_sum['vulnerability_total__sum']                           
+                             
+                p.vulnerability_total_npm = vulnerability_total_npm
                 p.vulnerability_total_debian = vulnerability_total_debian
                 p.vulnerability_total = vulnerability_total_python
                 p.save()
