@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM ubuntu:24.04 AS builder_base_appmonitor
+FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu2404_base_latest  AS builder_base_appmonitor
 MAINTAINER asi@dbca.wa.gov.au
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Perth
