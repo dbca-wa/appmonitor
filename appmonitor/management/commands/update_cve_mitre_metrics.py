@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print ("Updating mitre CVE")
 
-        ppvia = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
+        ppvia = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=2).order_by("-id")[1:200]
         
         # .all().exclude(baseSeverity='').exclude(baseSeverity=None).order_by("-id")
         for p in ppvia:
@@ -34,9 +34,10 @@ class Command(BaseCommand):
                         content = resp.json()
                         data_resp["content"] = content
 
-                    cache.set(cve_url, data_resp,  86400)
+                    cache.set(cve_url, data_resp,  604800)
                 else:
                     data_resp = cve_url_cache
+                    cache.set(cve_url, data_resp,  604800)
 
                 if data_resp["status_code"] == 200:
                     jsonresp = data_resp["content"]
@@ -81,7 +82,7 @@ class Command(BaseCommand):
         print (total_count)
 
 
-        ppvia = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
+        ppvia = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=2).order_by("-id")[1:200]
         for p in ppvia:
 
             if len(p.cve) > 0:
@@ -99,9 +100,10 @@ class Command(BaseCommand):
                         content = resp.json()
                         data_resp["content"] = content
 
-                    cache.set(cve_url, data_resp,  86400)
+                    cache.set(cve_url, data_resp,  604800)
                 else:
                     data_resp = cve_url_cache
+                    cache.set(cve_url, data_resp,  604800)
 
                 if data_resp["status_code"] == 200:
                     jsonresp = data_resp["content"]
@@ -143,7 +145,7 @@ class Command(BaseCommand):
                     print ("Saved")
 
 
-        ppvia = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
+        ppvia = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=2).order_by("-id")[1:200]
         for p in ppvia:
 
             if len(p.cve) > 0:
@@ -161,9 +163,10 @@ class Command(BaseCommand):
                         content = resp.json()
                         data_resp["content"] = content
 
-                    cache.set(cve_url, data_resp,  86400)
+                    cache.set(cve_url, data_resp,  604800)
                 else:
                     data_resp = cve_url_cache
+                    cache.set(cve_url, data_resp,  604800)
 
                 if data_resp["status_code"] == 200:
                     jsonresp = data_resp["content"]

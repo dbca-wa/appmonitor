@@ -28,7 +28,8 @@
 10 9 * * 1 /app/venv/bin/python3 /app/manage.py vulnerable_system_packages_notification >> /app/logs/vulnerable_system_packages_notification.log 2>&1
 
 # CVE metrics
-01 10 * * * /app/venv/bin/python3 /app/manage.py update_cve_mitre_metrics >> /app/logs/update_cve_mitre_metrics.log 2>&1
+30 09 * * * /app/venv/bin/python3 /app/manage.py update_cve_mitre_metrics >> /app/logs/update_cve_mitre_metrics.log 2>&1
+30 13 * * * /app/venv/bin/python3 /app/manage.py update_cve_mitre_metrics >> /app/logs/update_cve_mitre_metrics.log 2>&1
 
 # Ubuntu Vulnerabilities DB Update
 15 7 * * 1 python manage.py update_ubuntu_vulnerabilities_db -a full >> /app/logs/update_ubuntu_vulnerabilities_db.log 2>&1
