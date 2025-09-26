@@ -6,6 +6,7 @@ import datetime
 import requests
 from appmonitor import models
 from django.core.cache import cache
+from django.db.models.functions import Length
 
 class Command(BaseCommand):
     help = 'Connect to mitre CVE database'
@@ -13,7 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print ("Updating mitre CVE")
 
-        ppvia = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.all().order_by("-id")
+        ppvia = models.DebianPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
+        
+        # .all().exclude(baseSeverity='').exclude(baseSeverity=None).order_by("-id")
         for p in ppvia:
 
             if len(p.cve) > 0:
@@ -78,7 +81,7 @@ class Command(BaseCommand):
         print (total_count)
 
 
-        ppvia = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.all().order_by("-id")
+        ppvia = models.PythonPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
         for p in ppvia:
 
             if len(p.cve) > 0:
@@ -140,7 +143,7 @@ class Command(BaseCommand):
                     print ("Saved")
 
 
-        ppvia = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.all().order_by("-id")
+        ppvia = models.NpmPackageVulnerabilityVersionAdvisoryInformation.objects.annotate(baseSeverity_len=Length('baseSeverity')).exclude(baseSeverity_len__gt=3).order_by("-id")
         for p in ppvia:
 
             if len(p.cve) > 0:
