@@ -115,7 +115,7 @@ def get_checks(status_types, filters, *args, **kwargs):
 
 
 def get_platform_info(pid, filters=None, request=None, *args, **kwargs):    
-    
+    current_dt = datetime.now()
     groups = request.user.groups.all()
     print ("GROUPS")
     print (groups)
@@ -179,9 +179,12 @@ def get_platform_info(pid, filters=None, request=None, *args, **kwargs):
                 row["updated"] = pi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
                 row["created"] = pi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
                 last_sync_dt = 'No Sync'
+                last_sync_dt_in_seconds = 1000000
                 if pi.last_sync_dt:
                     last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
+                    last_sync_dt_in_seconds = int((current_dt.replace(tzinfo=datetime_timezone.utc) - pi.last_sync_dt).total_seconds() / 60)
                 row["last_sync_dt"] = last_sync_dt
+                row["last_sync_dt_in_seconds"] = last_sync_dt_in_seconds
                 platform_info_array.append(row)
         return {"status": 200, "platform_info_array": platform_info_array}
     else:
