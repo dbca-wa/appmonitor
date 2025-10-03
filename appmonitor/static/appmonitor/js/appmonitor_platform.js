@@ -196,19 +196,19 @@ var appmonitor_platform = {
                                 if (resp.platform_info_array[i].vulnerability_total > 0) {
                                     htmlval+= "     <a title='Python' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a>";
                                 } else {
-                                    htmlval+= "     <a title='Python' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total+"</a>";
+                                    htmlval+= "     <a title='Python' type='button' class='btn btn-success' style='cursor: pointer ;' href='/platform/view/"+resp.platform_info_array[i].id+"/python-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total+"</a>";
 
                                 }
                                 if (resp.platform_info_array[i].vulnerability_total_debian > 0) {
                                     htmlval+= "     <a title='Ubuntu' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/debian-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_debian+"</a>";
                                 } else {
-                                    htmlval+= "     <a title='Ubuntu' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total_debian+"</a>";
+                                    htmlval+= "     <a title='Ubuntu' type='button' class='btn btn-success' style='cursor: pointer ;' href='/platform/view/"+resp.platform_info_array[i].id+"/debian-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_debian+"</a>";
 
                                 }     
                                 if (resp.platform_info_array[i].vulnerability_total_npm > 0) {
                                     htmlval+= "     <a title='NPM/Node' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/node-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
                                 } else {
-                                    htmlval+= "     <a title='NPM/Node' type='button' class='btn btn-success' style='cursor: default ;'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
+                                    htmlval+= "     <a title='NPM/Node' type='button' class='btn btn-success' style='cursor: pointer ;' href='/platform/view/"+resp.platform_info_array[i].id+"/node-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
 
                                 }                                                                                             
                                 
@@ -216,7 +216,7 @@ var appmonitor_platform = {
                                     if (resp.platform_info_array[i].dependabot_vulnerability_total > 0) {
                                         htmlval+= "     <a title='DependaBot' type='button' class='btn btn-danger' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a>";
                                     } else {
-                                        htmlval+= "     <a title='DependaBot' type='button' class='btn btn-success' style='cursor: default ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a>";
+                                        htmlval+= "     <a title='DependaBot' type='button' class='btn btn-success' style='cursor: pointer ;' href='/platform/view/"+resp.platform_info_array[i].id+"/dependabot'>"+resp.platform_info_array[i].dependabot_vulnerability_total+"</a>";
 
                                     }
                                 } else {
@@ -224,9 +224,13 @@ var appmonitor_platform = {
                                    htmlval+= " &nbsp;";
                                 }
                                 htmlval+= "     </td>";
-
+                                var last_sync_class = "text-success";
+                                if (resp.platform_info_array[i].last_sync_dt_in_seconds > 86400) {
+                                    last_sync_class = "text-danger";
+                    
+                                }
                                 htmlval+= "     <td>"+resp.platform_info_array[i].group_responsible_group_name+"</td>";
-                                htmlval+= "     <td>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
+                                htmlval+= "     <td class='"+last_sync_class+"'>"+resp.platform_info_array[i].last_sync_dt+"</td>"; 
                                 // htmlval+= "     <td>"+resp.platform_info_array[i].updated+"</td>";                                
 
                                 htmlval+= "     <td>";

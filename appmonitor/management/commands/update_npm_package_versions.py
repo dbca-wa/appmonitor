@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 os.makedirs(package_store_path+"/"+package_name_first, exist_ok=True)
             
             if not os.path.exists(full_file_path):
-                print ("npm show '"+n.package_name+"' versions > "+full_file_path)
+                print ("npm show '"+n.package_name+"' versions --json > "+full_file_path)
                 result = subprocess.run("npm show '"+n.package_name+"' versions --json > "+full_file_path, shell=True)
             else:
                 modification_timestamp = os.path.getmtime(full_file_path)
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 # Calculate the age of the file in seconds
                 file_age_seconds = current_time - modification_timestamp
                 if file_age_seconds > 345600: # 4 Days  (so we dont hammer the npm registry) 
-                    print ("npm show '"+n.package_name+"' versions > "+full_file_path)
+                    print ("npm show '"+n.package_name+"' versions --json > "+full_file_path)
                     result = subprocess.run("npm show '"+n.package_name+"' versions --json > "+full_file_path, shell=True)
                 #print (modification_timestamp, file_age_seconds)
            

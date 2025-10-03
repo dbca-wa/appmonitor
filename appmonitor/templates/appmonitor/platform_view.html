@@ -71,16 +71,15 @@
                     </tbody>
                 </table>
 
-
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'python-packages' %}active{% endif %}" aria-current="page" href="/platform/view/{{ platform_obj.id }}/python-packages?only_vulnerable={{ only_vulnerable }}">Python Packages</a>
+                      <a class="nav-link {% if ecosystem == 'python-packages' %}active{% endif %}" aria-current="page" href="/platform/view/{{ platform_obj.id }}/python-packages?only_vulnerable={{ only_vulnerable }}">Python Packages <span class="badge bg-{% if platform_obj.vulnerability_total > 0%}danger{% else %}success{% endif %}">{{ platform_obj.vulnerability_total }}</span></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'debian-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/debian-packages?only_vulnerable={{ only_vulnerable }}">Debian Packages</a>
+                      <a class="nav-link {% if ecosystem == 'debian-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/debian-packages?only_vulnerable={{ only_vulnerable }}">Debian Packages <span class="badge bg-{% if platform_obj.vulnerability_total_debian > 0%}danger{% else %}success{% endif %}">{{ platform_obj.vulnerability_total_debian }}</span> </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if ecosystem == 'node-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/node-packages?only_vulnerable={{ only_vulnerable }}">Node Packages</a>
+                      <a class="nav-link {% if ecosystem == 'node-packages' %}active{% endif %}" href="/platform/view/{{ platform_obj.id }}/node-packages?only_vulnerable={{ only_vulnerable }}">Node Packages <span class="badge bg-{% if platform_obj.vulnerability_total_npm > 0%}danger{% else %}success{% endif %}">{{ platform_obj.vulnerability_total_npm }}</span></a>
                     </li>                    
                   </ul>
                   <br>
