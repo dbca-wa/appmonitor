@@ -181,8 +181,9 @@ def get_platform_info(pid, filters=None, request=None, *args, **kwargs):
                 last_sync_dt = 'No Sync'
                 last_sync_dt_in_seconds = 1000000
                 if pi.last_sync_dt:
-                    last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')
-                    last_sync_dt_in_seconds = int((current_dt.replace(tzinfo=datetime_timezone.utc) - pi.last_sync_dt).total_seconds() / 60)
+                    # print ((pi.last_sync_dt - current_dt).total_seconds())
+                    last_sync_dt = pi.last_sync_dt.astimezone().strftime('%d/%m/%Y %H:%M %p')                    
+                    last_sync_dt_in_seconds = int((current_dt.replace(tzinfo=datetime_timezone.utc) - pi.last_sync_dt).total_seconds())                    
                 row["last_sync_dt"] = last_sync_dt
                 row["last_sync_dt_in_seconds"] = last_sync_dt_in_seconds
                 platform_info_array.append(row)
