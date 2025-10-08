@@ -1,6 +1,6 @@
 {
 	"name": "APP Monitor Development",
-	"image": "dbcawa/docker_app_dev:appmonitor_dev_latest",
+	"image": "ghcr.io/dbca-wa/docker_app_dev:appmonitor_dev_latest",
 	"remoteUser": "container",
 	"workspaceFolder": "/data/data/projects/appmonitor",
 	"mounts": ["type=bind,source=/data/,target=/data/",

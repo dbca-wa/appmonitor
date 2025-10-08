@@ -31,8 +31,8 @@ stages:
         tags: |
               latest
               $(tagDate)
-        containerRegistry: DockerHub
-        repository: dbcawa/appmonitor
+        containerRegistry: DockerGitHub
+        repository: ghcr.io/dbca-wa/appmonitor
       env:
         DOCKER_BUILDKIT: 1
     - task: Docker@2
@@ -43,7 +43,7 @@ stages:
         tags: |
               appmonitor_dev_latest
               appmonitor_dev_$(tagDate)
-        containerRegistry: DockerHub
-        repository: dbcawa/docker_app_dev
+        containerRegistry: DockerGitHub
+        repository: ghcr.io/dbca-wa/docker_app_dev
       env:
         DOCKER_BUILDKIT: 1
