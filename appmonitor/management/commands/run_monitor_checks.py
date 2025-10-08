@@ -31,6 +31,7 @@ class Command(BaseCommand):
         mjl = models.MonitorJobLog.objects.create(job='run_monitor_checks.py')
 
         monitor = models.Monitor.objects.filter(active=True)
+        loop_count = 0
         for i in monitor:
             print ("Running checks for: "+i.check_name)
 
@@ -76,6 +77,11 @@ class Command(BaseCommand):
             if i.mon_type == 12:
                   thread = threading.Thread(target=self.db_query_check, args=(i,))
                   thread.start()  
+
+            loop_count = loop_count + 1
+            if loop_count > 3:
+                time.sleep(5)
+                loop_count = 0
         #thread still keep running not accurate finished time.  work in progress                  
         #mjl.finished = datetime.datetime.today()
         #mjl.save()
