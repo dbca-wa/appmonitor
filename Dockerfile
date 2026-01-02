@@ -66,7 +66,7 @@ COPY requirements.txt ./
 COPY python-cron ./
 RUN whoami
 RUN /app/venv/bin/pip3 install --upgrade pip
-RUN /app/venv/bin/pip3 install --no-cache-dir -r requirements.txt 
+#RUN /app/venv/bin/pip3 install --no-cache-dir -r requirements.txt 
 # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
 # Reference: https://stackoverflow.com/questions/18643998/geodjango-geosexception-error
 #&& sed -i -e "s/ver = geos_version().decode()/ver = geos_version().decode().split(' ')[0]/" /usr/local/lib/python3.6/dist-packages/django/contrib/gis/geos/libgeos.py \
