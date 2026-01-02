@@ -19,7 +19,7 @@ xlsxwriter==3.1.9
 git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 python-decouple==3.8
 cryptography==44.0.1
-pillow==10.3.0
+pillow~=12.0.0
 numpy==1.26.3
 setuptools==80.9.0
 wheel==0.42.0
