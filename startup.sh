@@ -5,7 +5,9 @@
 # sed -i 's/\"/\\"/g' /etc/.cronenv
 ulimit -m 2048000
 ulimit -v 2048000
-cat /dev/urandom | tr -dc 'a-f0-9' | fold -w 32 | head -n 1 > /app/git_hash
+# cat /dev/urandom | tr -dc 'a-f0-9' | fold -w 32 | head -n 1 > /app/git_hash
+openssl rand -hex 32 > /app/git_hash
+
 
 if [ $ENABLE_CRON == "True" ];
 then
