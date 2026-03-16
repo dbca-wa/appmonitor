@@ -23,39 +23,58 @@ class Command(BaseCommand):
                 try:
                     tickets = requests.get(tf.url,auth=auth_request)
                     tickets_pending = tickets.json()
-                    if "tickets" in tickets_pending:
-                        for t in tickets_pending['tickets']:
-                            print ("TICKET")
-                            print (t['subject']) 
-                            print (t['updated_at'])
+                    total_pages = 1
+                    if "total" in tickets_pending:
+                        total_tickets = tickets_pending['total']
+                        total_tickets_divide_into_pages = int(total_tickets) / 100
+                        
+                        
+                        if float(total_tickets_divide_into_pages) >= int(total_tickets_divide_into_pages):
+                            total_pages = int(total_tickets_divide_into_pages) + 1
+                    page = 1
+                    while page <= total_pages:
+                        new_url = tf.url.replace("&page=1", "&page="+str(page))
+                        tickets = requests.get(new_url,auth=auth_request)
+                        tickets_pending = tickets.json()
 
-                            ticket_exists  = models.Tickets.objects.filter(ticket_reference_no=t['id'])
 
-                            if ticket_exists.count() > 0:
-                                print (ticket_exists[0])
-                                updated_at = ticket_exists[0].last_update_str
-                                if updated_at != t['updated_at']:
-                                    ticket_new = email_templates.TicketUpdated()
-                                    ticket_new.subject = "Updated Ticket : "+t['subject']+" "+str(t['id'])
+                        
+
+                        if "tickets" in tickets_pending:
+                            for t in tickets_pending['tickets']:
+                                print ("TICKET")
+                                print (t['subject']) 
+                                print (t['updated_at'])
+
+                                ticket_exists  = models.Tickets.objects.filter(ticket_reference_no=t['id'])
+
+                                if ticket_exists.count() > 0:
+                                    print (ticket_exists[0])
+                                    updated_at = ticket_exists[0].last_update_str
+                                    if updated_at != t['updated_at']:
+                                        ticket_new = email_templates.TicketUpdated()
+                                        ticket_new.subject = "Updated Ticket : "+t['subject']+" "+str(t['id'])
+                                        to_addresses=[]
+                                        for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
+                                            print ("Preparing to send updated "+notification.email)
+                                            to_addresses.append(notification.email)
+                                        ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})   
+                                        current_ticket = models.Tickets.objects.get(ticket_reference_no=t['id'])
+                                        current_ticket.last_update_str = t['updated_at']
+                                        current_ticket.save()
+
+                                else:
+                                    ticket_new = email_templates.TicketNew()
+                                    ticket_new.subject = "New Ticket : "+t['subject']+" "+str(t['id'])
                                     to_addresses=[]
                                     for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
-                                        print ("Preparing to send updated "+notification.email)
+                                        print ("Preparing to send new "+notification.email)
                                         to_addresses.append(notification.email)
-                                    ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})   
-                                    current_ticket = models.Tickets.objects.get(ticket_reference_no=t['id'])
-                                    current_ticket.last_update_str = t['updated_at']
-                                    current_ticket.save()
+                                    ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})                                     
 
-                            else:
-                                ticket_new = email_templates.TicketNew()
-                                ticket_new.subject = "New Ticket : "+t['subject']+" "+str(t['id'])
-                                to_addresses=[]
-                                for notification in models.NewTicketFilterNotification.objects.filter(active=True,ticket_filter=tf):
-                                    print ("Preparing to send new "+notification.email)
-                                    to_addresses.append(notification.email)
-                                ticket_new.send(to_addresses=to_addresses, context={"ticket": t, "settings": settings, "tf": tf})                                     
-
-                                models.Tickets.objects.create(ticket_reference_no=t['id'],last_update_str = t['updated_at'])
+                                    models.Tickets.objects.create(ticket_reference_no=t['id'],last_update_str = t['updated_at'])
+                        page = page + 1
+                        print ("Page "+str(page)+" of "+str(total_pages))
 
                             
                 except Exception as e:

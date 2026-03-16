@@ -81,7 +81,7 @@ class NewTicketFilterNotificationInline(admin.TabularInline):
 
 @admin.register(models.TicketFilter)
 class TicketFilter(admin.ModelAdmin):
-     list_display = ('id','name','url','active')
+     list_display = ('id','name','email_group','url','active')
      list_filter = ('active',)
      search_fields = ('id','name','url')
      inlines = [TicketFilterNotificationInline,NewTicketFilterNotificationInline]
