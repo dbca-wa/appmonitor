@@ -14,7 +14,7 @@ git+https://github.com/dbca-wa/django-cron.git#egg=django_cron
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 six==1.16.0
 django-nested-inline==0.4.6
-packaging==23.2
+packaging~=26.0
 xlsxwriter==3.1.9
 git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 python-decouple==3.8
