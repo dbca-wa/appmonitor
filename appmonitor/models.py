@@ -238,8 +238,15 @@ class NotificationEmail(models.Model):
     
 
 class TicketFilter(models.Model):
+    EMAIL_GROUP = Choices(
+             (0, 'full_list', ('Full list')),
+             (1, 'group_list', ('Group List')),
+
+    )
+
     name = models.CharField(max_length=255, default='', null=True, blank=True)
     url = models.CharField(max_length=2000, default='', null=True, blank=True)
+    email_group = models.IntegerField(choices=EMAIL_GROUP, null=True, blank=True, default=EMAIL_GROUP.full_list)
     active = models.BooleanField(default=True) 
     created = models.DateTimeField(auto_now_add=True)
 

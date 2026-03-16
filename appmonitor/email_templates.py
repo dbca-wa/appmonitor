@@ -27,6 +27,11 @@ class TicketList(WAGovUtilsTemplateEmailBase):
     html_template = "appmonitor/email/tickets_outstanding.html"
     txt_template = "appmonitor/email/tickets_outstanding.txt"        
 
+class TicketListGrouped(WAGovUtilsTemplateEmailBase):
+    """Tickets Outstanding"""
+    subject = "Tickets Outstanding"
+    html_template = "appmonitor/email/tickets_outstanding_grouped.html"
+    txt_template = "appmonitor/email/tickets_outstanding_grouped.txt"     
 
 class TicketNew(WAGovUtilsTemplateEmailBase):
     """New Ticket."""
