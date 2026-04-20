@@ -59,7 +59,7 @@ var appmonitor_packages = {
                                 htmlval+= "     <td><a href='/platform/view/"+resp.platform_packages_info_array[i].platform_id+"/' '>"+resp.platform_packages_info_array[i].system_name+"</a></td>";
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].package_name+"</td>";
                                 htmlval+= "     <td>"+resp.platform_packages_info_array[i].current_package_version+"</td>";
-                                htmlval+= "     <td>"+resp.platform_packages_info_array[i].python_version+"</td>";
+                                htmlval+= "     <td>"+resp.platform_packages_info_array[i].ecosystem+"</td>";
                                 
 
                                 if (resp.platform_packages_info_array[i].vulnerability_total > 0) {

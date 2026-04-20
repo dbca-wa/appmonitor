@@ -253,8 +253,7 @@ class Command(BaseCommand):
         cookies={}
         auth_response=None
         response_code = -1000
-        if monitor.use_basic_auth is True:
-            
+        if monitor.use_basic_auth is True:            
             try:
                 auth_response=auth=HTTPBasicAuth(monitor.username,monitor.password)                
             except Exception as e:
@@ -354,6 +353,7 @@ class Command(BaseCommand):
                 self.create_monitor_history(monitor,2,'packet loss : '+str(resp['loss']), output)
             elif int(resp['loss'].rstrip("%")) >= int(monitor.up_value):
                 self.create_monitor_history(monitor,3,'packet loss : '+str(resp['loss']), output)
+
         a = dt_datetime.now()
         monitor.last_update =a
         monitor.save()
