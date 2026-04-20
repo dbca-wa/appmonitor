@@ -14,7 +14,10 @@
         <thead class='table-dark'>
             <tr>
                 <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">System Name</th>   
-                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Vulnerability total</th>                       
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Vulnerability (Python)</th>                       
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Vulnerability (Debian)</th>                       
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Vulnerability (NPM)</th>                       
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">Vulnerability (Dependabot)</th>                       
             </tr>
         </thead>
         <tbody >
@@ -23,6 +26,13 @@
                 <tr>                    
                     <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ p.system_name }}</td>                    
                     <td style="font-weight: bold; text-align: center; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if p.vulnerability_total < 1%}background-color: #198754; color: #ffffff;{% elif p.vulnerability_total < 10%}background-color: #ffc107; color: #000000;{% else %}background-color: #dc3545; color: #ffffff;{% endif %}">{{ p.vulnerability_total }}</td>                    
+                    <td style="font-weight: bold; text-align: center; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if p.vulnerability_total_debian < 1%}background-color: #198754; color: #ffffff;{% elif p.vulnerability_total_debian < 10%}background-color: #ffc107; color: #000000;{% else %}background-color: #dc3545; color: #ffffff;{% endif %}">{{ p.vulnerability_total_debian }}</td>                    
+                    <td style="font-weight: bold; text-align: center; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if p.vulnerability_total_npm < 1%}background-color: #198754; color: #ffffff;{% elif p.vulnerability_total_npm < 10%}background-color: #ffc107; color: #000000;{% else %}background-color: #dc3545; color: #ffffff;{% endif %}">{{ p.vulnerability_total_npm }}</td>                    
+                    <td style="font-weight: bold; text-align: center; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {%if p.dependabot_vulnerability_total < 1%}background-color: #198754; color: #ffffff;{% elif p.dependabot_vulnerability_total < 10%}background-color: #ffc107; color: #000000;{% else %}background-color: #dc3545; color: #ffffff;{% endif %}">{{ p.dependabot_vulnerability_total }}</td>                    
+                    
+
+
+                    
                 </tr>
                 {% endfor %}
             {% else %}

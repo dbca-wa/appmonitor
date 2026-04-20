@@ -288,9 +288,10 @@ def get_platform_packages_info(search_package, only_vulnerable, exact_match, *ar
     
     if only_vulnerable == 'true':
         query_obj &= Q(vulnerability_total__gt=0)
-
-    platform_packages_info_obj = models.PythonPackage.objects.filter(query_obj)
+    
     platform_packages_info_array = []
+
+    platform_packages_info_obj = models.PythonPackage.objects.filter(query_obj)[:100]
     for ppi in platform_packages_info_obj:
         row = {}
         row["id"] = ppi.id
@@ -310,7 +311,54 @@ def get_platform_packages_info(search_package, only_vulnerable, exact_match, *ar
         row["group_responsible_group_name"] = ppi.platform.group_responsible.group_name
         row["platform_updated"] = ppi.platform.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
         row["platform_created"] = ppi.platform.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row['ecosystem'] = 'python'
         platform_packages_info_array.append(row)
+
+    platform_packages_info_obj = models.DebianPackage.objects.filter(query_obj)[:100]
+    for ppi in platform_packages_info_obj:
+        row = {}
+        row["id"] = ppi.id
+        row['package_name'] = ppi.package_name
+        row['current_package_version'] = ppi.current_package_version
+        row['vulnerability_total'] = ppi.vulnerability_total
+        row['active'] = ppi.active
+        row['updated'] = ppi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row['created'] =  ppi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row["platform_id"] = ppi.platform.id
+        row["system_name"] = ppi.platform.system_name
+        row["operating_system_name"] = ppi.platform.operating_system_name
+        row["operating_system_version"] = ppi.platform.operating_system_version
+        row["python_version"] = ppi.platform.python_version
+        row["django_version"] = ppi.platform.django_version
+        row["group_responsible_id"] = ppi.platform.group_responsible.id
+        row["group_responsible_group_name"] = ppi.platform.group_responsible.group_name
+        row["platform_updated"] = ppi.platform.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row["platform_created"] = ppi.platform.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row['ecosystem'] = 'debian'
+        platform_packages_info_array.append(row)
+
+    platform_packages_info_obj = models.NpmPackage.objects.filter(query_obj)[:100]
+    for ppi in platform_packages_info_obj:
+        row = {}
+        row["id"] = ppi.id
+        row['package_name'] = ppi.package_name
+        row['current_package_version'] = ppi.current_package_version
+        row['vulnerability_total'] = ppi.vulnerability_total
+        row['active'] = ppi.active
+        row['updated'] = ppi.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row['created'] =  ppi.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row["platform_id"] = ppi.platform.id
+        row["system_name"] = ppi.platform.system_name
+        row["operating_system_name"] = ppi.platform.operating_system_name
+        row["operating_system_version"] = ppi.platform.operating_system_version
+        row["python_version"] = ppi.platform.python_version
+        row["django_version"] = ppi.platform.django_version
+        row["group_responsible_id"] = ppi.platform.group_responsible.id
+        row["group_responsible_group_name"] = ppi.platform.group_responsible.group_name
+        row["platform_updated"] = ppi.platform.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row["platform_created"] = ppi.platform.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
+        row['ecosystem'] = 'npm'
+        platform_packages_info_array.append(row)          
 
     return {"status": 200, "platform_packages_info_array": platform_packages_info_array}
 
