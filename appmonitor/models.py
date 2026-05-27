@@ -235,7 +235,34 @@ class NotificationEmail(models.Model):
 
     def __str__(self):
         return self.email 
+
+class DevopsReport(models.Model):
     
+    SORT_ORDER = Choices(
+             (0, 'devops', ('Devops Query Order')),
+             (1, 'prioritystatus', ('Priorty Status')),
+
+    )
+
+    name = models.CharField(max_length=255, default='', null=True, blank=True)
+    devopsurl = models.CharField(max_length=2000, default='', null=True, blank=True)
+    sort_order = models.IntegerField(choices=SORT_ORDER, null=True, blank=True, default=SORT_ORDER.devops)
+    wiql_query = models.TextField(blank=True, default='')
+    active = models.BooleanField(default=True) 
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name    
+
+class DevopsReportNotification(models.Model):
+
+    devopsreport = models.ForeignKey(DevopsReport, null=True, blank=True, on_delete=models.CASCADE)
+    email = models.CharField(max_length=255, default='', null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
 
 class TicketFilter(models.Model):
     EMAIL_GROUP = Choices(

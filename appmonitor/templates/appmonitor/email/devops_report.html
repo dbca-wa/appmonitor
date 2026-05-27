@@ -1,0 +1,152 @@
+<html >
+<body style='background-color: #e6e6e6;padding:10px;'>
+
+<div style='background-color: #FFFFFF; padding:20px;'>
+    <table bgcolor='#FFFFFF' cellpadding="0" cellspacing="0" style="padding:20px">
+    <tr><td>
+    <div><img src="{% include "appmonitor/email/dbca_logo_base64_img.html"%}" style='height:100px'></div>
+    <br>
+    <p>Report Data for "{{report_name}}":</p>
+    <p>Total Tasks : {{ total_tasks }}</p>
+
+
+
+    <table style="width:100%"  cellpadding="0" cellspacing="0">
+    <thead class='table-dark'>
+        <tr>{% for col in column_array_table %}            
+                <th style="font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;">{{ col }}</th>  
+            {% endfor %}                            
+        </tr>
+    </thead>
+    <tbody >
+        
+        {% if work_items_data %}
+        
+            {% if  sort_order == 1 %}
+                {% for row in work_items_data %}
+                
+                <!-- Urgent status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop == "Urgent" %}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                {% for row in work_items_data %}
+                <!-- High status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop == "High" %}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                {% for row in work_items_data %}
+
+                <!-- Medium status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop == "Medium" %}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>                
+                {% endfor %}
+                {% for row in work_items_data %}
+                <!-- Low status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop == "Low" %}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr> 
+                {% endfor %}
+                {% for row in work_items_data %}
+                <!-- Lowest status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop == "Lowest" %}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>    
+                {% endfor %}
+                {% for row in work_items_data %}
+                <!-- None status -->
+                <tr>
+                    {% for column_loop in row %}                     
+                        {% if forloop.counter == priortystatus_index %}
+                     
+                            {% if column_loop != "Urgent" and column_loop != "High" and column_loop != "Medium" and column_loop != "Low" and column_loop != "Lowest"%}
+                                {% for column in row %}
+                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
+                                {% endfor %}                               
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>                       
+                
+
+                {% endfor %}            
+
+            {% else %}
+                {% for row in work_items_data %}
+                <tr>
+                    {% for column in row %}            
+                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ column }}</td>          
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            {% endif %}
+            
+        {% else %}
+            <tr>
+                <td colspan="5" class='text-center'>No Results</td>
+            </tr>
+        {% endif %}
+        
+        
+    </tbody>
+</table>
+<br>
+
+<p><i>
+This is an automated system generated notification.
+</i>
+<br>
+System URL: <a href='{{ settings.APP_URL }}'>{{ settings.APP_URL }}</a>
+</p>
+</td>
+</tr>
+</table>
+</body>
+</html>
