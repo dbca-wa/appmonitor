@@ -22,110 +22,157 @@
         
         {% if work_items_data %}
         
-            {% if  sort_order == 1 %}
+            {% if sort_order == 1 %}
                 {% for row in work_items_data %}
-                
-                <!-- Urgent status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop == "Urgent" %}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-                {% for row in work_items_data %}
-                <!-- High status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop == "High" %}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-                {% for row in work_items_data %}
+                    <tr>    
+                       
 
-                <!-- Medium status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop == "Medium" %}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
+                    {% for column_loop_key, column_loop_value in row.items %}  
+
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value == "Urgent" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; "><A href="{{ value.url }}">{{ value.id }}</a></td>          
+                                            {% elif key == "Custom.PriorityStatus" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; background-color: #aa0000;  text-align:center; color: #FFFFFF;">{{value}}</td>                                                              
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>                
-                {% endfor %}
-                {% for row in work_items_data %}
-                <!-- Low status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop == "Low" %}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
+                    {% endfor %}     
+                    </tr>
+                    {% endfor %}     
+
+                    {% for row in work_items_data %}
+                    <tr>
+                    <!-- High -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value == "High" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td>          
+                                            {% elif key == "Custom.PriorityStatus" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; background-color: #d47f00; text-align:center;">{{ value }}</td>                                                                                                                  
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
+                    {% endfor %}  
+                    </tr>
+                    {% endfor %} 
+                    {% for row in work_items_data %}
+                    <tr>
+                    <!-- Medium -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value == "Medium" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td>   
+                                            {% elif key == "Custom.PriorityStatus" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; background-color: #004ddb; text-align:center;">{{ value }}</td>                                                           
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
+                            {% endif %}
+                    {% endfor %}  
+                    </tr>
+                    {% endfor %}                     
+
+                    
+                    {% for row in work_items_data %}
+                    <tr>
+                    <!-- Low -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value == "Low" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td> 
+                                            {% elif key == "Custom.PriorityStatus" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; background-color: #9c9c9c; text-align:center;">{{ value }}</td>                                                             
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
+                            {% endif %}
+                    {% endfor %}     
+                    </tr>
+                    {% endfor %} 
+                    {% for row in work_items_data %}
+                    <tr>
+                    
+                    <!-- Low -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value == "Lowest" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td>
+                                            {% elif key == "Custom.PriorityStatus" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; background-color: #cfcfcf; text-align:center;">{{ value }}</td>                                                                
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
+                            {% endif %}
+                    {% endfor %}         
+                    </tr>
+                    {% endfor %} 
+                    {% for row in work_items_data %}
+                    <tr>
+                    
+                    <!-- Other -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}
+                                {% if column_loop_value != "Urgent" and column_loop_value != "High" and column_loop_value != "Medium" and column_loop_value != "Low" and column_loop_value != "Low" and column_loop_value != "Lowest" %}
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td>          
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}
+                                {% endif %} 
+                            {% endif %}
+                    {% endfor %}                       
+
+
                 </tr> 
-                {% endfor %}
-                {% for row in work_items_data %}
-                <!-- Lowest status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop == "Lowest" %}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>    
-                {% endfor %}
-                {% for row in work_items_data %}
-                <!-- None status -->
-                <tr>
-                    {% for column_loop in row %}                     
-                        {% if forloop.counter == priortystatus_index %}
-                     
-                            {% if column_loop != "Urgent" and column_loop != "High" and column_loop != "Medium" and column_loop != "Low" and column_loop != "Lowest"%}
-                                {% for column in row %}
-                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; {% if column == 'Urgent' %}background-color: #fa0b0b;{% elif column == 'High'%}background-color: #e98b20;{% elif column == 'Medium'%}background-color: #0f55be;{% elif column == 'Low'%}background-color: #b9babd;{% elif column == 'Lowest'%}background-color: #d9dadf;{% else %}{%endif%}">{{ column }}</td>          
-                                {% endfor %}                               
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </tr>                       
+
+
                 
 
                 {% endfor %}            
 
             {% else %}
-                {% for row in work_items_data %}
-                <tr>
-                    {% for column in row %}            
-                        <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ column }}</td>          
-                    {% endfor %}
+                    {% for row in work_items_data %}
+                    <tr>
+                   <!-- Other -->
+                    {% for column_loop_key, column_loop_value in row.items %}  
+                            {% if column_loop_key == "Custom.PriorityStatus" %}                                
+                                    {% for key, value in row.items %}                                                                                                                                                     
+                                            {% if key == "System.Id" %}
+                                                <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;"><A href="{{ value.url }}">{{ value.id }}</a></td>          
+                                            {% else %}
+                                                    <td style="font-weight: normal; text-align: left; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;">{{ value }}</td>  
+                                            {% endif %}                                                                                                                        
+                                    {% endfor %}                                
+                            {% endif %}
+                    {% endfor %}    
                 </tr>
                 {% endfor %}
+                
             {% endif %}
             
         {% else %}
