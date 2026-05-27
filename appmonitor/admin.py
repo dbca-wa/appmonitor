@@ -86,6 +86,16 @@ class TicketFilter(admin.ModelAdmin):
      search_fields = ('id','name','url')
      inlines = [TicketFilterNotificationInline,NewTicketFilterNotificationInline]
 
+class DevopsReportNotificationInline(admin.TabularInline):
+    model = models.DevopsReportNotification
+    extra = 0
+
+@admin.register(models.DevopsReport)
+class DevopsReport(admin.ModelAdmin):
+     list_display = ('id','name','devopsurl','active','created')
+     search_fields = ('id','name',)
+     inlines = [DevopsReportNotificationInline]
+
 @admin.register(models.Tickets)
 class Tickets(admin.ModelAdmin):
      list_display = ('id','ticket_reference_no','last_update_str','created')
