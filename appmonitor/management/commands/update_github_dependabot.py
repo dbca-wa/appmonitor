@@ -12,9 +12,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print ("Updating Dependabot Alerts")
 
-        ghsa_id_hashses = []
         platforms = models.Platform.objects.filter(active=True)
         for p in platforms:
+            ghsa_id_hashses = []
 
             if len(p.git_repo_name) > 0:
                 resp = requests.get("https://api.github.com/repos/dbca-wa/{}/dependabot/alerts".format(p.git_repo_name),headers={"Accept": "application/vnd.github+json", "Authorization": "Bearer "+settings.GIT_API_TOKEN, "X-GitHub-Api-Version":"2022-11-28"})
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 for a in all_pdba:
                     if a.ghsa_id not in ghsa_id_hashses:
                         print ("Deleting: {}".format(a.ghsa_id))
-                        models.PlatformDependaBotAdvisory.objects.filter(ghsa_id=a.ghsa_id).delete()
+                        models.PlatformDependaBotAdvisory.objects.filter(platform=p, ghsa_id=a.ghsa_id).delete()
                     #[0]["package"]
                 # curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer <git_api_token>" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/dbca-wa/gokart-sss-django/dependabot/alerts |
                 platform_dependabot_total = models.PlatformDependaBotAdvisory.objects.filter(platform=p,state='open').count()
