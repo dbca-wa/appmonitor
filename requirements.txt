@@ -22,7 +22,7 @@ cryptography~=49.0.0
 pillow~=12.2.0
 numpy==2.4.0
 setuptools==80.9.0
-wheel~=0.46.0
+wheel~=0.47.0
 git+https://github.com/jasonrollins/shareplum.git@55d860b#egg=shareplum
 psycopg2==2.9.11
 idna==3.16
@@ -31,6 +31,6 @@ requests~=2.33.0
 pytz==2024.1
 python-decouple==3.8
 django-extensions~=4.1
-urllib3~=2.6.0
+urllib3~=2.7.0
 semantic-version==2.10.0
 azure-devops==7.1.0b4
