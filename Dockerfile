@@ -10,7 +10,7 @@ SHELL ["/bin/bash", "-c"]
 RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list
 RUN mv /etc/apt/sourcesau.list /etc/apt/sources.list
 # Use Australian Mirrors
-
+RUN echo $IMAGE_TAG;
 # Key for Build purposes only
 ENV FIELD_ENCRYPTION_KEY="Mv12YKHFm4WgTXMqvnoUUMZPpxx1ZnlFkfGzwactcdM="
 # Key for Build purposes only
