@@ -1,4 +1,6 @@
 # Prepare the base environment.
+ARG IMAGE_TAG
+ARG IMAGE_NAME
 FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu2604_base_latest  AS builder_base_appmonitor
 MAINTAINER asi@dbca.wa.gov.au
 ENV DEBIAN_FRONTEND=noninteractive
