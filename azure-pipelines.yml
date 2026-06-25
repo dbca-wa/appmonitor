@@ -34,7 +34,7 @@ stages:
               $(tagDate)
         containerRegistry: DockerGitHub
         repository: '$(imageName)'
-        arguments: '--build-arg IMAGE_TAG=$(tagDate) IMAGE_NAME=$(imageName)'
+        arguments: '--build-arg IMAGE_TAG=$(tagDate) --build-arg IMAGE_NAME=$(imageName)'
       env:
         DOCKER_BUILDKIT: 1
     - task: Docker@2
