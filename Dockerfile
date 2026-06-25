@@ -2,7 +2,12 @@
 ARG IMAGE_TAG
 ARG IMAGE_NAME
 FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu2604_base_latest  AS builder_base_appmonitor
+ARG IMAGE_TAG
+ARG IMAGE_NAME
 MAINTAINER asi@dbca.wa.gov.au
+RUN echo "Building version: $IMAGE_TAG for $IMAGE_NAME"
+ENV CONTAINER_IMAGE_TAG=${IMAGE_TAG}
+ENV CONTAINER_IMAGE_NAME=${IMAGE_NAME}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Perth
 ENV PRODUCTION_EMAIL=True
