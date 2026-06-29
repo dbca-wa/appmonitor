@@ -93,6 +93,7 @@ RUN touch /app/.env
 COPY .git ./.git
 COPY --chown=oim:oim appmonitor appmonitor
 COPY --chown=oim:oim manage.py ./
+COPY --chown=oim:oim static-config static-config
 # RUN chmod 777 /app/appmonitor/cache/
 RUN /app/venv/bin/python manage.py collectstatic --noinput
 
