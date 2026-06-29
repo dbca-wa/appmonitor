@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     result = subprocess.run(["syft", "dir:/tmp/dockerimage/uncompressed/","-o", "cyclonedx-json="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json"], capture_output=True, text=True)           
                     print (result)
 
-                    result = subprocess.run(["grype", str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json", "--sort-by=severity", "--output=template","--template="+settings.BASE_DIR+"/static-config/tsv.tmpl", "--file="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-vulnerabilities.tsv"], capture_output=True, text=True)           
+                    result = subprocess.run(["grype", str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json", "--sort-by=severity", "--output=template","--template="+str(settings.BASE_DIR)+"/static-config/tsv.tmpl", "--file="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-vulnerabilities.tsv"], capture_output=True, text=True)           
                     print (result)
                      
    
