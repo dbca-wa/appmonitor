@@ -339,6 +339,8 @@ class Platform(models.Model):
     vulnerability_total_debian = models.IntegerField(default=0,null=True)
     vulnerability_total_npm = models.IntegerField(default=0,null=True)    
     platform_current_severity = models.CharField(max_length=20, default='', null=True, blank=True)
+    image_tag = models.CharField(max_length=255, default='', null=True, blank=True)
+    image_name = models.CharField(max_length=1024, default='', null=True, blank=True)
     dependabot_vulnerability_total = models.IntegerField(default=0)
     json_response =  models.JSONField(null=True, blank=True)    
     stale_packages = models.BooleanField(default=True)

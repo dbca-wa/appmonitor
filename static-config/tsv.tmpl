@@ -1,0 +1,89 @@
+{{ printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"
+  "Package"
+  "InstalledVersion"
+  "FixedVersion"
+  "Type"
+  "VulnerabilityID"
+  "Severity"
+  "CVSS"
+  "CVSSVector"
+  "FixState"
+  "Description"
+  "PackagePath"
+  "Namespace"
+  "URL" }}
+
+{{- range .Matches }}
+{{- $a := .Artifact -}}
+{{- $v := .Vulnerability -}}
+
+{{- /* Fix versions */ -}}
+{{- $fixVersions := "" -}}
+{{- if $v.Fix.Versions -}}
+  {{- range $i, $ver := $v.Fix.Versions -}}
+    {{- if eq $i 0 -}}
+      {{- $fixVersions = $ver -}}
+    {{- else -}}
+      {{- $fixVersions = printf "%s;%s" $fixVersions $ver -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* CVSS score + vector */ -}}
+{{- $cvss := "" -}}
+{{- $cvssVector := "" -}}
+{{- if $v.Cvss -}}
+  {{- range $v.Cvss -}}
+    {{- if .Metrics.BaseScore -}}
+      {{- $cvss = printf "%.1f" .Metrics.BaseScore -}}
+      {{- $cvssVector = .Vector -}}
+      {{- break -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Fix state */ -}}
+{{- $fixState := "" -}}
+{{- if $v.Fix.State -}}
+  {{- $fixState = printf "%s" $v.Fix.State -}}
+{{- end -}}
+
+{{- /* Description (sanitize newline, quotes, spaces, truncate) */ -}}
+{{- $desc := "" -}}
+{{- if $v.Description -}}
+  {{- $cleanDesc := $v.Description 
+      | replace "\r" " " 
+      | replace "\n" " " 
+      | replace "\t" " "
+      | replace "\"" "" 
+      | replace "'" "" 
+      | regexReplaceAll "\\s+" " " -}}
+  {{- $desc = printf "%.200s" $cleanDesc -}}
+{{- end -}}
+
+{{- /* Package path */ -}}
+{{- $pkgPath := "" -}}
+{{- if $a.Locations -}}
+  {{- range $i, $loc := $a.Locations -}}
+    {{- if eq $i 0 -}}
+      {{- $pkgPath = printf "%s" $loc.Path -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{ printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"
+    (printf "%s" $a.Name)
+    (printf "%s" $a.Version)
+    (printf "%s" $fixVersions)
+    (printf "%s" $a.Type)
+    (printf "%s" $v.ID)
+    (printf "%s" $v.Severity)
+    (printf "%s" $cvss)
+    (printf "%s" $cvssVector)
+    (printf "%s" $fixState)
+    (printf "%s" $desc)
+    (printf "%s" $pkgPath)
+    (printf "%s" $v.Namespace)
+    (printf "%s" $v.DataSource) -}}
+{{- end }}
+
