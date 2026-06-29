@@ -54,8 +54,8 @@ RUN apt-get install --no-install-recommends -y python3-pil
 ENV TZ=Australia/Perth
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ENV wget -qO- https://get.anchore.io/syft | sh -s -- -b /usr/local/bin
-ENV wget -qO- https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+RUN wget -qO- https://get.anchore.io/syft | sh -s -- -b /usr/local/bin
+RUN wget -qO- https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
 COPY startup.sh /
 RUN chmod 755 /startup.sh
