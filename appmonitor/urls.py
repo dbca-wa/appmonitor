@@ -45,6 +45,8 @@ urlpatterns = [
     path('api/get-checks-alerts/', api.get_checks_alerts, name='api_get_checks_alerts'),    
     path('api/get-platform-info/', api.get_platform_info, name='get_platform_info'),
     path('api/get-platform-packages-info/', api.get_platform_packages_info, name='get_platform_packages_info'),
+    path('api/download/<str:scan_id>-platform-scan.csv', api.download_local_scan_csv, name='download_local_scan_csv'),
+    
     path('api/platform/create', api.platform_create, name='platform_create'),
     path('api/platform/update', api.platform_update, name='platform_update'),
     re_path(r'^api/platform/(?P<pk>[0-9]+)/$', api.get_platform_info_by_id, name='python_package_advisory'),  

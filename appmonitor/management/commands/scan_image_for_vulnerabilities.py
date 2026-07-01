@@ -9,16 +9,26 @@ import subprocess
 import tarfile
 import os
 import shutil
+import csv
 
 class Command(BaseCommand):
     help = 'Scan docker images'
 
+    def add_arguments(self, parser):
+        parser.add_argument('-i' '--id', type=str , help='Only run selected platform by id', default=None)
+
     def handle(self, *args, **options):
         print ("Rebuilding Platform Packages...")
+        
+        
         try:
             DB_DIRECTORY_TO_ARCHIVE = settings.DB_DIRECTORY_TO_ARCHIVE
             os.makedirs(DB_DIRECTORY_TO_ARCHIVE+"/scans/", exist_ok=True)            
-            platform_obj = models.Platform.objects.filter(active=True)           
+            pid = options['i__id']          
+            if pid is None:
+                platform_obj = models.Platform.objects.filter(active=True)  
+            else:                         
+                platform_obj = models.Platform.objects.filter(active=True, id=pid)
 
             for p in platform_obj:                
 
@@ -60,10 +70,33 @@ class Command(BaseCommand):
                     result = subprocess.run(["syft", "dir:/tmp/dockerimage/uncompressed/","-o", "cyclonedx-json="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json"], capture_output=True, text=True)           
                     print (result)
 
-                    result = subprocess.run(["grype", str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json", "--sort-by=severity", "--output=template","--template="+str(settings.BASE_DIR)+"/static-config/tsv.tmpl", "--file="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-vulnerabilities.tsv"], capture_output=True, text=True)           
+                    result = subprocess.run(["grype", str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-sbom.json", "--sort-by=severity", "--output=template","--template="+str(settings.BASE_DIR)+"/static-config/tsv.tmpl", "--file="+str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-vulnerabilities.csv"], capture_output=True, text=True)           
                     print (result)
                      
-   
+                    target_column = 'FixState'
+                    target_value = 'fixed'
+                    count = 0
+
+                    with open(str(DB_DIRECTORY_TO_ARCHIVE)+"/scans/"+str(p.id)+"-vulnerabilities.csv", mode='r', encoding='utf-8') as file:
+                        # Use delimiter='\t' for tab-separated, or delimiter=',' for standard CSV
+                        reader = csv.DictReader(file, delimiter='\t')
+                        
+                        # Strip any accidental whitespace from headers
+                        reader.fieldnames = [field.strip() for field in reader.fieldnames] if reader.fieldnames else []
+                        
+                        if target_column in reader.fieldnames:
+                            for row in reader:
+                                # Compare the cell value (stripping whitespace to handle formatting safely)
+                                
+                                if row[target_column].strip() == target_value:
+                                    print (row[target_column].strip())
+                                    count += 1
+                            print(f"Total records where '{target_column}' is '{target_value}': {count}")
+                            p.vulnerability_total_grype=count
+                            p.save()
+                        else:
+                            print(f"Error: Column '{target_column}' not found. Available columns are: {reader.fieldnames}")
+                    
         except Exception as e:
             print ("EXCEPTION2:")
             print (e)

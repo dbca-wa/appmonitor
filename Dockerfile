@@ -12,25 +12,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Perth
 ENV PRODUCTION_EMAIL=True
 ENV SECRET_KEY="ThisisNotRealKey"
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH=$VIRTUAL_ENV/bin:$PATH
 SHELL ["/bin/bash", "-c"]
-# Use Australian Mirrors
-RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list
-RUN mv /etc/apt/sourcesau.list /etc/apt/sources.list
-# Use Australian Mirrors
-RUN echo $IMAGE_TAG;
 # Key for Build purposes only
 ENV FIELD_ENCRYPTION_KEY="Mv12YKHFm4WgTXMqvnoUUMZPpxx1ZnlFkfGzwactcdM="
 # Key for Build purposes only
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install --no-install-recommends -y wget git libmagic-dev gcc binutils libproj-dev gdal-bin python3 python3-setuptools python3-dev python3-pip tzdata libreoffice cron python3-gunicorn
-RUN apt-get install --no-install-recommends -y libpq-dev patch virtualenv
-RUN apt-get install --no-install-recommends -y postgresql-client mtr
-RUN apt-get install --no-install-recommends -y sqlite3 vim postgresql-client ssh htop iputils-ping unzip skopeo
+RUN apt-get install --no-install-recommends -y python3-pip libreoffice skopeo 
 RUN ln -s /usr/bin/python3 /usr/bin/python 
-#RUN ln -s /usr/bin/pip3 /usr/bin/pip
-# RUN pip install --upgrade pip
 
 RUN groupadd -g 5000 oim 
 RUN useradd -g 5000 -u 5000 oim -s /bin/bash -d /app
@@ -46,8 +38,6 @@ RUN echo "ulimit -v 2048000" >> /etc/bash.bashrc
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
 RUN chmod 755 /tmp/default_script_installer.sh
 RUN /tmp/default_script_installer.sh
-
-
 
 RUN apt-get install --no-install-recommends -y python3-pil
 
@@ -72,9 +62,9 @@ RUN git config --global --add safe.directory /app
 # RUN /bin/bash -c "source /app/venv/local/bin/activate"
 COPY requirements.txt ./
 COPY python-cron ./
-RUN whoami
-RUN /app/venv/bin/pip3 install --upgrade pip
-RUN /app/venv/bin/pip3 install --no-cache-dir -r requirements.txt 
+RUN python3 -m venv $VIRTUAL_ENV
+RUN $VIRTUAL_ENV/bin/pip3 install --upgrade pip
+RUN $VIRTUAL_ENV/bin/pip3 install --no-cache-dir -r requirements.txt 
 # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
 # Reference: https://stackoverflow.com/questions/18643998/geodjango-geosexception-error
 #&& sed -i -e "s/ver = geos_version().decode()/ver = geos_version().decode().split(' ')[0]/" /usr/local/lib/python3.6/dist-packages/django/contrib/gis/geos/libgeos.py \
