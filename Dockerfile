@@ -54,7 +54,7 @@ RUN chmod 755 /startup.sh
 FROM builder_base_appmonitor AS python_libs_appmonitor
 WORKDIR /app
 USER oim 
-RUN virtualenv /app/venv
+RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH=/app/venv/bin:$PATH
 
 RUN git config --global --add safe.directory /app
@@ -62,7 +62,7 @@ RUN git config --global --add safe.directory /app
 # RUN /bin/bash -c "source /app/venv/local/bin/activate"
 COPY requirements.txt ./
 COPY python-cron ./
-RUN python3 -m venv $VIRTUAL_ENV
+
 RUN $VIRTUAL_ENV/bin/pip3 install --upgrade pip
 RUN $VIRTUAL_ENV/bin/pip3 install --no-cache-dir -r requirements.txt 
 # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
