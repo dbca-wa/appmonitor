@@ -24,7 +24,7 @@ numpy==2.4.0
 setuptools==82.0.1
 wheel~=0.47.0
 git+https://github.com/jasonrollins/shareplum.git@55d860b#egg=shareplum
-psycopg2==2.9.11
+psycopg2-binary==2.9.12
 idna==3.16
 sqlparse~=0.5.5
 requests~=2.33.0
