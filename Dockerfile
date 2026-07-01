@@ -21,7 +21,7 @@ ENV FIELD_ENCRYPTION_KEY="Mv12YKHFm4WgTXMqvnoUUMZPpxx1ZnlFkfGzwactcdM="
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install --no-install-recommends -y python3-pip libreoffice skopeo 
+RUN apt-get install --no-install-recommends -y curl wget python3-pip libreoffice skopeo 
 RUN ln -s /usr/bin/python3 /usr/bin/python 
 
 RUN groupadd -g 5000 oim 
