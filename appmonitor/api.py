@@ -1,6 +1,6 @@
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse, Http404
 from django.contrib.auth.models import Group
 from django.db.models import Q
 from appmonitor import models
@@ -11,7 +11,7 @@ from appmonitor import models
 from pytz import timezone
 from datetime import datetime
 from django.conf import settings
-
+import os
 
 @csrf_exempt
 def get_checks(request, *args, **kwargs):    
@@ -75,6 +75,11 @@ def update_platform_information(request, *args, **kwargs):
         platform_obj.operating_system_version = json_data['platform_obj']['system_info']['VERSION_ID']
         platform_obj.python_version = json_data['platform_obj']['system_info']['python_version']
         platform_obj.django_version = json_data['platform_obj']['system_info']['django_version']
+        if 'IMAGE_NAME' in json_data:
+            platform_obj.image_name = json_data['IMAGE_NAME']
+        if 'IMAGE_TAG' in json_data:
+            platform_obj.image_tag = json_data['IMAGE_TAG']
+
         platform_obj.json_response = json_data
         platform_obj.stale_packages = True
         platform_obj.last_sync_dt = datetime.now()
@@ -361,3 +366,47 @@ def get_monitor_info_by_id(request, *args, **kwargs):
             return HttpResponse(json.dumps({'status': 500, 'message': str(e)}), content_type='application/json', status=403) 
     else:
         return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
+
+def download_local_scan_csv(request, scan_id):
+    """Locates an existing scan CSV file in ./db/scan/ and streams it
+
+    to the user as a secure file download.
+    """
+    if request.user.is_authenticated:
+        access_type = utils.user_group_permissions(request)
+        if access_type['view_access_platform_status'] is True:
+
+            # 1. Reconstruct the path where the files live
+            # (e.g., /your-project-root/db/scan/123-vulnerabilities.csv)
+            target_dir = os.path.join(str(settings.DB_DIRECTORY_TO_ARCHIVE), "scans")
+            filename = f"{scan_id}-vulnerabilities.csv"
+            print (filename)
+            file_path = os.path.join(target_dir, filename)
+
+            # 2. Security Check: Prevent Directory Traversal attacks
+            # This ensures users can't pass a malicious scan_id like '../../etc/passwd'
+            resolved_path = os.path.abspath(file_path)
+            if not resolved_path.startswith(os.path.abspath(target_dir)):
+                raise Http404("Invalid file path requested.")
+
+            # 3. Check if the file actually exists on disk
+            if not os.path.exists(resolved_path):
+                # You can change this to a JsonResponse if you prefer an API-style error
+                raise Http404(f"Vulnerability report for scan {scan_id} does not exist.")
+
+            # 4. Open and stream the file
+            # 'as_attachment=True' forces the browser to download the file instead of displaying it
+            response = FileResponse(
+                open(resolved_path, "rb"),
+                as_attachment=True,
+                filename=filename,
+                content_type="text/csv",
+            )
+
+            return response
+        else:
+            return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403)      
+    else:
+        return HttpResponse(json.dumps({'status': 403, 'message': "Forbidden Authentication"}), content_type='application/json', status=403) 
+
+  

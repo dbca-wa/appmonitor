@@ -209,7 +209,6 @@ var appmonitor_platform = {
                                     htmlval+= "     <a title='NPM/Node' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/platform/view/"+resp.platform_info_array[i].id+"/node-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
                                 } else {
                                     htmlval+= "     <a title='NPM/Node' type='button' class='btn btn-success' style='cursor: pointer ;' href='/platform/view/"+resp.platform_info_array[i].id+"/node-packages?only_vulnerable=true'>"+resp.platform_info_array[i].vulnerability_total_npm+"</a>";
-
                                 }                                                                                             
                                 
                                 if (resp.platform_info_array[i].git_repo_name.length > 0) {
@@ -223,6 +222,12 @@ var appmonitor_platform = {
 
                                    htmlval+= " &nbsp;";
                                 }
+                                if (resp.platform_info_array[i].vulnerability_total_grype > 0) {
+                                    htmlval+= "     <a title='Grype' type='button' class='btn "+severity_color+"' style='cursor:pointer;' href='/api/download/"+resp.platform_info_array[i].id+"-platform-scan.csv'>"+resp.platform_info_array[i].vulnerability_total_grype+"</a>";
+                                } else {
+                                    htmlval+= "     <a title='Grype' type='button' class='btn btn-success' style='cursor: pointer ;' href='/api/download/"+resp.platform_info_array[i].id+"-platform-scan.csv'>"+resp.platform_info_array[i].vulnerability_total_grype+"</a>";
+                                }   
+
                                 htmlval+= "     </td>";
                                 var last_sync_class = "text-success";
                                 if (resp.platform_info_array[i].last_sync_dt_in_seconds > 86400) {
