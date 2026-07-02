@@ -10,6 +10,7 @@
 */4 * * * * /app/venv/bin/python3 /app/manage.py run_monitor_checks >> /app/logs/run_monitor_checks.log 2>&1
 */4 * * * * /app/venv/bin/python3 /app/manage.py runcrons >> /app/logs/runcrons.log 2>&1
 
+
 # Fresh Service Ticket Notification
 */4 * * * * /app/venv/bin/python3 /app/manage.py check_freshservices_for_new_tickets >> /app/logs/check_freshservices_for_new_tickets.log 2>&1
 30 9 * * * /app/venv/bin/python3 /app/manage.py check_freshservices_for_oustanding_tickets >> /app/logs/check_freshservices_for_oustanding_tickets.log 2>&1
@@ -29,6 +30,7 @@
 05 07 * * * /app/venv/bin/python3 /app/manage.py check_for_vulnerable_packages >> /app/logs/check_for_vulnerable_packages.log 2>&1
 
 10 9 * * 1 /app/venv/bin/python3 /app/manage.py vulnerable_system_packages_notification >> /app/logs/vulnerable_system_packages_notification.log 2>&1
+10 7 * * 1 /app/venv/bin/python3 /app/manage.py scan_image_for_vulnerabilities >> /app/logs/scan_image_for_vulnerabilities.log 2>&1
 
 # CVE metrics
 30 09 * * * /app/venv/bin/python3 /app/manage.py update_cve_mitre_metrics >> /app/logs/update_cve_mitre_metrics.log 2>&1
