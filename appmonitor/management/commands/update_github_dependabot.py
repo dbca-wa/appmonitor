@@ -17,12 +17,31 @@ class Command(BaseCommand):
             ghsa_id_hashses = []
 
             if len(p.git_repo_name) > 0:
-                resp = requests.get("https://api.github.com/repos/dbca-wa/{}/dependabot/alerts".format(p.git_repo_name),headers={"Accept": "application/vnd.github+json", "Authorization": "Bearer "+settings.GIT_API_TOKEN, "X-GitHub-Api-Version":"2022-11-28"})
-                jsonresp = resp.json()
+                headers = {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization": "Bearer " + settings.GIT_API_TOKEN,
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+                url = "https://api.github.com/repos/dbca-wa/{}/dependabot/alerts?per_page=100".format(p.git_repo_name)
+                jsonresp = []
+                while url:
+                    resp = requests.get(url, headers=headers)
+                    page_data = resp.json()
+                    if not isinstance(page_data, list):
+                        break
+                    jsonresp.extend(page_data)
+                    url = None
+                    for part in resp.headers.get('Link', '').split(','):
+                        part = part.strip()
+                        if 'rel="next"' in part:
+                            url = part[part.find('<') + 1:part.find('>')]
+                            break
                 total_count = 0
+                numbers_in_response = []
                 for jr in jsonresp:
                     total_count = total_count + 1
                     ghsa_id_hashses.append(jr["security_advisory"]["ghsa_id"])
+                    numbers_in_response.append(jr['number'])
                     print (jr['number'])
                     print (jr['state'])
                     # print (jr["security_advisory"]["ghsa_id"])
@@ -59,9 +78,9 @@ class Command(BaseCommand):
                 # all_pdba = models.PlatformDependaBotAdvisory.objects.all().delete() 
                 all_pdba = models.PlatformDependaBotAdvisory.objects.filter(platform=p) 
                 for a in all_pdba:
-                    if a.ghsa_id not in ghsa_id_hashses:
+                    if a.number not in numbers_in_response:
                         print ("Deleting: {}".format(a.ghsa_id))
-                        models.PlatformDependaBotAdvisory.objects.filter(platform=p, ghsa_id=a.ghsa_id).delete()
+                        models.PlatformDependaBotAdvisory.objects.filter(platform=p, number=a.number).delete()
                     #[0]["package"]
                 # curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer <git_api_token>" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/dbca-wa/gokart-sss-django/dependabot/alerts |
                 platform_dependabot_total = models.PlatformDependaBotAdvisory.objects.filter(platform=p,state='open').count()
