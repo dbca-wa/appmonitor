@@ -73,10 +73,10 @@
                 </table>
 
 
-                <a href='/platform/view/1/dependabot?state=open' class="btn btn-secondary">
+                <a href='/platform/view/{{ platform_obj.id }}/dependabot?state=open' class="btn btn-secondary">
                     Open <span class="badge bg-danger">{{ platform_dependabot_obj_open_count }}</span>
                 </a>
-                <a href='/platform/view/1/dependabot?state=fixed' class="btn btn-secondary">
+                <a href='/platform/view/{{ platform_obj.id }}/dependabot?state=fixed' class="btn btn-secondary">
                     Fixed <span class="badge bg-success">{{ platform_dependabot_obj_fixed_count }}</span>
                 </a>
                 <br><br>
