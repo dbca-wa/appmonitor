@@ -40,6 +40,7 @@ class Command(BaseCommand):
                         pdba.package_name = jr["security_advisory"]["vulnerabilities"][0]["package"]["name"]
                         pdba.severity = jr["security_advisory"]["vulnerabilities"][0]["severity"]
                         pdba.cve_id = jr["security_advisory"]["cve_id"]
+                        pdba.manifest_path = jr["dependency"]["manifest_path"]
                         pdba.save()
                         
                     else:  
@@ -53,6 +54,7 @@ class Command(BaseCommand):
                             package_name=jr["security_advisory"]["vulnerabilities"][0]["package"]["name"],
                             severity= jr["security_advisory"]["vulnerabilities"][0]["severity"],
                             cve_id = jr["security_advisory"]["cve_id"],
+                            manifest_path = jr["dependency"]["manifest_path"],
                         )
                 # all_pdba = models.PlatformDependaBotAdvisory.objects.all().delete() 
                 all_pdba = models.PlatformDependaBotAdvisory.objects.filter(platform=p) 
