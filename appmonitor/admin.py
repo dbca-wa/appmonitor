@@ -1,14 +1,8 @@
-from django.contrib import messages
 from django.contrib.gis import admin
-from django.contrib.admin import AdminSite
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import Group
-from nested_inline.admin import NestedStackedInline, NestedModelAdmin
-
-
-from django.db.models import Q
+from nested_inline.admin import NestedModelAdmin, NestedStackedInline
 
 from appmonitor import models
+
 
 class MonitorAlertInline(admin.TabularInline):
     model = models.MonitorAlert
@@ -157,7 +151,7 @@ class PlatformAdvisoryEmailInline(admin.TabularInline):
 class PlatformDependaBotAdvisory(admin.TabularInline):
      list_display = ('id','ghsa_id','package_name','ecosystem','severity','cve_id','updated','created')
      model = models.PlatformDependaBotAdvisory
-     readonly_fields=('number','state','ghsa_id','package_name','ecosystem','severity','cve_id','updated','created')
+     readonly_fields=('number','state','ghsa_id','package_name','ecosystem','severity','cve_id','manifest_path','updated','created')
      extra = 0   
 
 @admin.register(models.Platform)
