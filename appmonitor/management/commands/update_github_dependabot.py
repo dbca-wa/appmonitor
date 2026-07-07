@@ -13,10 +13,11 @@ class Command(BaseCommand):
         print ("Updating Dependabot Alerts")
 
         platforms = models.Platform.objects.filter(active=True)
+        total_count = 0
         for p in platforms:
             ghsa_id_hashses = []
 
-            if len(p.git_repo_name) > 0:
+            if p.git_repo_name and len(p.git_repo_name) > 0:
                 headers = {
                     "Accept": "application/vnd.github+json",
                     "Authorization": "Bearer " + settings.GIT_API_TOKEN,
@@ -36,7 +37,6 @@ class Command(BaseCommand):
                         if 'rel="next"' in part:
                             url = part[part.find('<') + 1:part.find('>')]
                             break
-                total_count = 0
                 numbers_in_response = []
                 for jr in jsonresp:
                     total_count = total_count + 1
@@ -49,15 +49,20 @@ class Command(BaseCommand):
                     # print (jr["security_advisory"]["vulnerabilities"][0]["package"]["name"])
                     # print (jr["security_advisory"]["vulnerabilities"][0]["severity"])
                     # print (jr["security_advisory"]["cve_id"])
-                    
+
+                    vulnerabilities = jr["security_advisory"].get("vulnerabilities", [])
+                    ecosystem = vulnerabilities[0]["package"]["ecosystem"] if vulnerabilities else ""
+                    package_name = vulnerabilities[0]["package"]["name"] if vulnerabilities else ""
+                    severity = vulnerabilities[0]["severity"] if vulnerabilities else ""
+
                     if models.PlatformDependaBotAdvisory.objects.filter(platform=p, number=jr['number']).count() > 0:
                         print ("Updating {}".format(jr["security_advisory"]["ghsa_id"]))
                         pdba = models.PlatformDependaBotAdvisory.objects.get(platform=p, number=jr['number'])
                         pdba.state = jr['state']
                         pdba.number = jr['number']
-                        pdba.ecosystem = jr["security_advisory"]["vulnerabilities"][0]["package"]["ecosystem"]
-                        pdba.package_name = jr["security_advisory"]["vulnerabilities"][0]["package"]["name"]
-                        pdba.severity = jr["security_advisory"]["vulnerabilities"][0]["severity"]
+                        pdba.ecosystem = ecosystem
+                        pdba.package_name = package_name
+                        pdba.severity = severity
                         pdba.cve_id = jr["security_advisory"]["cve_id"]
                         pdba.manifest_path = jr["dependency"]["manifest_path"]
                         pdba.save()
@@ -69,9 +74,9 @@ class Command(BaseCommand):
                             state = jr['state'],
                             number = jr['number'],
                             ghsa_id=jr["security_advisory"]["ghsa_id"],
-                            ecosystem=jr["security_advisory"]["vulnerabilities"][0]["package"]["ecosystem"],
-                            package_name=jr["security_advisory"]["vulnerabilities"][0]["package"]["name"],
-                            severity= jr["security_advisory"]["vulnerabilities"][0]["severity"],
+                            ecosystem=ecosystem,
+                            package_name=package_name,
+                            severity=severity,
                             cve_id = jr["security_advisory"]["cve_id"],
                             manifest_path = jr["dependency"]["manifest_path"],
                         )
