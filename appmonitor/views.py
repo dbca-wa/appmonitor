@@ -1,15 +1,18 @@
 # Third-Party
-from django import http
-from django import shortcuts
-from django.views.generic import base
-from django.contrib import messages
 from datetime import datetime
+
 # from django.utils.timezone import utc
 from datetime import timezone as datetime_timezone
 
 # Typing
 from typing import Any
+
+from django import http, shortcuts
+from django.contrib import messages
+from django.views.generic import base
+
 from appmonitor import models
+
 
 class HomePage(base.TemplateView):
     """Home page view."""
@@ -208,6 +211,7 @@ class PlatformDependaBotPackageView(base.TemplateView):
                     row['ecosystem'] = pdb.ecosystem
                     row['severity'] = pdb.severity
                     row['cve_id'] = pdb.cve_id
+                    row['manifest_path'] = pdb.manifest_path
                     row['created'] = pdb.created.astimezone().strftime('%d/%m/%Y %H:%M %p')
                     row['updated'] = pdb.updated.astimezone().strftime('%d/%m/%Y %H:%M %p')
                     platform_dependabot_array.append(row)

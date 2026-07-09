@@ -13,16 +13,35 @@ class Command(BaseCommand):
         print ("Updating Dependabot Alerts")
 
         platforms = models.Platform.objects.filter(active=True)
+        total_count = 0
         for p in platforms:
             ghsa_id_hashses = []
 
-            if len(p.git_repo_name) > 0:
-                resp = requests.get("https://api.github.com/repos/dbca-wa/{}/dependabot/alerts".format(p.git_repo_name),headers={"Accept": "application/vnd.github+json", "Authorization": "Bearer "+settings.GIT_API_TOKEN, "X-GitHub-Api-Version":"2022-11-28"})
-                jsonresp = resp.json()
-                total_count = 0
+            if p.git_repo_name and len(p.git_repo_name) > 0:
+                headers = {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization": "Bearer " + settings.GIT_API_TOKEN,
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+                url = "https://api.github.com/repos/dbca-wa/{}/dependabot/alerts?per_page=100".format(p.git_repo_name)
+                jsonresp = []
+                while url:
+                    resp = requests.get(url, headers=headers)
+                    page_data = resp.json()
+                    if not isinstance(page_data, list):
+                        break
+                    jsonresp.extend(page_data)
+                    url = None
+                    for part in resp.headers.get('Link', '').split(','):
+                        part = part.strip()
+                        if 'rel="next"' in part:
+                            url = part[part.find('<') + 1:part.find('>')]
+                            break
+                numbers_in_response = []
                 for jr in jsonresp:
                     total_count = total_count + 1
                     ghsa_id_hashses.append(jr["security_advisory"]["ghsa_id"])
+                    numbers_in_response.append(jr['number'])
                     print (jr['number'])
                     print (jr['state'])
                     # print (jr["security_advisory"]["ghsa_id"])
@@ -30,16 +49,22 @@ class Command(BaseCommand):
                     # print (jr["security_advisory"]["vulnerabilities"][0]["package"]["name"])
                     # print (jr["security_advisory"]["vulnerabilities"][0]["severity"])
                     # print (jr["security_advisory"]["cve_id"])
-                    
+
+                    vulnerabilities = jr["security_advisory"].get("vulnerabilities", [])
+                    ecosystem = vulnerabilities[0]["package"]["ecosystem"] if vulnerabilities else ""
+                    package_name = vulnerabilities[0]["package"]["name"] if vulnerabilities else ""
+                    severity = vulnerabilities[0]["severity"] if vulnerabilities else ""
+
                     if models.PlatformDependaBotAdvisory.objects.filter(platform=p, number=jr['number']).count() > 0:
                         print ("Updating {}".format(jr["security_advisory"]["ghsa_id"]))
                         pdba = models.PlatformDependaBotAdvisory.objects.get(platform=p, number=jr['number'])
                         pdba.state = jr['state']
                         pdba.number = jr['number']
-                        pdba.ecosystem = jr["security_advisory"]["vulnerabilities"][0]["package"]["ecosystem"]
-                        pdba.package_name = jr["security_advisory"]["vulnerabilities"][0]["package"]["name"]
-                        pdba.severity = jr["security_advisory"]["vulnerabilities"][0]["severity"]
+                        pdba.ecosystem = ecosystem
+                        pdba.package_name = package_name
+                        pdba.severity = severity
                         pdba.cve_id = jr["security_advisory"]["cve_id"]
+                        pdba.manifest_path = jr["dependency"]["manifest_path"]
                         pdba.save()
                         
                     else:  
@@ -49,17 +74,18 @@ class Command(BaseCommand):
                             state = jr['state'],
                             number = jr['number'],
                             ghsa_id=jr["security_advisory"]["ghsa_id"],
-                            ecosystem=jr["security_advisory"]["vulnerabilities"][0]["package"]["ecosystem"],
-                            package_name=jr["security_advisory"]["vulnerabilities"][0]["package"]["name"],
-                            severity= jr["security_advisory"]["vulnerabilities"][0]["severity"],
+                            ecosystem=ecosystem,
+                            package_name=package_name,
+                            severity=severity,
                             cve_id = jr["security_advisory"]["cve_id"],
+                            manifest_path = jr["dependency"]["manifest_path"],
                         )
                 # all_pdba = models.PlatformDependaBotAdvisory.objects.all().delete() 
                 all_pdba = models.PlatformDependaBotAdvisory.objects.filter(platform=p) 
                 for a in all_pdba:
-                    if a.ghsa_id not in ghsa_id_hashses:
+                    if a.number not in numbers_in_response:
                         print ("Deleting: {}".format(a.ghsa_id))
-                        models.PlatformDependaBotAdvisory.objects.filter(platform=p, ghsa_id=a.ghsa_id).delete()
+                        models.PlatformDependaBotAdvisory.objects.filter(platform=p, number=a.number).delete()
                     #[0]["package"]
                 # curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer <git_api_token>" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/dbca-wa/gokart-sss-django/dependabot/alerts |
                 platform_dependabot_total = models.PlatformDependaBotAdvisory.objects.filter(platform=p,state='open').count()

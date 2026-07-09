@@ -387,7 +387,8 @@ class PlatformDependaBotAdvisory(models.Model):
     package_name = models.CharField(max_length=255, default='', null=True, blank=True)
     ecosystem = models.CharField(max_length=255, default='', null=True, blank=True)
     severity = models.CharField(max_length=20, default='', null=True, blank=True)
-    cve_id = models.CharField(max_length=50, default='', null=True, blank=True)    
+    cve_id = models.CharField(max_length=50, default='', null=True, blank=True)
+    manifest_path = models.CharField(max_length=512, default='', null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
