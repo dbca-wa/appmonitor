@@ -20,6 +20,10 @@ RUN echo "fi" >> /etc/bash.bashrc
 # RUN cp /root/.bashrc /home/docker
 # RUN cp /root/.profile /home/docker
 
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+# Create workspace
+RUN mkdir -p /workspace
+
 # For Linux
 RUN groupadd -g 20000 container
 RUN useradd -g 20000 -u 200000 container -s /bin/bash
