@@ -46,7 +46,18 @@ stages:
           -t $(imageName):$(tagDate)-$(shortSha) \
           -f $(Build.SourcesDirectory)/Dockerfile .
       displayName: 'Docker Build Main Image'     
-
+    # 3.1 
+    - script: |
+        cp /app/testartifact.txt $(Build.ArtifactStagingDirectory)/
+      displayName: 'Copy file from Ubuntu filesystem'
+    # 3.2: Publish the staging folder to Artifacts
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Copied File'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'UbuntuDrop'
+        publishLocation: 'pipeline'
+      
     # 4. Push Main Image tags
     - bash: |
         docker push $(imageName):latest
