@@ -78,7 +78,7 @@ COPY timezone /etc/timezone
 #RUN /app/venv/bin/pip install /app/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 COPY gunicorn.ini ./
-
+RUN echo "testing" > /app/testartifact.txt
 RUN touch /app/.env
 COPY .git ./.git
 COPY --chown=oim:oim appmonitor appmonitor
