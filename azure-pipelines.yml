@@ -79,11 +79,7 @@ stages:
     # 4.1 Scan image
     - bash: |
         mkdir -p "$(Build.ArtifactStagingDirectory)"
-    
-        docker run --pull always --rm \
-          -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" \ 
-          -v "$(Build.ArtifactStagingDirectory):/artifacts" \
-          ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest \
+        docker run --pull always -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" -v "$(Build.ArtifactStagingDirectory):/artifacts" -it ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest \
           bash -c '
             /app/scan_image.sh
     
