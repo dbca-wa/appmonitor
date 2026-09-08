@@ -46,10 +46,10 @@ if [ -n "$CODE_SERVER_PASSWORD" ]; then
 fi
 status=$?
 if [ $status -ne 0 ]; then
-  echo "Failed to start gunicorn: $status"
+  echo "Failed to start code server: $status"
   exit $status
 fi
 else
-   echo "ENABLE_WEB environment vairable not set to True, web server is not starting."
+   echo "CODE_SERVER_PASSWORD_ENABLED environment vairable not set to True, code server is not starting."
    /bin/bash
 fi
