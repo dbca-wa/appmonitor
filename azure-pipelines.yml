@@ -76,26 +76,26 @@ stages:
         docker push $(imageName):$(tagDate)-$(shortSha)
       displayName: 'Push Main Image'
 
-   # 4.1 Scan image
-   - bash: |
-      mkdir -p "$(Build.ArtifactStagingDirectory)"
-  
-      docker run --pull always --rm \
-        -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" \ 
-        -v "$(Build.ArtifactStagingDirectory):/artifacts" \
-        ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest \
-        bash -c '
-          /app/scan_image.sh
-  
-          cp /tmp/scans/vulnerabilities.csv /artifacts/
-          cp /tmp/scans/sbom.json /artifacts/
-      '
-    displayName: Run security scan
-
-  - publish: $(Build.ArtifactStagingDirectory)
-    artifact: security-scan
-    displayName: Publish scan results
-
+    # 4.1 Scan image
+    - bash: |
+        mkdir -p "$(Build.ArtifactStagingDirectory)"
+    
+        docker run --pull always --rm \
+          -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" \ 
+          -v "$(Build.ArtifactStagingDirectory):/artifacts" \
+          ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest \
+          bash -c '
+            /app/scan_image.sh
+    
+            cp /tmp/scans/vulnerabilities.csv /artifacts/
+            cp /tmp/scans/sbom.json /artifacts/
+        '
+      displayName: Run security scan
+     
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: security-scan
+      displayName: Publish scan results
+     
     # 5. FIXED: Build Dev Image using native Bash
     - bash: |
         export DOCKER_BUILDKIT=1
