@@ -46,29 +46,6 @@ stages:
           -t $(imageName):$(tagDate)-$(shortSha) \
           -f $(Build.SourcesDirectory)/Dockerfile .
       displayName: 'Docker Build Main Image'     
-
-
-      
-    # 3.1 
-    - script: |
-        # Create a temporary, stopped container from the built image
-        docker create --name temp_container $(imageName):latest
-        
-        # Copy the file from inside the container to the DevOps staging directory
-        docker cp temp_container:/app/testartifact.txt $(Build.ArtifactStagingDirectory)/
-        
-        # Clean up the temporary container
-        docker rm temp_container
-      displayName: 'Extract testartifact.txt from Docker image'
-    
-
-    # 3.2: Publish the staging folder to Artifacts
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Copied File'
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-        artifact: 'UbuntuDrop'
-        publishLocation: 'pipeline'
       
     # 4. Push Main Image tags
     - bash: |
@@ -76,21 +53,7 @@ stages:
         docker push $(imageName):$(tagDate)-$(shortSha)
       displayName: 'Push Main Image'
 
-    # 4.1 Scan image
-    - bash: |
-        mkdir -p "$(Build.ArtifactStagingDirectory)"
-        chmod 777 "$(Build.ArtifactStagingDirectory)"
-        docker run --pull always --rm -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" -v "$(Build.ArtifactStagingDirectory):/artifacts" ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest  bash -c '
-            /app/scan_image.sh
-    
-            cp /tmp/scans/vulnerabilities.csv /artifacts/
-            cp /tmp/scans/sbom.json /artifacts/
-        '
-      displayName: Run security scan
-     
-    - publish: $(Build.ArtifactStagingDirectory)
-      artifact: security-scan
-      displayName: Publish scan results
+
      
     # 5. FIXED: Build Dev Image using native Bash
     - bash: |
@@ -108,4 +71,21 @@ stages:
         docker push $(devImageName):appmonitor_dev_latest
         docker push $(devImageName):appmonitor_dev_$(tagDate)-$(shortSha)
       displayName: 'Push Dev Image'
+
+    # 7 Scan image
+    - bash: |
+        mkdir -p "$(Build.ArtifactStagingDirectory)"
+        chmod 777 "$(Build.ArtifactStagingDirectory)"
+        docker run --pull always --rm -e DOCKER_IMAGE="$(imageName):$(tagDate)-$(shortSha)" -v "$(Build.ArtifactStagingDirectory):/artifacts" ghcr.io/dbca-wa/docker-apps-dev:security_scan_tools_base_latest  bash -c '
+            /app/scan_image.sh
+    
+            cp /tmp/scans/vulnerabilities.csv /artifacts/
+            cp /tmp/scans/vulnerabilities.xlsx /artifacts/
+            cp /tmp/scans/sbom.json /artifacts/
+        '
+      displayName: Run security scan
+    # 8 publish scan
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: security-scan
+      displayName: Publish scan results      
       
