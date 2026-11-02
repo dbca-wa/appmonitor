@@ -52,19 +52,20 @@ class Command(BaseCommand):
                             for t in tickets_pending['tickets']:
                                 ticket_row = {}
                                 ticket_row['id']  = t['id']
-                                ticket_row['subject'] = t['subject']
-                                # ticket_row['system_id'] = t['custom_fields']['system_id']
-                                ticket_row['lf_system_id'] = t['custom_fields']['lf_system_id']
+                                ticket_row['subject'] = t['subject']                                
+
+                                
+                                ticket_row['lf_system_id'] = None
+                                if 'lf_systemid' in t['custom_fields']:
+                                    ticket_row['lf_system_id'] = t['custom_fields']['lf_systemid']
+                                
                                 ticket_row['status'] = t['status']
                                 if t['status'] not in status_in_use:
                                     status_in_use.append(t['status'])
 
                                 print (t['subject'])   
                                 nowtime = datetime.now()
-                                # print (t)             
                                 
-                                # created_at = t['created_at'].replace("T"," ")
-                                # created_at = created_at.replace("Z","")
                                 ticket_created_datetime = datetime.strptime(t['created_at'], '%Y-%m-%dT%H:%M:%SZ')  
                                 ticket_row['ticket_created_datetime']  = ticket_created_datetime
                                 timediff = nowtime - ticket_created_datetime
